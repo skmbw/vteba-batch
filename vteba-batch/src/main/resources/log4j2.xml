@@ -6,7 +6,7 @@
 		<!-- 日志备份目录 -->
 		<Property name="BACKUP_HOME">{LOG_HOME}/backup</Property>
 		<Property name="STAT_NAME">stat</Property>
-		<Property name="SERVER_NAME">global</Property>
+		<Property name="SERVER_NAME">global.log</Property>
 		<Property name="FILE_NAME">log.log</Property>
 	</Properties>
 	<Appenders>
@@ -67,17 +67,17 @@
 		</Logger>
 		<Logger name="org.jboss" level="INFO" additivity="true">
 		</Logger>
-		<Logger name="org.springframework" level="DEBUG" additivity="true">
+		<Logger name="org.springframework" level="INFO" additivity="true">
 		</Logger>
 		<Logger name="org.springframework.tx" level="INFO" additivity="true">
 		</Logger>
-		<Logger name="org.springframework.web" level="DEBUG" additivity="true">
+		<Logger name="org.springframework.web" level="INFO" additivity="true">
 		</Logger>
 		<Logger name="org.springframework.orm" level="INFO" additivity="true">
 		</Logger>
-		<Logger name="org.springframework.mvc" level="DEBUG" additivity="true">
+		<Logger name="org.springframework.mvc" level="INFO" additivity="true">
 		</Logger>
-		<Logger name="bitronix.tm" level="INFO" additivity="true">
+		<Logger name="bitronix.tm" level="WARN" additivity="true">
 		</Logger>
 		<Logger name="org.hibernate.type.descriptor.sql.BasicBinder" level="TRACE" additivity="true">
 		</Logger>
