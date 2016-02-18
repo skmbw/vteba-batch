@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE generatorConfiguration PUBLIC "-//mybatis.org//DTD MyBatis Generator Configuration 1.0//EN" "http://mybatis.org/dtd/mybatis-generator-config_1_0.dtd" >
+
+<generatorConfiguration>
+	<!-- jdbc驱动的jar文件位置，要修改成自己本地的驱动文件所在的位置，绝对路径，或项目根路径 -->
+	<classPathEntry location="C:\Users\yinlei\.m2\repository\mysql\mysql-connector-java\5.1.35\mysql-connector-java-5.1.35.jar" />
+	<context id="context1">
+		<property name="javaFileEncoding" value="UTF-8"/>
+		<property name="suppressDate" value="true"/>
+		<property name="trimStrings" value="true"/>
+		<property name="mainType" value="true"/><!-- 是否使用main方法产生代码 -->
+		<property name="projectPath" value="C:\Users\yinlei\git\iterq-api\"/>
+		<property name="defaultPackage" value="src/main/java/"/>
+		<!-- jdbc连接配置 -->
+		<jdbcConnection driverClass="com.mysql.jdbc.Driver" connectionURL="jdbc:mysql://localhost:3306/tianxun" userId="root" password="3416763" />
+		
+		<!-- 实体文件的位置 -->
+		<javaModelGenerator targetPackage="com.vteba.iterq.api.question.model" targetProject="iterq-api" />
+		
+		<!-- Mapper.xml文件的位置，sql映射文件的位置 -->
+		<sqlMapGenerator targetPackage="com.vteba.iterq.api.question.mapper" targetProject="iterq-api" />
+		
+		<!-- Mapper.java文件的位置，也就是DAO接口文件位置 -->
+		<javaClientGenerator targetPackage="com.vteba.iterq.api.question.dao" targetProject="iterq-api" type="XMLMAPPER" >
+			<property name="rootInterface" value="com.vteba.tx.jdbc.mybatis.spi.BaseDao"/>
+		</javaClientGenerator>
+	
+		<!-- 要映射的表，schema可以不指定，建议指定。可以覆盖某些方法不产生 -->
+		<!-- user模块 
+		<table schema="tianxun" tableName="user">
+			如果字段名和属性名不一致，在此处重载。column是DB字段 ，property是Model属性
+			<columnOverride column="user_name" property="name" />
+		</table> -->
+		
+		<!-- employee模块 -->
+<!-- 		<table schema="tianxun" tableName="orders"> -->
+<!-- 		</table> -->
+<!-- 		<table schema="tianxun" tableName="trading"> -->
+<!-- 		</table> -->
+<!-- 		<table schema="tianxun" tableName="account"> -->
+<!-- 		</table> -->
+		<table schema="tianxun" tableName="question">
+		</table>
+	</context>
+</generatorConfiguration>
