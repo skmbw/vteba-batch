@@ -3,25 +3,25 @@
 
 <generatorConfiguration>
 	<!-- jdbc驱动的jar文件位置，要修改成自己本地的驱动文件所在的位置，绝对路径，或项目根路径 -->
-	<classPathEntry location="C:\Users\yinlei\.m2\repository\mysql\mysql-connector-java\5.1.35\mysql-connector-java-5.1.35.jar" />
+	<classPathEntry location="C:\Users\Administrator\.m2\repository\mysql\mysql-connector-java\5.1.35\mysql-connector-java-5.1.35.jar" />
 	<context id="context1">
 		<property name="javaFileEncoding" value="UTF-8"/>
 		<property name="suppressDate" value="true"/>
 		<property name="trimStrings" value="true"/>
 		<property name="mainType" value="true"/><!-- 是否使用main方法产生代码 -->
-		<property name="projectPath" value="C:\Users\yinlei\git\iterq-api\"/>
+		<property name="projectPath" value="C:\Users\Administrator\git\vteba-batch\"/>
 		<property name="defaultPackage" value="src/main/java/"/>
 		<!-- jdbc连接配置 -->
-		<jdbcConnection driverClass="com.mysql.jdbc.Driver" connectionURL="jdbc:mysql://localhost:3306/tianxun" userId="root" password="3416763" />
+		<jdbcConnection driverClass="com.mysql.jdbc.Driver" connectionURL="jdbc:mysql://localhost:3306/tiantian" userId="root" password="3416763" />
 		
 		<!-- 实体文件的位置 -->
-		<javaModelGenerator targetPackage="com.vteba.iterq.api.question.model" targetProject="iterq-api" />
+		<javaModelGenerator targetPackage="com.vteba.batch.user.model" targetProject="vteba-batch" />
 		
 		<!-- Mapper.xml文件的位置，sql映射文件的位置 -->
-		<sqlMapGenerator targetPackage="com.vteba.iterq.api.question.mapper" targetProject="iterq-api" />
+		<sqlMapGenerator targetPackage="com.vteba.batch.user.mapper" targetProject="vteba-batch" />
 		
 		<!-- Mapper.java文件的位置，也就是DAO接口文件位置 -->
-		<javaClientGenerator targetPackage="com.vteba.iterq.api.question.dao" targetProject="iterq-api" type="XMLMAPPER" >
+		<javaClientGenerator targetPackage="com.vteba.batch.user.dao" targetProject="vteba-batch" type="XMLMAPPER" >
 			<property name="rootInterface" value="com.vteba.tx.jdbc.mybatis.spi.BaseDao"/>
 		</javaClientGenerator>
 	
@@ -32,14 +32,7 @@
 			<columnOverride column="user_name" property="name" />
 		</table> -->
 		
-		<!-- employee模块 -->
-<!-- 		<table schema="tianxun" tableName="orders"> -->
-<!-- 		</table> -->
-<!-- 		<table schema="tianxun" tableName="trading"> -->
-<!-- 		</table> -->
-<!-- 		<table schema="tianxun" tableName="account"> -->
-<!-- 		</table> -->
-		<table schema="tianxun" tableName="question">
+		<table schema="tiantian" tableName="user">
 		</table>
 	</context>
 </generatorConfiguration>

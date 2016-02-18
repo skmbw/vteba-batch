@@ -46,6 +46,14 @@
 					<groupId>org.springframework</groupId>
 					<artifactId>spring-tx</artifactId>
 				</exclusion>
+				<exclusion>
+					<groupId>xpp3</groupId>
+					<artifactId>xpp3_min</artifactId>
+				</exclusion>
+				<exclusion>
+					<groupId>xmlpull</groupId>
+					<artifactId>xmlpull</artifactId>
+				</exclusion>
 			</exclusions>
 		</dependency>
 
