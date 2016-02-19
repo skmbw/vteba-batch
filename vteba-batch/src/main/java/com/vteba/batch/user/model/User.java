@@ -1,5 +1,7 @@
 package com.vteba.batch.user.model;
 
+import java.util.Date;
+
 public class User {
     /**
      * order by 排序语句
@@ -39,6 +41,8 @@ public class User {
      * 对应数据库表字段 user.age
      */
     private Integer age;
+    
+    private Date updateDate;
 
     /**
      * 设置 order by 排序语句
@@ -149,4 +153,12 @@ public class User {
     public void setAge(Integer age) {
         this.age = age;
     }
+
+	public Date getUpdateDate() {
+		return updateDate;
+	}
+
+	public void setUpdateDate(Date updateDate) {
+		this.updateDate = updateDate;
+	}
 }

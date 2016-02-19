@@ -13,7 +13,7 @@
 		<!-- 定义控制台输出 -->
 		<Console name="Console" target="SYSTEM_OUT">
 <!-- 			<PatternLayout pattern="%date{yyyy-MM-dd HH:mm:ss.SSS} %level [%thread][%file:%line] - %msg%n" /> -->
-			<PatternLayout pattern="%date{yyyy-MM-dd HH:mm:ss.SSS} %level [%C{1}:%line:%M] - %msg%n" />
+			<PatternLayout pattern="%date{yyyy-MM-dd HH:mm:ss.SSS} %level [%thread][%C{1}:%line:%M] - %msg%n" />
 		</Console>
 
 		<!-- 程序员调试日志 -->
