@@ -26,6 +26,9 @@
 		<property name="dataSource" ref="tiantianDataSource" />
 	</bean>
 	
+	<bean class="org.springframework.batch.core.configuration.support.JobRegistryBeanPostProcessor">
+		<property name="jobRegistry" ref="jobRegistry" />
+  	</bean>
 	<bean id="jobRegistry" class="org.springframework.batch.core.configuration.support.MapJobRegistry" />
 
 	<bean id="jobRepository" class="org.springframework.batch.core.repository.support.JobRepositoryFactoryBean">
@@ -35,6 +38,8 @@
 
 	<!-- 1 -->
 	<batch:step id="userInitStep">
+		<!-- taskExecutor，是用来重复执行的，防止任务不成功 task-executor="taskExecutor" -->
+		<!-- taskExecutor非空的情况下 会默认执行重复策略 -->
 		<batch:tasklet ref="userTasklet" />
 	</batch:step>
 

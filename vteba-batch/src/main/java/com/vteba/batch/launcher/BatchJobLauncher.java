@@ -51,4 +51,16 @@ public class BatchJobLauncher {
 	public void setJob(Job job) {
 		this.job = job;
 	}
+
+	public Map<String, String> getJobParameters() {
+		return jobParameters;
+	}
+
+	public void setJobParameters(Map<String, String> jobParameters) {
+		this.jobParameters = jobParameters;
+	}
+
+	public void setJobLauncher(JobLauncher jobLauncher) {
+		this.jobLauncher = jobLauncher;
+	}
 }

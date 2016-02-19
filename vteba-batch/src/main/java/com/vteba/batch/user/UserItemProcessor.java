@@ -24,7 +24,9 @@ public class UserItemProcessor implements ItemProcessor<User, User> {
 		} catch (Exception e) {
 			LOGGER.info("处理user=[{}]失败, msg=[{}]", name, e);
 		}
-		
+//		if (item.getId() == 5) {
+//			throw new RuntimeException("Test Transaction.");
+//		}
 		LOGGER.info("处理user=[{}]成功。", name);
 		return item;
 	}
