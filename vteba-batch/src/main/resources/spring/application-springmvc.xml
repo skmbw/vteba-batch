@@ -11,7 +11,7 @@
 		
 	<!-- 开启controller注解支持 -->
     <!-- 如果base-package=com.wocai 则注解事务不起作用，可以使用切点表达式，精确指定 -->
-    <context:component-scan base-package="com.vteba.tiantian.*.action,com.vteba.tiantian.*.*.action">
+    <context:component-scan base-package="com.vteba.batch.*.action,com.vteba.batch.*.*.action">
         <context:include-filter type="annotation" expression="org.springframework.stereotype.Controller"/>
     </context:component-scan>
 	

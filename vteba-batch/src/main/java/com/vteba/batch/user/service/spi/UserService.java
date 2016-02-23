@@ -11,5 +11,6 @@ import com.vteba.service.generic.MyBatisService;
  * @date 2016-2-18 16:34:16
  */
 public interface UserService extends MyBatisService<User, UserBean, Integer> {
-
+	
+	public int updateUser(int request);
 }
