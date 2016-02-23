@@ -61,7 +61,27 @@
 		</batch:tasklet>
 	</batch:step>
 
+<!-- 	<batch:step id="parallelStepA1"> -->
+<!-- 		<batch:tasklet ref="parallelStep1" /> -->
+<!-- 	</batch:step> -->
+	
+<!-- 	<batch:step id="parallelStepA2"> -->
+<!-- 		<batch:tasklet ref="parallelStep2" /> -->
+<!-- 	</batch:step> -->
+
 	<batch:job id="userJob">
+		<batch:split id="splitParallel" task-executor="taskExecutor" next="userJobStep1">
+			<batch:flow>
+				<batch:step id="parallelStep_1">
+					<batch:tasklet ref="parallelStep1" />
+				</batch:step>
+			</batch:flow>
+			<batch:flow>
+				<batch:step id="parallelStep_2">
+					<batch:tasklet ref="parallelStep2" />
+				</batch:step>
+			</batch:flow>
+		</batch:split>
 		<batch:step id="userJobStep1" parent="userInitStep" next="userJobStep2" />
 		<batch:step id="userJobStep2" parent="userProcessStep" />
 	</batch:job>

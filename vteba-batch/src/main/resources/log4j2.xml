@@ -52,13 +52,13 @@
 		</Logger>
 		<Logger name="java.sql.Connection" level="TRACE" additivity="true">
 		</Logger>
-
 		<Logger name="java.sql.Statement" level="TRACE" additivity="true">
 		</Logger>
-
 		<Logger name="java.sql.PreparedStatement" level="TRACE" additivity="true">
 		</Logger>
-
+		<Logger name="com.ibatis" level="DEBUG" additivity="true">
+		</Logger>
+		
 		<Logger name="org.apache.struts2" level="INFO" additivity="true">
 		</Logger>
 		<Logger name="com.opensymphony.xwork2" level="INFO" additivity="true">
@@ -79,11 +79,11 @@
 		</Logger>
 		<Logger name="bitronix.tm" level="WARN" additivity="true">
 		</Logger>
-		<Logger name="org.hibernate.type.descriptor.sql.BasicBinder" level="TRACE" additivity="true">
-		</Logger>
+<!-- 		<Logger name="org.hibernate.type.descriptor.sql.BasicBinder" level="TRACE" additivity="true"> -->
+<!-- 		</Logger> -->
 
 		<!-- Root Logger -->
-		<Root level="DEBUG">
+		<Root level="TRACE">
 			<AppenderRef ref="Console" />
 			<AppenderRef ref="File" />
 		</Root>
