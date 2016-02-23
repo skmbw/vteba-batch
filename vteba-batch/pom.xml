@@ -11,7 +11,7 @@
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<log4j2-version>2.4</log4j2-version>
-		<maven.build.timestamp.format>yyyyMMddHHmmss</maven.build.timestamp.format>
+		<maven.build.timestamp.format>yyyy-MM-dd HH:mm:ss</maven.build.timestamp.format>
 	</properties>
 	
 	<dependencies>
@@ -368,6 +368,7 @@
 <!-- 					<warName>vteba-batch-${maven.build.timestamp}</warName> -->
 					<archive>
 						<manifestEntries>
+							<!-- Build-Timestame即是自定义属性 -->
 							<Build-Timestame>${maven.build.timestamp}</Build-Timestame>
 						</manifestEntries>
 					</archive>
