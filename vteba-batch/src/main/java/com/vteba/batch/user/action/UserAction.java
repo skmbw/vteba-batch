@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import com.vteba.batch.user.model.User;
 import com.vteba.batch.user.service.spi.UserService;
 import com.vteba.utils.id.IntIncrement;
+import com.vteba.utils.serialize.Kryoer;
 import com.vteba.web.action.GenericAction;
 import com.vteba.web.action.JsonBean;
 
@@ -30,6 +31,9 @@ public class UserAction extends GenericAction<User> {
 	@Inject
 	private UserService userServiceImpl;
 	
+	@Inject
+	private Kryoer kryoer;
+	
 	/**
      * 获得用户List，初始化列表页。
      * @param model 参数
@@ -38,6 +42,15 @@ public class UserAction extends GenericAction<User> {
     @RequestMapping("/initial")
     public String initial(User model, Map<String, Object> maps) {
     	try {
+    		model.setName("yinlei");
+    		model.setAge(12);
+    		long d = System.currentTimeMillis();
+    		byte[] bb = kryoer.toByte(model);
+    		System.out.println(System.currentTimeMillis() - d);
+    		d = System.currentTimeMillis();
+    		kryoer.fromByte(bb);
+    		System.out.println(System.currentTimeMillis() - d);
+    		
     		List<User> list = userServiceImpl.pagedList(model);
             maps.put("list", list);
 		} catch (Exception e) {

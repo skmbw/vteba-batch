@@ -117,4 +117,11 @@
 		<constructor-arg value="1"/><!--1,256,384,512-->
 	</bean>
 
+	<bean id="kryoer" class="com.vteba.utils.serialize.Kryoer">
+		<constructor-arg>
+			<list>
+				<value>com.vteba.batch.user.model.User</value>
+			</list>
+		</constructor-arg>
+	</bean>
 </beans>
