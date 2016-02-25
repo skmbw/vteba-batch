@@ -21,6 +21,18 @@ public class Test {
 		list.add("2");
 		
 		System.out.println(Arrays.toString(list.toArray()));
+		Object[] aObjects = new Object[3];
+		aObjects[0] = 1;
+		aObjects[1] = "2a";
+		aObjects[2] = "3";
+		
+		Object[] objs = list.toArray();
+		test1(2, objs);
+		test1(0, aObjects);
 	}
 
+	public static void test1(int i, Object...objects) {
+		System.out.println(Arrays.toString(objects));
+		System.out.println("yinlei");
+	}
 }

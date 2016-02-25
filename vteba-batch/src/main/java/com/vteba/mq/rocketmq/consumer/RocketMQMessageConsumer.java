@@ -13,6 +13,7 @@ import com.alibaba.rocketmq.common.consumer.ConsumeFromWhere;
 import com.vteba.mq.rocketmq.listener.RocketMQMessageListener;
 import com.vteba.mq.rocketmq.listener.RocketMQMessageListenerWrapper;
 import com.vteba.utils.common.PropUtils;
+import com.vteba.utils.serialize.Kryoer;
 
 /**
  * RocketMQ消息消费者。对RocketMQ原生的消费者做了一些配置属性的扩展，方便配置。<br>
@@ -39,13 +40,22 @@ public class RocketMQMessageConsumer implements InitializingBean {
 	private RocketMQMessageListener messageListener;
 	// RocketMQ的消费者
 	private DefaultMQPushConsumer defaultMQPushConsumer;
-
+	// 是否启用kryo来反序列化对象，默认true，要关闭，请设为false
+	private boolean kryoFeatures = true;
+	// kryo序列化器
+	private Kryoer kryoer;
+	// 强制在业务层上反序列化
+	private boolean forceServiceDeserialize;
+	
+	/**
+	 * 启动消费者
+	 */
 	public void init() {
 		LOGGER.debug("启动RocketMQ消费者监听...");
-		defaultMQPushConsumer = new DefaultMQPushConsumer();
-		defaultMQPushConsumer.setConsumerGroup(consumerGroup);
-		defaultMQPushConsumer.setNamesrvAddr(namesrvAddr);
 		try {
+			defaultMQPushConsumer = new DefaultMQPushConsumer();
+			defaultMQPushConsumer.setConsumerGroup(consumerGroup);
+			defaultMQPushConsumer.setNamesrvAddr(namesrvAddr);
 			// 订阅主题为topic下Tag为subExpression的消息
 			if (topic != null) {
 				defaultMQPushConsumer.subscribe(topic, subExpression);
@@ -59,8 +69,17 @@ public class RocketMQMessageConsumer implements InitializingBean {
 			// 程序第一次启动从消息队列头取数据
 			defaultMQPushConsumer.setConsumeFromWhere(ConsumeFromWhere.CONSUME_FROM_FIRST_OFFSET);
 			RocketMQMessageListenerWrapper messageListenerWrapper = new RocketMQMessageListenerWrapper();
-			
 			messageListenerWrapper.setMessageListener(messageListener);
+			// 强制业务层自己调用Kryoer去反序列化
+			if (forceServiceDeserialize) {
+				messageListenerWrapper.setKryoFeatures(false);
+			} else {
+				if (kryoFeatures) { // 开启了在统一的Kryo反序列化
+					messageListenerWrapper.setKryoFeatures(kryoFeatures);
+					messageListenerWrapper.setKryoer(kryoer);
+				}
+			}
+			
 			defaultMQPushConsumer.registerMessageListener(messageListenerWrapper);
 			defaultMQPushConsumer.start();
 			LOGGER.debug("启动RocketMQ消费者监听成功.");
@@ -69,6 +88,20 @@ public class RocketMQMessageConsumer implements InitializingBean {
 		}
 	}
 
+	/**
+	 * 清理消费者
+	 */
+	public void destroy() {
+		if (defaultMQPushConsumer != null) {
+			try {
+				defaultMQPushConsumer.shutdown();
+				LOGGER.debug("关闭RocketMQ消费者监听...");
+			} catch (Exception e) {
+				LOGGER.error("启动RocketMQ消费者监听异常，msg=[{}].", e);
+			}
+		}
+	}
+	
 	@Override
 	public void afterPropertiesSet() throws Exception {
 		Assert.notNull(consumerGroup, "property[consumerGroup] cannot be null.");
@@ -81,6 +114,11 @@ public class RocketMQMessageConsumer implements InitializingBean {
 		
 		if (topic == null && topicSubExpressionMap == null) {
 			throw new IllegalArgumentException("property[topic] and [topicSubExpressionMap] cannot be null together.");
+		}
+		
+		// 序列化工具，如果不需要，可以关闭
+		if (kryoer == null && kryoFeatures) {
+			Assert.notNull(kryoer, "property[kryoer] cannot be null, or set property[kryoFeatures] to false, close this features.");
 		}
 	}
 
@@ -134,5 +172,17 @@ public class RocketMQMessageConsumer implements InitializingBean {
 
 	public DefaultMQPushConsumer getDefaultMQPushConsumer() {
 		return defaultMQPushConsumer;
+	}
+
+	public void setKryoFeatures(boolean kryoFeatures) {
+		this.kryoFeatures = kryoFeatures;
+	}
+
+	public void setKryoer(Kryoer kryoer) {
+		this.kryoer = kryoer;
+	}
+
+	public void setForceServiceDeserialize(boolean forceServiceDeserialize) {
+		this.forceServiceDeserialize = forceServiceDeserialize;
 	}
 }
