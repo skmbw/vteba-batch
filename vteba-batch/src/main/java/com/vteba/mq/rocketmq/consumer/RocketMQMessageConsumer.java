@@ -56,6 +56,7 @@ public class RocketMQMessageConsumer implements InitializingBean {
 			defaultMQPushConsumer = new DefaultMQPushConsumer();
 			defaultMQPushConsumer.setConsumerGroup(consumerGroup);
 			defaultMQPushConsumer.setNamesrvAddr(namesrvAddr);
+			
 			// 订阅主题为topic下Tag为subExpression的消息
 			if (topic != null) {
 				defaultMQPushConsumer.subscribe(topic, subExpression);

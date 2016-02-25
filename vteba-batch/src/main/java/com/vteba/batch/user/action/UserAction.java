@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.vteba.batch.user.model.User;
 import com.vteba.batch.user.service.spi.UserService;
+import com.vteba.mq.rocketmq.producer.RocketMQMessageProducer;
 import com.vteba.utils.id.IntIncrement;
 import com.vteba.utils.serialize.Kryoer;
 import com.vteba.web.action.GenericAction;
@@ -33,6 +34,9 @@ public class UserAction extends GenericAction<User> {
 	
 	@Inject
 	private Kryoer kryoer;
+	
+	@Inject
+	private RocketMQMessageProducer rocketMQMessageProducer;
 	
 	/**
      * 获得用户List，初始化列表页。
@@ -70,7 +74,16 @@ public class UserAction extends GenericAction<User> {
 	public List<User> list(User model) {
 		List<User> list = null;
 		try {
-			list = userServiceImpl.pagedList(model);
+			model = new User();
+			model.setName("Test1");
+			
+			rocketMQMessageProducer.send(model);
+			model.setAge(29);
+			rocketMQMessageProducer.send("Test1", model);
+			
+			model.setId(2345);
+			rocketMQMessageProducer.send("YinleiUser2", "Test2", model);
+			//list = userServiceImpl.pagedList(model);
 		} catch (Exception e) {
 			LOGGER.error("get record list error, errorMsg=[{}].", e.getMessage());
 		}

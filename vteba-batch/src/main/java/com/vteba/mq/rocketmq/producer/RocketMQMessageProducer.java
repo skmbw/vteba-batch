@@ -109,17 +109,17 @@ public class RocketMQMessageProducer implements InitializingBean {
 		return send(topic, tags, null, message);
 	}
 	
-	/**
-	 * 应该不会出现这种业务组合吧，没有默认的Topic，但是有默认的Tags
-	 * @param message 待发送消息
-	 * @param topic Topic
-	 * @return 发送结果
-	 * @throws Exception
-	 */
-	@Deprecated
-	public SendResult send(Object message, String topic) throws Exception {
-		return send(topic, tags, null, message);
-	}
+//	/**
+//	 * 应该不会出现这种业务组合吧，没有默认的Topic，但是有默认的Tags
+//	 * @param message 待发送消息
+//	 * @param topic Topic
+//	 * @return 发送结果
+//	 * @throws Exception
+//	 */
+//	@Deprecated
+//	public SendResult send(Object message, String topic) throws Exception {
+//		return send(topic, tags, null, message);
+//	}
 	
 	/**
 	 * 发送消息
@@ -205,7 +205,7 @@ public class RocketMQMessageProducer implements InitializingBean {
 	 * 因为只封装了send发送方法，可以通过该方法获得底层的RocketMQ的DefaultMQProducer，做一些其他的操作。
 	 * @return DefaultMQProducer
 	 */
-	public DefaultMQProducer getMqProducer() {
+	public DefaultMQProducer getDefaultMQProducer() {
 		return defaultMQProducer;
 	}
 

@@ -124,4 +124,27 @@
 			</list>
 		</constructor-arg>
 	</bean>
+	
+	<bean id="rocketMQMessageConsumer" class="com.vteba.mq.rocketmq.consumer.RocketMQMessageConsumer" init-method="init" destroy-method="destroy">
+		<property name="namesrvAddr" value="192.168.1.31:9876" />
+		<property name="consumerGroup" value="userGroup" />
+		<property name="topic" value="YinleiUser" />
+		<property name="subExpression" value="Test" />
+		<property name="topicSubExpressionMap">
+			<map>
+				<entry key="YinleiUser" value="Test||Test1" />
+				<entry key="YinleiUser2" value="Test2" />
+			</map>
+		</property>
+		<property name="kryoer" ref="kryoer" />
+		<property name="messageListener" ref="simpleRocketMQMessageListener" />
+	</bean>
+	
+	<bean id="rocketMQMessageProducer" class="com.vteba.mq.rocketmq.producer.RocketMQMessageProducer"  init-method="init" destroy-method="destroy">
+		<property name="namesrvAddr" value="192.168.1.31:9876" />
+		<property name="producerGroup" value="userGroup" />
+		<property name="topic" value="YinleiUser" />
+		<property name="tags" value="Test" />
+		<property name="kryoer" ref="kryoer" />
+	</bean>
 </beans>
