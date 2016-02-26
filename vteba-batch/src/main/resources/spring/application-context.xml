@@ -138,6 +138,7 @@
 		</property>
 		<property name="kryoer" ref="kryoer" />
 		<property name="messageListener" ref="simpleRocketMQMessageListener" />
+		<property name="forceServiceDeserialize" value="true" />
 	</bean>
 	
 	<bean id="rocketMQMessageProducer" class="com.vteba.mq.rocketmq.producer.RocketMQMessageProducer"  init-method="init" destroy-method="destroy">

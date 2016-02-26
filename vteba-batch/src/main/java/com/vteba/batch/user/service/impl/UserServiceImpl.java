@@ -28,7 +28,7 @@ public class UserServiceImpl extends MyBatisServiceImpl<User, UserBean, Integer>
 	// 添加了方法后，记得改为private
 	protected UserDao userDao;
 	
-	private byte[] syncLock = new byte[0];
+//	private byte[] syncLock = new byte[0]; // 这样定义对象锁开销最低，比new Object()低
 	
 	private ReentrantLock lock = new ReentrantLock();
 	

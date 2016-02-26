@@ -48,17 +48,17 @@ public class DefaultApplicationListener implements ApplicationListener<ContextRe
 		
 		factory.registerBeanDefinition("user2", definition);
 		
-		User testUser = (User) factory.getBean("user");
-		System.out.println(testUser);
-		
-		testUser = (User) factory.getBean("user2");
-		System.out.println(testUser);
-		
-		testUser = (User) factory.getBean("user", User.class);
-		System.out.println(testUser);
-		
-		testUser = (User) factory.getBean("user2", User.class);
-		System.out.println(testUser);
+//		User testUser = (User) factory.getBean("user");
+//		System.out.println(testUser);
+//		
+//		testUser = (User) factory.getBean("user2");
+//		System.out.println(testUser);
+//		
+//		testUser = (User) factory.getBean("user", User.class);
+//		System.out.println(testUser);
+//		
+//		testUser = (User) factory.getBean("user2", User.class);
+//		System.out.println(testUser);
 		//System.out.println(factory.getBean(User.class));
 	}
 
