@@ -117,19 +117,23 @@
 		<constructor-arg value="1"/><!--1,256,384,512-->
 	</bean>
 
+	<!-- 基于Kryo的序列化工具 -->
 	<bean id="kryoer" class="com.vteba.utils.serialize.Kryoer">
 		<constructor-arg>
 			<list>
+				<!-- 如果使用Kryo序列化对象，所有使用到的对象都要在这里配置，以后可以调整到运行时扫描注解 -->
 				<value>com.vteba.batch.user.model.User</value>
 			</list>
 		</constructor-arg>
 	</bean>
 	
+	<!-- RocketMQ消费者， 建议一个Topic配置一个，注意订阅的Topic要和MessageListener是配对的-->
 	<bean id="rocketMQMessageConsumer" class="com.vteba.mq.rocketmq.consumer.RocketMQMessageConsumer" init-method="init" destroy-method="destroy">
 		<property name="namesrvAddr" value="192.168.1.31:9876" />
 		<property name="consumerGroup" value="userGroup" />
 		<property name="topic" value="YinleiUser" />
 		<property name="subExpression" value="Test" />
+		<!-- 如果有多个Topic，建议使用这种方式：key是Topic，value是tags -->
 		<property name="topicSubExpressionMap">
 			<map>
 				<entry key="YinleiUser" value="Test||Test1" />
@@ -137,10 +141,13 @@
 			</map>
 		</property>
 		<property name="kryoer" ref="kryoer" />
+		<!-- 业务监听器 -->
 		<property name="messageListener" ref="simpleRocketMQMessageListener" />
+		<!-- 强制业务层自己使用kryo反序列化 -->
 		<property name="forceServiceDeserialize" value="true" />
 	</bean>
 	
+	<!-- RocketMQ生产者，建议使用一个应用配置一个 -->
 	<bean id="rocketMQMessageProducer" class="com.vteba.mq.rocketmq.producer.RocketMQMessageProducer"  init-method="init" destroy-method="destroy">
 		<property name="namesrvAddr" value="192.168.1.31:9876" />
 		<property name="producerGroup" value="userGroup" />
