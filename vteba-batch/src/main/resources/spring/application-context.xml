@@ -155,4 +155,13 @@
 		<property name="tags" value="Test" />
 		<property name="kryoer" ref="kryoer" />
 	</bean>
+	
+	<bean id="packageAnnotationScanner" class="com.vteba.core.annotation.PackageAnnotationScanner">
+		<constructor-arg value="com.vteba.batch.user" />
+		<constructor-arg>
+			<list>
+				<value>com.vteba.core.annotation.KryoBean</value>
+			</list>
+		</constructor-arg>
+	</bean>
 </beans>
