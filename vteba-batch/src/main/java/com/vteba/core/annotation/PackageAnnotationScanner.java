@@ -27,37 +27,41 @@ import org.springframework.util.ClassUtils;
  */
 public class PackageAnnotationScanner {
 	private final Logger LOGGER = LoggerFactory.getLogger(PackageAnnotationScanner.class);
-	
+
 	private static final String RESOURCE_PATTERN = "/**/*.class";
-	
+
 	private ResourcePatternResolver resourcePatternResolver = new PathMatchingResourcePatternResolver();
-	
-	private List<String> packagesList= new LinkedList<String>();
-	
+
+	private List<String> packagesList = new LinkedList<String>();
+
 	private List<TypeFilter> typeFilters = new LinkedList<TypeFilter>();
-	
-	private Set<Class<?>> classSet= new HashSet<Class<?>>();
-	
+
+	private Set<Class<?>> classSet = new HashSet<Class<?>>();
+
 	/**
 	 * 构造函数
-	 * @param packagesToScan 指定哪些包需要被扫描,支持多个包"package.a,package.b"并对每个包都会递归搜索
-	 * @param annotationFilter 指定扫描包中含有特定注解标记的bean,支持多个注解
+	 * 
+	 * @param packagesToScan
+	 *            指定哪些包需要被扫描,支持多个包"package.a,package.b"并对每个包都会递归搜索
+	 * @param annotationFilter
+	 *            指定扫描包中含有特定注解标记的bean,支持多个注解
 	 */
-	public PackageAnnotationScanner(String[] packagesToScan, List<Class<? extends Annotation>> annotationFilter){
+	public PackageAnnotationScanner(String[] packagesToScan, List<Class<? extends Annotation>> annotationFilter) {
 		if (packagesToScan != null) {
 			for (String packagePath : packagesToScan) {
 				this.packagesList.add(packagePath);
 			}
 		}
-		if (annotationFilter != null){
+		if (annotationFilter != null) {
 			for (Class<? extends Annotation> annotation : annotationFilter) {
 				typeFilters.add(new AnnotationTypeFilter(annotation, false));
 			}
 		}
 	}
-	
+
 	/**
 	 * 将符合条件的Bean以Class集合的形式返回
+	 * 
 	 * @return
 	 * @throws IOException
 	 * @throws ClassNotFoundException
@@ -65,24 +69,24 @@ public class PackageAnnotationScanner {
 	public Set<Class<?>> getClassSet() throws IOException, ClassNotFoundException {
 		this.classSet.clear();
 		if (!this.packagesList.isEmpty()) {
-				for (String pkg : this.packagesList) {
-					String pattern = ResourcePatternResolver.CLASSPATH_ALL_URL_PREFIX +
-							ClassUtils.convertClassNameToResourcePath(pkg) + RESOURCE_PATTERN;
-					Resource[] resources = this.resourcePatternResolver.getResources(pattern);
-					MetadataReaderFactory readerFactory = new CachingMetadataReaderFactory(this.resourcePatternResolver);
-					for (Resource resource : resources) {
-						if (resource.isReadable()) {
-							MetadataReader reader = readerFactory.getMetadataReader(resource);
-							String className = reader.getClassMetadata().getClassName();
-							if (matchesEntityTypeFilter(reader, readerFactory)) {
-								this.classSet.add(Class.forName(className));
-							}
+			for (String pkg : this.packagesList) {
+				String pattern = ResourcePatternResolver.CLASSPATH_ALL_URL_PREFIX
+						+ ClassUtils.convertClassNameToResourcePath(pkg) + RESOURCE_PATTERN;
+				Resource[] resources = this.resourcePatternResolver.getResources(pattern);
+				MetadataReaderFactory readerFactory = new CachingMetadataReaderFactory(this.resourcePatternResolver);
+				for (Resource resource : resources) {
+					if (resource.isReadable()) {
+						MetadataReader reader = readerFactory.getMetadataReader(resource);
+						String className = reader.getClassMetadata().getClassName();
+						if (matchesEntityTypeFilter(reader, readerFactory)) {
+							this.classSet.add(Class.forName(className));
 						}
 					}
 				}
+			}
 		}
-		//输出日志
-		if (LOGGER.isInfoEnabled()){
+		// 输出日志
+		if (LOGGER.isInfoEnabled()) {
 			for (Class<?> clazz : this.classSet) {
 				LOGGER.info(String.format("Found class:%s", clazz.getName()));
 			}
@@ -92,12 +96,14 @@ public class PackageAnnotationScanner {
 
 	/**
 	 * 检查当前扫描到的Bean含有任何一个指定的注解标记
+	 * 
 	 * @param reader
 	 * @param readerFactory
 	 * @return
 	 * @throws IOException
 	 */
-	private boolean matchesEntityTypeFilter(MetadataReader reader, MetadataReaderFactory readerFactory) throws IOException {
+	private boolean matchesEntityTypeFilter(MetadataReader reader, MetadataReaderFactory readerFactory)
+			throws IOException {
 		if (!this.typeFilters.isEmpty()) {
 			for (TypeFilter filter : this.typeFilters) {
 				if (filter.match(reader, readerFactory)) {
