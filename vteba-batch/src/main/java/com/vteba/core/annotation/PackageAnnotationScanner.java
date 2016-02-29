@@ -20,7 +20,8 @@ import org.springframework.core.type.filter.TypeFilter;
 import org.springframework.util.ClassUtils;
 
 /**
- * 类注解扫描器，扫描某一子包下的，某种注解。
+ * 类注解扫描器，扫描某一子包下的，某种注解。可以配置成Spring Bean，但是建议在运行时使用。
+ * 不需要保留实例，浪费内存。
  * 
  * @author yinlei
  * @date 2016年2月26日 下午5:59:02
@@ -68,27 +69,25 @@ public class PackageAnnotationScanner {
 	 */
 	public Set<Class<?>> getClassSet() throws IOException, ClassNotFoundException {
 		this.classSet.clear();
-		if (!this.packagesList.isEmpty()) {
-			for (String pkg : this.packagesList) {
-				String pattern = ResourcePatternResolver.CLASSPATH_ALL_URL_PREFIX
-						+ ClassUtils.convertClassNameToResourcePath(pkg) + RESOURCE_PATTERN;
-				Resource[] resources = this.resourcePatternResolver.getResources(pattern);
-				MetadataReaderFactory readerFactory = new CachingMetadataReaderFactory(this.resourcePatternResolver);
-				for (Resource resource : resources) {
-					if (resource.isReadable()) {
-						MetadataReader reader = readerFactory.getMetadataReader(resource);
-						String className = reader.getClassMetadata().getClassName();
-						if (matchesEntityTypeFilter(reader, readerFactory)) {
-							this.classSet.add(Class.forName(className));
-						}
+		for (String pkg : this.packagesList) {
+			String pattern = ResourcePatternResolver.CLASSPATH_ALL_URL_PREFIX
+					+ ClassUtils.convertClassNameToResourcePath(pkg) + RESOURCE_PATTERN;
+			Resource[] resources = this.resourcePatternResolver.getResources(pattern);
+			MetadataReaderFactory readerFactory = new CachingMetadataReaderFactory(this.resourcePatternResolver);
+			for (Resource resource : resources) {
+				if (resource.isReadable()) {
+					MetadataReader reader = readerFactory.getMetadataReader(resource);
+					String className = reader.getClassMetadata().getClassName();
+					if (matchesEntityTypeFilter(reader, readerFactory)) {
+						this.classSet.add(Class.forName(className));
 					}
 				}
 			}
 		}
 		// 输出日志
-		if (LOGGER.isInfoEnabled()) {
+		if (LOGGER.isDebugEnabled()) {
 			for (Class<?> clazz : this.classSet) {
-				LOGGER.info("Found class[{}].", clazz.getName());
+				LOGGER.debug("Found class[{}].", clazz.getName());
 			}
 		}
 		return this.classSet;
