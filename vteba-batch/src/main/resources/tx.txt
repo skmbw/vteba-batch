@@ -1,0 +1,18 @@
+1、spring的注解事务和aop且面事务都是通过切面实现的，同一个service中方法互调，第二个方法，不会开启事务。
+那么为什么spring只对跨Service的方法才生效？ 
+Debug代码发现跨Service调用方法时，都会经过org.springframework.aop.framework.CglibAopProxy.DynamicAdvisedInterceptor.intercept()方法，
+只有经过此处，才能对事务进行控制。 只有跨service类，才能开启切面。
+2、spring的bean如果实现了Ordered接口，那么他们有一个顺序，可以通过order属性来指定
+3、默认情况先注解的order低，也就是说先执行注解的切面，后执行aop的切面。如果同时配置，两个事务管理都会起作用，
+只是顺序不同。
+4、事务最后是否提交和他们的事务传播级别有关系，REQUIRED情况下，在两个切面上都没有要回滚的异常时
+才会提交事务。其中任意一个标记为回滚，那么这个事务是会回滚的。
+5、对于注解/aop如果没有指定要回滚的异常类，所有的运行时异常都会导致回滚.已检测CheckedException
+不回滚。
+如果指定了要回滚的异常类：指定的类及其子类会回滚，运行时异常也会回滚。
+如果指定了不需要回滚的异常类：指定的类及其子类不回滚。
+6、跨Service调用方法时： 
+**如果被调用方法是Propagation.REQUIRES_NEW，被catch后不抛出，事务可以正常提交； 
+如果被调用方法是Propagation.REQUIRED，被catch后不抛出，后面的代码虽然可以执行下去，但最终还是会分出rollback-only异常：**Global transaction is marked as rollback-only but transactional code requested commit 
+如果是在同一个Service中调用方法时： 
+不论注解是REQUIRES_NEW还是REQUIRED，其结果都是一样的，就是都被忽略掉了，等于没写。当其抛出异常时，只需catch住不抛出，事务就可以正常提交。

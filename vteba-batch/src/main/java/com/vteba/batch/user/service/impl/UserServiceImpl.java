@@ -1,5 +1,6 @@
 package com.vteba.batch.user.service.impl;
 
+import java.util.Date;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.locks.ReentrantLock;
 
@@ -13,6 +14,7 @@ import com.vteba.batch.user.dao.UserDao;
 import com.vteba.batch.user.model.User;
 import com.vteba.batch.user.model.UserBean;
 import com.vteba.batch.user.service.spi.UserService;
+import com.vteba.exception.BaseException;
 import com.vteba.service.generic.impl.MyBatisServiceImpl;
 import com.vteba.tx.jdbc.mybatis.spi.BaseDao;
 import com.vteba.utils.date.DateUtils;
@@ -74,6 +76,25 @@ public class UserServiceImpl extends MyBatisServiceImpl<User, UserBean, Integer>
 			TimeUnit.SECONDS.sleep(5);
 		} catch (InterruptedException e) {
 			LOGGER.error("线程中断异常，msg=[{}]", e);
+		}
+		return 1;
+	}
+
+	//@Transactional(rollbackFor = {BusinessService.class})
+	@Override
+	public int updateEntity(int request) {
+		User user = new User();
+		user.setAge(35);
+		user.setName("dalei");
+		user.setUpdateDate(new Date());
+		userDao.save(user);
+		int i = 1;
+		if (i == 1) {
+//			throw new BasicException("基础异常");
+			// throw new ServiceException("事务异常");
+			// throw new BusinessService("事务异常子类");
+//			throw new RuntimeException("运行时异常");
+			throw new BaseException("基础异常子类");
 		}
 		return 1;
 	}

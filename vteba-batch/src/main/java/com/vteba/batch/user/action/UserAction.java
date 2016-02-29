@@ -100,7 +100,8 @@ public class UserAction extends GenericAction<User> {
     public User get(Integer id) {
     	User model = null;
     	try {
-    		model = userServiceImpl.get(id);
+    		//model = userServiceImpl.get(id);
+    		userServiceImpl.updateEntity(1);
 		} catch (Exception e) {
 			LOGGER.error("get record error, errorMsg=[{}].", e.getMessage());
 		}

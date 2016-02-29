@@ -11,7 +11,7 @@
 	
 	<import resource="application-mybatis.xml"/>
 	
-	<import resource="classpath:job/job-text.xml"/>
+<!-- 	<import resource="classpath:job/job-text.xml"/> -->
 	
 	<!-- 默认是基于java interface代理，proxy-target-class="true"表示基于cglib代理。 expose-proxy="true"表示将aop放到AopContext中，供查询 -->
 	<aop:aspectj-autoproxy proxy-target-class="true"/>
@@ -89,7 +89,7 @@
 			<tx:method name="add*" propagation="REQUIRED"/>
 			<tx:method name="persist*" propagation="REQUIRED"/>
 			<tx:method name="delete*" propagation="REQUIRED"/>
-			<tx:method name="update*" propagation="REQUIRED"/>
+			<tx:method name="update*" propagation="REQUIRED" timeout="4000" rollback-for="com.vteba.common.exception.ServiceException" no-rollback-for="com.vteba.common.exception.BasicException"/>
 			<tx:method name="insert*" propagation="REQUIRED"/>
 			<tx:method name="remove*" propagation="REQUIRED"/>
 			<tx:method name="create*" propagation="REQUIRED"/>
@@ -100,22 +100,22 @@
 			<tx:method name="calculate*" propagation="REQUIRED"/>
 			<tx:method name="handle*" propagation="REQUIRED"/>
 			<tx:method name="decide*" propagation="REQUIRED"/>
-			<tx:method name="*" propagation="REQUIRED" isolation="DEFAULT" timeout="6000" rollback-for="com.vteba.common.exception.BusinessException"/>
+			<tx:method name="*" propagation="REQUIRED" isolation="DEFAULT" timeout="6000" rollback-for="com.vteba.common.exception.ServiceException" no-rollback-for="com.vteba.common.exception.BasicException"/>
 		</tx:attributes> 
 	</tx:advice>
 	<!-- expose-proxy="true" -->
 	<aop:config><!--为指定包下所有类的所有方法应用事务切点-->
 		<aop:pointcut expression="execution(* com.vteba.*.*.impl.*.*(..))" id="serviceTxMethodPointCut"/>
 		<aop:pointcut expression="execution(* com.vteba.*.*.service.impl.*.*(..))" id="financeTxMethodPointCut"/>
-		<aop:pointcut expression="execution(* com.vteba.*.*.remote.*.*(..))" id="remoteTxMethodPointCut"/>
-		<aop:advisor advice-ref="transactionAdvice" pointcut-ref="serviceTxMethodPointCut"/>
-		<aop:advisor advice-ref="transactionAdvice" pointcut-ref="financeTxMethodPointCut"/>
-		<aop:advisor advice-ref="transactionAdvice" pointcut-ref="remoteTxMethodPointCut"/>
+		<aop:advisor advice-ref="transactionAdvice" pointcut-ref="serviceTxMethodPointCut" order="12"/>
+		<aop:advisor advice-ref="transactionAdvice" pointcut-ref="financeTxMethodPointCut" order="12"/>
 	</aop:config>
 	
 	<bean id="shaPasswordEncoder" class="org.springframework.security.authentication.encoding.ShaPasswordEncoder">
 		<constructor-arg value="1"/><!--1,256,384,512-->
 	</bean>
+
+<!-- 	<tx:annotation-driven transaction-manager="transactionManager" order="11"/> -->
 
 	<!-- 基于Kryo的序列化工具 -->
 	<bean id="kryoer" class="com.vteba.utils.serialize.Kryoer">

@@ -13,4 +13,6 @@ import com.vteba.service.generic.MyBatisService;
 public interface UserService extends MyBatisService<User, UserBean, Integer> {
 	
 	public int updateUser(int request);
+	
+	public int updateEntity(int request);
 }
