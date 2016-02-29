@@ -2,8 +2,8 @@ package com.vteba.core.annotation;
 
 import java.io.IOException;
 import java.lang.annotation.Annotation;
+import java.util.ArrayList;
 import java.util.HashSet;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
 
@@ -32,9 +32,9 @@ public class PackageAnnotationScanner {
 
 	private ResourcePatternResolver resourcePatternResolver = new PathMatchingResourcePatternResolver();
 
-	private List<String> packagesList = new LinkedList<String>();
+	private List<String> packagesList = new ArrayList<String>();
 
-	private List<TypeFilter> typeFilters = new LinkedList<TypeFilter>();
+	private List<TypeFilter> typeFilters = new ArrayList<TypeFilter>();
 
 	private Set<Class<?>> classSet = new HashSet<Class<?>>();
 
@@ -88,7 +88,7 @@ public class PackageAnnotationScanner {
 		// 输出日志
 		if (LOGGER.isInfoEnabled()) {
 			for (Class<?> clazz : this.classSet) {
-				LOGGER.info(String.format("Found class:%s", clazz.getName()));
+				LOGGER.info("Found class[{}].", clazz.getName());
 			}
 		}
 		return this.classSet;
@@ -104,11 +104,9 @@ public class PackageAnnotationScanner {
 	 */
 	private boolean matchesEntityTypeFilter(MetadataReader reader, MetadataReaderFactory readerFactory)
 			throws IOException {
-		if (!this.typeFilters.isEmpty()) {
-			for (TypeFilter filter : this.typeFilters) {
-				if (filter.match(reader, readerFactory)) {
-					return true;
-				}
+		for (TypeFilter filter : this.typeFilters) {
+			if (filter.match(reader, readerFactory)) {
+				return true;
 			}
 		}
 		return false;
