@@ -2,6 +2,9 @@ package com.vteba.batch.user.model;
 
 import java.util.Date;
 
+import com.vteba.annotation.KryoBean;
+
+@KryoBean
 public class User {
     /**
      * order by 排序语句
