@@ -46,6 +46,8 @@ public class RocketMQMessageConsumer implements InitializingBean {
 	private Kryoer kryoer;
 	// 强制在业务层上反序列化
 	private boolean forceServiceDeserialize;
+	// 是否初始化topic
+	private boolean initTopic;
 	
 	/**
 	 * 启动消费者
@@ -84,6 +86,17 @@ public class RocketMQMessageConsumer implements InitializingBean {
 			defaultMQPushConsumer.registerMessageListener(messageListenerWrapper);
 			defaultMQPushConsumer.start();
 			LOGGER.debug("启动RocketMQ消费者监听成功.");
+			
+			if (initTopic) {
+				if (topic != null) {
+					defaultMQPushConsumer.createTopic(topic, topic, 10);
+				}
+				if (topicSubExpressionMap != null) {
+					for (Entry<String, String> entry : topicSubExpressionMap.entrySet()) {
+						defaultMQPushConsumer.createTopic(entry.getKey(), entry.getKey(), 10);
+					}
+				}
+			}
 		} catch (Exception e) {
 			LOGGER.error("启动RocketMQ消费者监听异常，msg=[{}].", e);
 		}
@@ -185,5 +198,9 @@ public class RocketMQMessageConsumer implements InitializingBean {
 
 	public void setForceServiceDeserialize(boolean forceServiceDeserialize) {
 		this.forceServiceDeserialize = forceServiceDeserialize;
+	}
+
+	public void setInitTopic(boolean initTopic) {
+		this.initTopic = initTopic;
 	}
 }

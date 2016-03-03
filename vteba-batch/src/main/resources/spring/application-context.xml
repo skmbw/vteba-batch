@@ -105,9 +105,7 @@
 	</tx:advice>
 	<!-- expose-proxy="true" -->
 	<aop:config><!--为指定包下所有类的所有方法应用事务切点-->
-		<aop:pointcut expression="execution(* com.vteba.*.*.impl.*.*(..))" id="serviceTxMethodPointCut"/>
-		<aop:pointcut expression="execution(* com.vteba.*.*.service.impl.*.*(..))" id="financeTxMethodPointCut"/>
-		<aop:advisor advice-ref="transactionAdvice" pointcut-ref="serviceTxMethodPointCut" order="12"/>
+		<aop:pointcut expression="execution(* com.vteba..*.service.impl.*.*(..))" id="financeTxMethodPointCut"/>
 		<aop:advisor advice-ref="transactionAdvice" pointcut-ref="financeTxMethodPointCut" order="12"/>
 	</aop:config>
 	
@@ -145,6 +143,7 @@
 		<property name="messageListener" ref="simpleRocketMQMessageListener" />
 		<!-- 强制业务层自己使用kryo反序列化 -->
 		<property name="forceServiceDeserialize" value="true" />
+		<property name="initTopic" value="false" />
 	</bean>
 	
 	<!-- RocketMQ生产者，建议使用一个应用配置一个 -->

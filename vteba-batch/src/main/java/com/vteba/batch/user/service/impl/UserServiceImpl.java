@@ -14,6 +14,7 @@ import com.vteba.batch.user.dao.UserDao;
 import com.vteba.batch.user.model.User;
 import com.vteba.batch.user.model.UserBean;
 import com.vteba.batch.user.service.spi.UserService;
+import com.vteba.common.exception.ServiceException;
 import com.vteba.exception.BaseException;
 import com.vteba.service.generic.impl.MyBatisServiceImpl;
 import com.vteba.tx.jdbc.mybatis.spi.BaseDao;
@@ -91,10 +92,10 @@ public class UserServiceImpl extends MyBatisServiceImpl<User, UserBean, Integer>
 		int i = 1;
 		if (i == 1) {
 //			throw new BasicException("基础异常");
-			// throw new ServiceException("事务异常");
+//			throw new ServiceException("事务异常");
 			// throw new BusinessService("事务异常子类");
-//			throw new RuntimeException("运行时异常");
-			throw new BaseException("基础异常子类");
+			throw new RuntimeException("运行时异常");
+//			throw new BaseException("基础异常子类");
 		}
 		return 1;
 	}
