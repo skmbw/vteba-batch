@@ -42,26 +42,17 @@
 		<Logger name="com.vteba.user.dao" level="INFO" additivity="true">
 		</Logger>
 
-		<Logger name="org.mybatis" level="INFO" additivity="true">
+		<Logger name="org.mybatis" level="TRACE" additivity="true">
 		</Logger>
 
-		<Logger name="org.apache.ibatis" level="DEBUG" additivity="true">
+		<Logger name="org.apache.ibatis" level="TRACE" additivity="true">
 		</Logger>
 		<!-- 打印mybatis sql -->
-		<Logger name="com.vteba.iterq" level="DEBUG" additivity="true">
+		<Logger name="com.vteba.batch" level="TRACE" additivity="true">
 		</Logger>
-		<Logger name="java.sql.Connection" level="TRACE" additivity="true">
+		<Logger name="java.sql" level="TRACE" additivity="true">
 		</Logger>
-		<Logger name="java.sql.Statement" level="TRACE" additivity="true">
-		</Logger>
-		<Logger name="java.sql.PreparedStatement" level="TRACE" additivity="true">
-		</Logger>
-		<Logger name="com.ibatis" level="DEBUG" additivity="true">
-		</Logger>
-		
-		<Logger name="org.apache.struts2" level="INFO" additivity="true">
-		</Logger>
-		<Logger name="com.opensymphony.xwork2" level="INFO" additivity="true">
+		<Logger name="com.ibatis" level="TRACE" additivity="true">
 		</Logger>
 		<Logger name="com.vteba.tx" level="INFO" additivity="true">
 		</Logger>

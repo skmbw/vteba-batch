@@ -21,7 +21,8 @@
 		<setting name="localCacheScope" value="SESSION"/>
 		<setting name="jdbcTypeForNull" value="OTHER"/>
 		<setting name="lazyLoadTriggerMethods" value="equals,clone,hashCode,toString"/>
-		<setting name="logImpl" value="LOG4J2"/>
+		<!-- 这里如果没有直接使用LOG4J2的api，使用了SLF4J作为门面，那么这里配置成SLF4J，否则sql语句打不出来 -->
+		<setting name="logImpl" value="SLF4J"/>
 	</settings>
 	
 	<typeAliases>
