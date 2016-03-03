@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans" xmlns:security="http://www.springframework.org/schema/security"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:jee="http://www.springframework.org/schema/jee"
+	xmlns:tx="http://www.springframework.org/schema/tx" xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:aop="http://www.springframework.org/schema/aop" xmlns:dwr="http://www.directwebremoting.org/schema/spring-dwr"
+	xmlns:cache="http://www.springframework.org/schema/cache" xmlns:spring="http://www.infinispan.org/schemas/spring" 
+	xmlns:util="http://www.springframework.org/schema/util" xmlns:mvc="http://www.springframework.org/schema/mvc"
+	xmlns:dubbo="http://code.alibabatech.com/schema/dubbo" xmlns:c="http://www.springframework.org/schema/c"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.2.xsd http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx-3.2.xsd http://www.springframework.org/schema/jee http://www.springframework.org/schema/jee/spring-jee-3.2.xsd http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop-3.2.xsd http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-3.2.xsd http://www.directwebremoting.org/schema/spring-dwr http://www.directwebremoting.org/schema/spring-dwr-3.0.xsd http://www.springframework.org/schema/security http://www.springframework.org/schema/security/spring-security-3.1.xsd http://www.springframework.org/schema/cache http://www.springframework.org/schema/cache/spring-cache-3.2.xsd http://www.infinispan.org/schemas/spring http://www.infinispan.org/schemas/infinispan-spring-5.0.xsd 
+	http://www.springframework.org/schema/mvc http://www.springframework.org/schema/mvc/spring-mvc-3.2.xsd http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util-3.2.xsd http://code.alibabatech.com/schema/dubbo http://code.alibabatech.com/schema/dubbo/dubbo.xsd"
+	default-autowire="byName">
+	
+	<!--dubbo 服务提供者应用名称 -->
+	<dubbo:application name="vteba-dubbo" />
+	<!-- 服务提供者缺省值配置为<dubbo:service>和<dubbo:protocol>标签的缺省值设置 -->
+	<dubbo:provider retries="0"
+		timeout="#{sysConfig['service.timeout']}" loadbalance="#{sysConfig['dubbo.loadbalance']}" />
+	<!--服务提供者 协议和端口 -->
+	<dubbo:protocol name="#{sysConfig['dubbo.protocol.name']}"
+		port="#{sysConfig['dubbo.protocol.rmi.port']}" />
+	
+	<!--dubbo 注册中心 -->
+	<dubbo:registry address="#{sysConfig['dubbo.registry']}" />
+	<dubbo:monitor protocol="registry" />
+
+	<!-- zookeeper -->
+	<bean id="zookeeperService" class="com.tzg.common.zookeeper.ZookeeperServiceImpl">
+		<property name="zookeeperHosts" value="#{sysConfig['zookeeper.hosts']}" />
+	</bean>
+	<dubbo:service interface="com.tzg.common.zookeeper.ZookeeperService"
+		ref="zookeeperService" timeout="#{sysConfig['service.timeout']}"
+		version="#{sysConfig['service.version']}" />
+
+	<!-- zookeeper 同步锁 -->
+	<bean id="zkClient" class="com.tzg.common.zookeeper.ZKClientImpl">
+		<constructor-arg index="0"
+			value="#{sysConfig['zookeeper.hosts']}" />
+		<constructor-arg index="1" value="5000" />
+		<constructor-arg index="2" value="3" />
+	</bean>
+
+	<!-- redis -->
+	<bean id="redisService" class="com.tzg.common.redis.RedisServiceImpl">
+		<property name="maxActive" value="#{sysConfig['redis.pool.maxActive']}" />
+		<property name="maxIdle" value="#{sysConfig['redis.pool.maxIdle']}" />
+		<property name="maxWait" value="#{sysConfig['redis.pool.maxWait']}" />
+		<property name="masterHost" value="#{sysConfig['master.hosts']}" />
+		<property name="salveHost" value="#{sysConfig['salve.hosts']}" />
+	</bean>
+	
+	<dubbo:service interface="com.tzg.common.redis.RedisService"
+		ref="redisService" timeout="#{sysConfig['service.timeout']}" version="#{sysConfig['service.version']}" />
+
+	<!-- 用户 -->
+	<dubbo:service interface="com.tzg.rmi.service.LoginAccountRmiService"
+		ref="loginAccountRmiService" timeout="#{sysConfig['service.timeout']}"
+		version="#{sysConfig['service.version']}" />
+
+	<!-- 渠道活动 -->
+	<bean id="loginChannelActiveRmiService" class="com.tzg.rmi.service.impl.LoginChannelActiveServiceImpl" />
+	<dubbo:service interface="com.tzg.rmi.service.LoginChannelActiveRmiService"
+		ref="loginChannelActiveRmiService" timeout="#{sysConfig['service.timeout']}"
+		version="#{sysConfig['service.version']}" />
+		
+	<!-- 账户 -->
+	<bean id="accountRmiService" class="com.tzg.rmi.service.impl.AccountRmiServiceImpl" />
+	<dubbo:service interface="com.tzg.rmi.service.AccountRmiService"
+		ref="accountRmiService" timeout="#{sysConfig['service.timeout']}"
+		version="#{sysConfig['service.version']}" />
+
+	<!-- 项目 -->
+	<bean id="projectRmiService" class="com.tzg.rmi.service.impl.ProjectRmiServiceImpl" />
+	<dubbo:service interface="com.tzg.rmi.service.ProjectRmiService"
+		ref="projectRmiService" timeout="#{sysConfig['service.timeout']}"
+		version="#{sysConfig['service.version']}" />
+</beans>
