@@ -40,15 +40,13 @@ public class ZKTest {
 		try {
 			ZKPaths.mkdirs(curatorFramework.getZookeeperClient().getZooKeeper(), path);
 		} catch (InterruptedException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		} catch (KeeperException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		} catch (Exception e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+		String zookeeper = "{\"dubbo.protocol.user.port\":\"30003\",\"service.version\":\"1.0.0\",\"service.timeout\":\"10000\",\"rocketMqPath\":\"192.168.1.31:9876\",\"zookeeper.hosts\":\"127.0.0.1:2181\",\"redis.pool.maxIdle\":\"20\",\"dubbo.registry\":\"zookeeper://127.0.0.1:2181\",\"redis.pool.maxActive\":\"100\",\"master.hosts\":\"192.168.1.31:6379\",\"dubbo.protocol.dubbo.port\":\"30001\",\"dubbo.protocol.name\":\"dubbo\",\"salve.hosts\":\"192.168.1.31:6379\",\"redis.pool.maxWait\":\"2000\"}";
 		System.out.println(path);
 	}
 
