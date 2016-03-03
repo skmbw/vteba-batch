@@ -42,13 +42,13 @@
 		<Logger name="com.vteba.user.dao" level="INFO" additivity="true">
 		</Logger>
 
-		<Logger name="org.mybatis" level="TRACE" additivity="true">
+		<Logger name="org.mybatis" level="INFO" additivity="true">
 		</Logger>
 
-		<Logger name="org.apache.ibatis" level="TRACE" additivity="true">
+		<Logger name="com.vteba.batch" level="TRACE" additivity="true">
 		</Logger>
 		<!-- 打印mybatis sql -->
-		<Logger name="com.vteba.batch" level="TRACE" additivity="true">
+		<Logger name="org.apache.ibatis" level="TRACE" additivity="true">
 		</Logger>
 		<Logger name="java.sql" level="TRACE" additivity="true">
 		</Logger>
@@ -74,7 +74,7 @@
 <!-- 		</Logger> -->
 
 		<!-- Root Logger -->
-		<Root level="TRACE">
+		<Root level="INFO">
 			<AppenderRef ref="Console" />
 			<AppenderRef ref="File" />
 		</Root>
