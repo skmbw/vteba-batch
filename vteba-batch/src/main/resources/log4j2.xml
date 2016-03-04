@@ -68,7 +68,9 @@
 		</Logger>
 		<Logger name="org.springframework.mvc" level="INFO" additivity="true">
 		</Logger>
-		<Logger name="bitronix.tm" level="WARN" additivity="true">
+		<Logger name="com.alibaba.rocketmq" level="WARN" additivity="true">
+		</Logger>
+		<Logger name="com.alibaba.dubbo" level="INFO" additivity="true">
 		</Logger>
 <!-- 		<Logger name="org.hibernate.type.descriptor.sql.BasicBinder" level="TRACE" additivity="true"> -->
 <!-- 		</Logger> -->

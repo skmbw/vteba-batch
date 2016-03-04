@@ -94,7 +94,7 @@ public class UserServiceImpl extends MyBatisServiceImpl<User, UserBean, Integer>
 //			throw new BasicException("基础异常");
 //			throw new ServiceException("事务异常");
 			// throw new BusinessService("事务异常子类");
-			throw new RuntimeException("运行时异常");
+			//throw new RuntimeException("运行时异常");
 //			throw new BaseException("基础异常子类");
 		}
 		return 1;
