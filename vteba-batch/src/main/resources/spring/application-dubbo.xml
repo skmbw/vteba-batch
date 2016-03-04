@@ -17,60 +17,31 @@
 		timeout="#{sysConfig['service.timeout']}" loadbalance="#{sysConfig['dubbo.loadbalance']}" />
 	<!--服务提供者 协议和端口 -->
 	<dubbo:protocol name="#{sysConfig['dubbo.protocol.name']}"
-		port="#{sysConfig['dubbo.protocol.rmi.port']}" />
+		port="#{sysConfig['dubbo.protocol.dubbo.port']}" />
 	
 	<!--dubbo 注册中心 -->
 	<dubbo:registry address="#{sysConfig['dubbo.registry']}" />
 	<dubbo:monitor protocol="registry" />
 
 	<!-- zookeeper -->
-	<bean id="zookeeperService" class="com.tzg.common.zookeeper.ZookeeperServiceImpl">
-		<property name="zookeeperHosts" value="#{sysConfig['zookeeper.hosts']}" />
-	</bean>
-	<dubbo:service interface="com.tzg.common.zookeeper.ZookeeperService"
-		ref="zookeeperService" timeout="#{sysConfig['service.timeout']}"
-		version="#{sysConfig['service.version']}" />
+<!-- 	<bean id="zookeeperService" class="com.tzg.common.zookeeper.ZookeeperServiceImpl"> -->
+<!-- 		<property name="zookeeperHosts" value="#{sysConfig['zookeeper.hosts']}" /> -->
+<!-- 	</bean> -->
+<!-- 	<dubbo:service interface="com.tzg.common.zookeeper.ZookeeperService" -->
+<!-- 		ref="zookeeperService" timeout="#{sysConfig['service.timeout']}" -->
+<!-- 		version="#{sysConfig['service.version']}" /> -->
 
 	<!-- zookeeper 同步锁 -->
-	<bean id="zkClient" class="com.tzg.common.zookeeper.ZKClientImpl">
-		<constructor-arg index="0"
-			value="#{sysConfig['zookeeper.hosts']}" />
-		<constructor-arg index="1" value="5000" />
-		<constructor-arg index="2" value="3" />
-	</bean>
+<!-- 	<bean id="zkClient" class="com.tzg.common.zookeeper.ZKClientImpl"> -->
+<!-- 		<constructor-arg index="0" -->
+<!-- 			value="#{sysConfig['zookeeper.hosts']}" /> -->
+<!-- 		<constructor-arg index="1" value="5000" /> -->
+<!-- 		<constructor-arg index="2" value="3" /> -->
+<!-- 	</bean> -->
 
-	<!-- redis -->
-	<bean id="redisService" class="com.tzg.common.redis.RedisServiceImpl">
-		<property name="maxActive" value="#{sysConfig['redis.pool.maxActive']}" />
-		<property name="maxIdle" value="#{sysConfig['redis.pool.maxIdle']}" />
-		<property name="maxWait" value="#{sysConfig['redis.pool.maxWait']}" />
-		<property name="masterHost" value="#{sysConfig['master.hosts']}" />
-		<property name="salveHost" value="#{sysConfig['salve.hosts']}" />
-	</bean>
-	
-	<dubbo:service interface="com.tzg.common.redis.RedisService"
-		ref="redisService" timeout="#{sysConfig['service.timeout']}" version="#{sysConfig['service.version']}" />
-
-	<!-- 用户 -->
-	<dubbo:service interface="com.tzg.rmi.service.LoginAccountRmiService"
-		ref="loginAccountRmiService" timeout="#{sysConfig['service.timeout']}"
+<!-- 	<bean id="loginChannelActiveRmiService" class="com.tzg.rmi.service.impl.LoginChannelActiveServiceImpl" /> -->
+	<dubbo:service interface="com.vteba.batch.user.service.spi.UserService"
+		ref="userServiceImpl" timeout="#{sysConfig['service.timeout']}"
 		version="#{sysConfig['service.version']}" />
 
-	<!-- 渠道活动 -->
-	<bean id="loginChannelActiveRmiService" class="com.tzg.rmi.service.impl.LoginChannelActiveServiceImpl" />
-	<dubbo:service interface="com.tzg.rmi.service.LoginChannelActiveRmiService"
-		ref="loginChannelActiveRmiService" timeout="#{sysConfig['service.timeout']}"
-		version="#{sysConfig['service.version']}" />
-		
-	<!-- 账户 -->
-	<bean id="accountRmiService" class="com.tzg.rmi.service.impl.AccountRmiServiceImpl" />
-	<dubbo:service interface="com.tzg.rmi.service.AccountRmiService"
-		ref="accountRmiService" timeout="#{sysConfig['service.timeout']}"
-		version="#{sysConfig['service.version']}" />
-
-	<!-- 项目 -->
-	<bean id="projectRmiService" class="com.tzg.rmi.service.impl.ProjectRmiServiceImpl" />
-	<dubbo:service interface="com.tzg.rmi.service.ProjectRmiService"
-		ref="projectRmiService" timeout="#{sysConfig['service.timeout']}"
-		version="#{sysConfig['service.version']}" />
 </beans>
