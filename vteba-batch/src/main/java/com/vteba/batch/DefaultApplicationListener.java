@@ -35,7 +35,7 @@ public class DefaultApplicationListener implements ApplicationListener<ContextRe
 			return;
 		}
 		DefaultListableBeanFactory factory = (DefaultListableBeanFactory) context.getAutowireCapableBeanFactory();
-		
+		// 手动生成的Bean，手动注册到spring 上下文
 		User user = new User();
 		user.setName("yinlei");
 		factory.registerSingleton("user", user);
