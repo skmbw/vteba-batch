@@ -11,7 +11,7 @@
 	default-autowire="byName">
 	
 	<!--dubbo 服务提供者应用名称 -->
-	<dubbo:application name="vteba-dubbo" />
+	<dubbo:application name="vteba-dubbo" logger="slf4j"/>
 	<!-- 服务提供者缺省值配置为<dubbo:service>和<dubbo:protocol>标签的缺省值设置 -->
 	<dubbo:provider retries="0"
 		timeout="#{sysConfig['service.timeout']}" loadbalance="#{sysConfig['dubbo.loadbalance']}" />

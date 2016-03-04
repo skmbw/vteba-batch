@@ -10,7 +10,7 @@
 	
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-		<log4j2-version>2.4</log4j2-version>
+		<log4j2-version>2.5</log4j2-version>
 		<maven.build.timestamp.format>yyyy-MM-dd HH:mm:ss</maven.build.timestamp.format>
 		<rocketmq>3.4.6</rocketmq>
 		<curator-version>2.10.0</curator-version>
