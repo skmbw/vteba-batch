@@ -24,20 +24,12 @@
 	<dubbo:monitor protocol="registry" />
 
 	<!-- zookeeper -->
-<!-- 	<bean id="zookeeperService" class="com.tzg.common.zookeeper.ZookeeperServiceImpl"> -->
-<!-- 		<property name="zookeeperHosts" value="#{sysConfig['zookeeper.hosts']}" /> -->
-<!-- 	</bean> -->
-<!-- 	<dubbo:service interface="com.tzg.common.zookeeper.ZookeeperService" -->
-<!-- 		ref="zookeeperService" timeout="#{sysConfig['service.timeout']}" -->
-<!-- 		version="#{sysConfig['service.version']}" /> -->
-
-	<!-- zookeeper 同步锁 -->
-<!-- 	<bean id="zkClient" class="com.tzg.common.zookeeper.ZKClientImpl"> -->
-<!-- 		<constructor-arg index="0" -->
-<!-- 			value="#{sysConfig['zookeeper.hosts']}" /> -->
-<!-- 		<constructor-arg index="1" value="5000" /> -->
-<!-- 		<constructor-arg index="2" value="3" /> -->
-<!-- 	</bean> -->
+	<bean id="curatorFrameworkService" class="com.vteba.zookeeper.CuratorFrameworkService" init-method="init" destroy-method="close">
+		<property name="connectionString" value="${zookeeper.hosts}" />
+		<property name="maxRetries" value="3" />
+		<property name="acquireTimeout" value="5000" />
+		<property name="baseSleepTimeMs" value="1000" />
+	</bean>
 
 <!-- 	<bean id="loginChannelActiveRmiService" class="com.tzg.rmi.service.impl.LoginChannelActiveServiceImpl" /> -->
 	<dubbo:service interface="com.vteba.batch.user.service.spi.UserService"

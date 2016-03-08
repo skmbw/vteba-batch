@@ -15,13 +15,13 @@
 		<jdbcConnection driverClass="com.mysql.jdbc.Driver" connectionURL="jdbc:mysql://localhost:3306/tiantian" userId="root" password="3416763" />
 		
 		<!-- 实体文件的位置 -->
-		<javaModelGenerator targetPackage="com.vteba.batch.user2.model" targetProject="vteba-batch" />
+		<javaModelGenerator targetPackage="com.vteba.batch.investor.model" targetProject="vteba-batch" />
 		
 		<!-- Mapper.xml文件的位置，sql映射文件的位置 -->
-		<sqlMapGenerator targetPackage="com.vteba.batch.user2.mapper" targetProject="vteba-batch" />
+		<sqlMapGenerator targetPackage="com.vteba.batch.investor.mapper" targetProject="vteba-batch" />
 		
 		<!-- Mapper.java文件的位置，也就是DAO接口文件位置 -->
-		<javaClientGenerator targetPackage="com.vteba.batch.user2.dao" targetProject="vteba-batch" type="XMLMAPPER" >
+		<javaClientGenerator targetPackage="com.vteba.batch.investor.dao" targetProject="vteba-batch" type="XMLMAPPER" >
 			<property name="rootInterface" value="com.vteba.tx.jdbc.mybatis.spi.BasicDao"/>
 		</javaClientGenerator>
 	
@@ -59,12 +59,14 @@
         uniqueStatementEnabled = true;
 		 -->
 		
-		<table schema="tiantian" tableName="user" 
+		<table schema="tiantian" tableName="investor" 
 			enableCountByExample="false" 
 			enableUpdateByExample="false" 
 			enableDeleteByExample="false" 
 			enableSelectByExample="false" 
-			selectByExampleQueryId="false">
+			selectByExampleQueryId="false"
+			enablePagedForList="false"
+			>
 		</table>
 	</context>
 </generatorConfiguration>
