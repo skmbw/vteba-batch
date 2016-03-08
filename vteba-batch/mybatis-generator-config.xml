@@ -15,14 +15,14 @@
 		<jdbcConnection driverClass="com.mysql.jdbc.Driver" connectionURL="jdbc:mysql://localhost:3306/tiantian" userId="root" password="3416763" />
 		
 		<!-- 实体文件的位置 -->
-		<javaModelGenerator targetPackage="com.vteba.batch.user.model" targetProject="vteba-batch" />
+		<javaModelGenerator targetPackage="com.vteba.batch.user2.model" targetProject="vteba-batch" />
 		
 		<!-- Mapper.xml文件的位置，sql映射文件的位置 -->
-		<sqlMapGenerator targetPackage="com.vteba.batch.user.mapper" targetProject="vteba-batch" />
+		<sqlMapGenerator targetPackage="com.vteba.batch.user2.mapper" targetProject="vteba-batch" />
 		
 		<!-- Mapper.java文件的位置，也就是DAO接口文件位置 -->
-		<javaClientGenerator targetPackage="com.vteba.batch.user.dao" targetProject="vteba-batch" type="XMLMAPPER" >
-			<property name="rootInterface" value="com.vteba.tx.jdbc.mybatis.spi.BaseDao"/>
+		<javaClientGenerator targetPackage="com.vteba.batch.user2.dao" targetProject="vteba-batch" type="XMLMAPPER" >
+			<property name="rootInterface" value="com.vteba.tx.jdbc.mybatis.spi.BasicDao"/>
 		</javaClientGenerator>
 	
 		<!-- 要映射的表，schema可以不指定，建议指定。可以覆盖某些方法不产生 -->
@@ -32,7 +32,39 @@
 			<columnOverride column="user_name" property="name" />
 		</table> -->
 		
-		<table schema="tiantian" tableName="user">
+		<!-- 
+		
+		insertStatementEnabled = true;
+        selectByPrimaryKeyStatementEnabled = true;
+        selectByExampleStatementEnabled = true;
+        updateByPrimaryKeyStatementEnabled = true;
+        deleteByPrimaryKeyStatementEnabled = true;
+        deleteByExampleStatementEnabled = true;
+        countByExampleStatementEnabled = true;
+        updateByExampleStatementEnabled = true;
+        
+        // 分页查询
+        pageQueryListStatementEnabled = true;
+        modelWhereClauseStatementEnabled = true;
+        queryPagedListStatementEnabled = true;
+        
+        queryListStatementEnabled = true;
+        updateBatchStatementEnabled = true;
+        deleteBatchStatementEnabled = true;
+        
+        updateModelWhereClauseStatementEnabled = true;
+        
+        countByStatementEnabled = true;
+        
+        uniqueStatementEnabled = true;
+		 -->
+		
+		<table schema="tiantian" tableName="user" 
+			enableCountByExample="false" 
+			enableUpdateByExample="false" 
+			enableDeleteByExample="false" 
+			enableSelectByExample="false" 
+			selectByExampleQueryId="false">
 		</table>
 	</context>
 </generatorConfiguration>

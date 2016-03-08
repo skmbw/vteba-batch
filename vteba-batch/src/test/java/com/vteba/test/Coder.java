@@ -22,7 +22,7 @@ public class Coder {
 		
 	    //项目绝对路径
 		String rootPath = "C:\\Users\\Administrator\\git\\vteba-batch\\vteba-batch\\";
-		CodeBuilder builder = new CodeBuilder(rootPath, TempType.MyBatisSimpleGeneric);
+		CodeBuilder builder = new CodeBuilder(rootPath, TempType.MyBatisBasic);
 		builder.setConfigFilePath("src/main/resources/config.properties")
 		.setSrcPath("src/main/java/")
 		.schema("tiantian")
@@ -32,7 +32,7 @@ public class Coder {
 		//.tableDesc("应用配置信息")
 		//.tableName("app_info")
 		.setTableList(tableListMap)
-		.module("com.vteba.batch.user")
+		.module("com.vteba.batch.user2")
 		.setPojo(false)
 		.setMongo(false)
 		.setGenAction(false)
