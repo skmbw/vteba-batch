@@ -25,7 +25,7 @@
 		<context:exclude-filter type="annotation" expression="org.springframework.stereotype.Controller"/>
 	</context:component-scan>
 	
-	<!--读取jndi数据库连接配置属性文件-->
+	<!--读取配置属性文件-->
 	<bean id="propUtils" class="com.vteba.utils.common.PropUtils">
 		<property name="locations">
 			<list>
