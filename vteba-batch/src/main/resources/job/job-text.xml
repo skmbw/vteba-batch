@@ -34,6 +34,9 @@
 	<bean id="jobRepository" class="org.springframework.batch.core.repository.support.JobRepositoryFactoryBean">
 		<property name="dataSource" ref="tiantianDataSource"/>
 		<property name="transactionManager" ref="transactionManager"/>
+		<property name="serializer">
+			<bean class="com.vteba.batch.serializer.FastJsonExecutionContextSerializer"></bean>
+		</property>
 	</bean>
 
 	<!-- 1 -->
