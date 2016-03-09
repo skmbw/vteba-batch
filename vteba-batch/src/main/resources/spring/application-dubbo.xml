@@ -12,6 +12,11 @@
 	<!-- logger="slf4j" dubbo的日志配置，也可以在jvm启动时-Ddubbo.application.logger=slf4j System.setProperty() -->
 	<!--dubbo 服务提供者应用名称 -->
 	<dubbo:application name="vteba-dubbo" />
+	
+	<!--loadbalance="random"  随机，按权重设置随机概率。-->
+    <!--loadbalance="roundrobin"  轮循，按公约后权重设置轮循比率。-->
+    <!--loadbalance="LeastActive"  最少活跃调用数，相同活跃数的随机，活跃数指调用前后计数差。-->
+    <!--loadbalance="ConsistentHash"  一致性Hash，相同参数的请求总是发到同一提供者。-->
 	<!-- 服务提供者缺省值配置为<dubbo:service>和<dubbo:protocol>标签的缺省值设置 -->
 	<dubbo:provider retries="0"
 		timeout="#{sysConfig['service.timeout']}" loadbalance="#{sysConfig['dubbo.loadbalance']}" />
@@ -19,7 +24,7 @@
 	<dubbo:protocol name="#{sysConfig['dubbo.protocol.name']}"
 		port="#{sysConfig['dubbo.protocol.dubbo.port']}" />
 	
-	<!--dubbo 注册中心 -->
+	<!--dubbo 注册中心， address可以使用逗号分割。protocol="zookeeper" -->
 	<dubbo:registry address="#{sysConfig['dubbo.registry']}" />
 	<dubbo:monitor protocol="registry" />
 
@@ -33,7 +38,7 @@
 
 <!-- 	<bean id="loginChannelActiveRmiService" class="com.tzg.rmi.service.impl.LoginChannelActiveServiceImpl" /> -->
 	<dubbo:service interface="com.vteba.batch.user.service.spi.UserService"
-		ref="userServiceImpl" timeout="#{sysConfig['service.timeout']}"
+		ref="userServiceImpl" timeout="#{sysConfig['service.timeout']}" retries="1"
 		version="#{sysConfig['service.version']}" />
 
 </beans>
