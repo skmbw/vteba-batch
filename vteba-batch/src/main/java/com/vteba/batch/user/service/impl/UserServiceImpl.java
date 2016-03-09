@@ -14,8 +14,6 @@ import com.vteba.batch.user.dao.UserDao;
 import com.vteba.batch.user.model.User;
 import com.vteba.batch.user.model.UserBean;
 import com.vteba.batch.user.service.spi.UserService;
-import com.vteba.common.exception.ServiceException;
-import com.vteba.exception.BaseException;
 import com.vteba.service.generic.impl.MyBatisServiceImpl;
 import com.vteba.tx.jdbc.mybatis.spi.BaseDao;
 import com.vteba.utils.date.DateUtils;

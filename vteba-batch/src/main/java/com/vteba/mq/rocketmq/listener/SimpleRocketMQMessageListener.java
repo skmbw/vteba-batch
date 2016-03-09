@@ -2,7 +2,6 @@ package com.vteba.mq.rocketmq.listener;
 
 import java.util.List;
 
-import javax.inject.Inject;
 import javax.inject.Named;
 
 import org.slf4j.Logger;
