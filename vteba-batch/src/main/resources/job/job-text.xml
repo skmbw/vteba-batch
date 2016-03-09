@@ -57,7 +57,32 @@
 	<!-- 2 -->
 	<batch:step id="userProcessStep">
 		<batch:tasklet>
-			<batch:chunk reader="userItemReader" processor="userItemProcessor" writer="userItemWriter" commit-interval="20"></batch:chunk>
+			<batch:chunk reader="userItemReader" processor="userItemProcessor" writer="userItemWriter" skip-limit="3" retry-limit="3" commit-interval="20" ><!-- retry-policy="" 重试次数限制，超过抛异常retry-limit="3" --><!-- 指定了skip-policy=""，次数和异常限制被忽略 -->
+				<batch:skippable-exception-classes>
+					<batch:include class="java.lang.RuntimeException"/>
+				</batch:skippable-exception-classes>
+				<batch:skip-policy>
+					<ref bean="userSkipPolicy"/>
+				</batch:skip-policy>
+				<!-- 跳过 skip listener -->
+				<batch:listeners>
+					<batch:listener ref="userSkipListener"></batch:listener>
+				</batch:listeners>
+				
+				<!-- 重试监听器 -->
+				<batch:retry-listeners>
+					<batch:listener ref="userRetryListener" />
+				</batch:retry-listeners>
+				<!-- 重试策略 -->
+				<batch:retry-policy>
+					<ref bean="userRetryPolicy"/>
+				</batch:retry-policy>
+				<!-- 可重试或者不可重试的异常 -->
+				<batch:retryable-exception-classes>
+					<batch:include class="java.lang.RuntimeException"/>
+					<batch:exclude class="java.io.FileNotFoundException"/>
+				</batch:retryable-exception-classes>
+			</batch:chunk>
 		</batch:tasklet>
 	</batch:step>
 
