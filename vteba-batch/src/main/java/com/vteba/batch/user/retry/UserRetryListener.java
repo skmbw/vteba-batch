@@ -7,6 +7,7 @@ import org.springframework.retry.RetryContext;
 import org.springframework.retry.RetryListener;
 
 @Named
+//@StepScope
 public class UserRetryListener implements RetryListener {
 
 	// spring batch使用RetryTemplate实现，无论是否需发生重试异常，都会执行一次
