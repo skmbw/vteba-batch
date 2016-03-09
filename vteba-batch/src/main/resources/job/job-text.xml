@@ -10,6 +10,8 @@
 	http://www.springframework.org/schema/mvc http://www.springframework.org/schema/mvc/spring-mvc-3.2.xsd http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util-3.2.xsd http://www.springframework.org/schema/batch http://www.springframework.org/schema/batch/spring-batch.xsd http://www.springframework.org/schema/task http://www.springframework.org/schema/task/spring-task-3.0.xsd"
 	default-autowire="byName">
 	
+	<bean id="fastJsonSerializer" class="com.vteba.batch.serializer.FastJsonExecutionContextSerializer"></bean>
+	
 	<bean id="jobOperator" class="org.springframework.batch.core.launch.support.SimpleJobOperator">
 		<property name="jobRepository" ref="jobRepository"/>	
 		<property name="jobLauncher" ref="jobLauncher"/>
@@ -24,8 +26,10 @@
 	
 	<bean id="jobExplorer" class="org.springframework.batch.core.explore.support.JobExplorerFactoryBean">
 		<property name="dataSource" ref="tiantianDataSource" />
+		<property name="serializer" ref="fastJsonSerializer" />
 	</bean>
 	
+	<!-- Job注册后 Bean后处理器 -->
 	<bean class="org.springframework.batch.core.configuration.support.JobRegistryBeanPostProcessor">
 		<property name="jobRegistry" ref="jobRegistry" />
   	</bean>
@@ -34,9 +38,7 @@
 	<bean id="jobRepository" class="org.springframework.batch.core.repository.support.JobRepositoryFactoryBean">
 		<property name="dataSource" ref="tiantianDataSource"/>
 		<property name="transactionManager" ref="transactionManager"/>
-		<property name="serializer">
-			<bean class="com.vteba.batch.serializer.FastJsonExecutionContextSerializer"></bean>
-		</property>
+		<property name="serializer" ref="fastJsonSerializer" />
 	</bean>
 
 	<!-- 1 -->
