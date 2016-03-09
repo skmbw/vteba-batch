@@ -27,7 +27,7 @@ public class SimpleRocketMQMessageListener implements RocketMQMessageListener {
 	// 支付topoc
 	private static final String TOPIC_PAY = "TOPIC_PAY";
 	
-	@Inject
+//	@Inject
 	private Kryoer kryoer;
 	
 	

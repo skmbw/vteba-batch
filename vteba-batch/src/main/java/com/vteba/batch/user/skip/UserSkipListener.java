@@ -1,4 +1,4 @@
-package com.vteba.batch.user.listener;
+package com.vteba.batch.user.skip;
 
 import javax.inject.Named;
 
@@ -8,7 +8,7 @@ import com.vteba.batch.user.model.User;
 
 @Named
 public class UserSkipListener implements SkipListener<User, User> {
-
+	
 	@Override
 	public void onSkipInRead(Throwable t) {
 		// TODO Auto-generated method stub

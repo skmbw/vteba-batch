@@ -32,11 +32,11 @@ public class UserAction extends GenericAction<User> {
 	@Inject
 	private UserService userServiceImpl;
 	
-	@Inject
-	private Kryoer kryoer;
-	
-	@Inject
-	private RocketMQMessageProducer rocketMQMessageProducer;
+//	@Inject
+//	private Kryoer kryoer;
+//	
+//	@Inject
+//	private RocketMQMessageProducer rocketMQMessageProducer;
 	
 	/**
      * 获得用户List，初始化列表页。
@@ -48,12 +48,12 @@ public class UserAction extends GenericAction<User> {
     	try {
     		model.setName("yinlei");
     		model.setAge(12);
-    		long d = System.currentTimeMillis();
-    		byte[] bb = kryoer.toByte(model);
-    		System.out.println(System.currentTimeMillis() - d);
-    		d = System.currentTimeMillis();
-    		kryoer.fromByte(bb);
-    		System.out.println(System.currentTimeMillis() - d);
+//    		long d = System.currentTimeMillis();
+//    		byte[] bb = kryoer.toByte(model);
+//    		System.out.println(System.currentTimeMillis() - d);
+//    		d = System.currentTimeMillis();
+//    		kryoer.fromByte(bb);
+//    		System.out.println(System.currentTimeMillis() - d);
     		
     		List<User> list = userServiceImpl.pagedList(model);
             maps.put("list", list);
@@ -77,12 +77,12 @@ public class UserAction extends GenericAction<User> {
 			model = new User();
 			model.setName("Test1");
 			
-			rocketMQMessageProducer.send(model);
-			model.setAge(29);
-			rocketMQMessageProducer.send("Test1", model);
-			
-			model.setId(2345);
-			rocketMQMessageProducer.send("YinleiUser2", "Test2", model);
+//			rocketMQMessageProducer.send(model);
+//			model.setAge(29);
+//			rocketMQMessageProducer.send("Test1", model);
+//			
+//			model.setId(2345);
+//			rocketMQMessageProducer.send("YinleiUser2", "Test2", model);
 			//list = userServiceImpl.pagedList(model);
 		} catch (Exception e) {
 			LOGGER.error("get record list error, errorMsg=[{}].", e.getMessage());

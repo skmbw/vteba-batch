@@ -1,4 +1,4 @@
-package com.vteba.batch.user.policy;
+package com.vteba.batch.user.skip;
 
 import javax.inject.Named;
 

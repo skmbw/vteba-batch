@@ -1,10 +1,16 @@
-package com.vteba.batch.user.policy;
+package com.vteba.batch.user.retry;
 
 import javax.inject.Named;
 
 import org.springframework.retry.RetryContext;
 import org.springframework.retry.RetryPolicy;
 
+/**
+ * 重试策略，当发生重试异常时回调
+ * 
+ * @author yinlei
+ * @date 2016年3月9日 上午10:53:27
+ */
 @Named
 public class UserRetryPolicy implements RetryPolicy {
 

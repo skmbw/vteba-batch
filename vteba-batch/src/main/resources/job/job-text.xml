@@ -57,7 +57,7 @@
 	<!-- 2 -->
 	<batch:step id="userProcessStep">
 		<batch:tasklet>
-			<batch:chunk reader="userItemReader" processor="userItemProcessor" writer="userItemWriter" skip-limit="3" retry-limit="3" commit-interval="20" ><!-- retry-policy="" 重试次数限制，超过抛异常retry-limit="3" --><!-- 指定了skip-policy=""，次数和异常限制被忽略 -->
+			<batch:chunk reader="userItemReader" processor="userItemProcessor" writer="userItemWriter" skip-limit="3" retry-limit="3" commit-interval="3" ><!-- retry-policy="" 重试次数限制，超过抛异常retry-limit="3" --><!-- 指定了skip-policy=""，次数和异常限制被忽略 -->
 				<batch:skippable-exception-classes>
 					<batch:include class="java.lang.RuntimeException"/>
 				</batch:skippable-exception-classes>
