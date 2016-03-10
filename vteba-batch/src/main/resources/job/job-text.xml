@@ -60,25 +60,28 @@
 	</bean>
 	<batch:step id="investorProcessStep">
 		<batch:tasklet>
-			<batch:chunk reader="investorItemReader" processor="investorItemProcessor" writer="investorItemWriter" retry-policy="investorRetryPolicy" retry-limit="2" commit-interval="3" ><!-- retry-policy="" 重试次数限制，超过抛异常retry-limit="3" --><!-- 指定了skip-policy=""，次数和异常限制被忽略 -->
+			<batch:chunk reader="investorItemReader" processor="investorItemProcessor" writer="investorItemWriter" commit-interval="3" ><!-- retry-policy="" 重试次数限制，超过抛异常retry-limit="3" --><!-- 指定了skip-policy=""，次数和异常限制被忽略 -->
+				<!-- 重试策略，立即进行重试，可以根据自己的业务规则定制复杂的重试策略 
+					 放在chunk的属性中也可以，和简单的重试可以同时存在。连个重试策略都会执行，
+					 但是listener只能和简单重试配合。
+					建议，定义了自定义重试策略，就不要使用listener了
+					 -->
+				<batch:retry-policy>
+					<ref bean="investorRetryPolicy"/>
+				</batch:retry-policy>
 				
-				<!-- 重试监听器，配置了重试监听器，将忽略重试策略和简单异常和次数的配置 -->
-				<batch:retry-listeners>
-					<batch:listener ref="investorRetryListener" />
-				</batch:retry-listeners>
-
-				<!-- 重试策略，立即进行重试，可以根据自己的业务规则定制复杂的重试策略 -->
-<!-- 				<batch:retry-policy> -->
-<!-- 					<ref bean="investorRetryPolicy"/> -->
-<!-- 				</batch:retry-policy> -->
+				<!-- 重试监听器，每次重试之前都会执行 -->
+<!-- 				<batch:retry-listeners> -->
+<!-- 					<batch:listener ref="investorRetryListener" /> -->
+<!-- 				</batch:retry-listeners> -->
 
 				<!-- 可重试异常，和retry-limit="2"是一对的，简单方式可以使用这种
 					哪些异常可以重试，哪些不可以重试，以及总的重试的次数，重试次数默认Integer.MAX_VALUE
 				-->
-				<batch:retryable-exception-classes>
-					<batch:include class="java.lang.RuntimeException"/>
-					<batch:exclude class="java.io.FileNotFoundException"/>
-				</batch:retryable-exception-classes>
+<!-- 				<batch:retryable-exception-classes> -->
+<!-- 					<batch:include class="java.lang.RuntimeException"/> -->
+<!-- 					<batch:exclude class="java.io.FileNotFoundException"/> -->
+<!-- 				</batch:retryable-exception-classes> -->
 			</batch:chunk>
 		</batch:tasklet>
 	</batch:step>
@@ -165,6 +168,6 @@
 	
 	<!-- Job任务配置 -->
 	<task:scheduled-tasks scheduler="taskScheduler">
-		<task:scheduled ref="userJobInstance" method="execute" cron="0 48 * * * ?"/>
+		<task:scheduled ref="userJobInstance" method="execute" cron="0 32 * * * ?"/>
 	</task:scheduled-tasks>
 </beans>

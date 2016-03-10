@@ -12,7 +12,7 @@ import org.springframework.retry.RetryListener;
 public class InvestorRetryListener  implements RetryListener {
 	private static final Logger LOGGER = LoggerFactory.getLogger(InvestorRetryListener.class);
 	
-	// spring batch使用RetryTemplate实现，无论是否需发生重试异常，都会执行一次
+	// spring batch使用RetryTemplate实现，无论是否需发生重试异常，都会执行一次.每次发生重试时也会执行
 	// 返回false，抛出TerminatedRetryException(RuntimeException子类)，会事务回滚.将会中断重试
 	@Override
 	public <T, E extends Throwable> boolean open(RetryContext context, RetryCallback<T, E> callback) {
