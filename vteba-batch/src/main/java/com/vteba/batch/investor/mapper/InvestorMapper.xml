@@ -9,13 +9,14 @@
     <id column="id" property="id" jdbcType="INTEGER" />
     <result column="name" property="name" jdbcType="VARCHAR" />
     <result column="age" property="age" jdbcType="INTEGER" />
+    <result column="create_date" property="createDate" jdbcType="TIMESTAMP" />
   </resultMap>
   <sql id="Base_Column_List" >
     <!--
       WARNING - 该表所有字段。
       MyBatis代码工具自动生成，不要修改！
     -->
-    id, name, age
+    id, name, age, create_date
   </sql>
   <sql id="model_where_clause" >
     <!--
@@ -29,6 +30,9 @@
         </if>
         <if test="age != null" >
           and age = #{age,jdbcType=INTEGER}
+        </if>
+        <if test="createDate != null" >
+          and create_date = #{createDate,jdbcType=TIMESTAMP}
         </if>
       </trim>
     </where>
@@ -51,6 +55,9 @@
         </if>
         <if test="params.age != null" >
           and age = #{params.age,jdbcType=INTEGER}
+        </if>
+        <if test="params.createDate != null" >
+          and create_date = #{params.createDate,jdbcType=TIMESTAMP}
         </if>
       </trim>
     </where>
@@ -170,6 +177,9 @@
       <if test="age != null" >
         age,
       </if>
+      <if test="createDate != null" >
+        create_date,
+      </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides="," >
       <if test="id != null" >
@@ -180,6 +190,9 @@
       </if>
       <if test="age != null" >
         #{age,jdbcType=INTEGER},
+      </if>
+      <if test="createDate != null" >
+        #{createDate,jdbcType=TIMESTAMP},
       </if>
     </trim>
   </insert>
@@ -209,6 +222,9 @@
       <if test="record.age != null" >
         age = #{record.age,jdbcType=INTEGER},
       </if>
+      <if test="record.createDate != null" >
+        create_date = #{record.createDate,jdbcType=TIMESTAMP},
+      </if>
     </set>
     <if test="_parameter != null" >
       <include refid="update_model_where_clause" />
@@ -226,6 +242,9 @@
       </if>
       <if test="age != null" >
         age = #{age,jdbcType=INTEGER},
+      </if>
+      <if test="createDate != null" >
+        create_date = #{createDate,jdbcType=TIMESTAMP},
       </if>
     </set>
     where id = #{id,jdbcType=INTEGER}

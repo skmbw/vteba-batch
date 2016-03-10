@@ -7,7 +7,7 @@ import com.vteba.service.generic.BasicService;
 /**
  * 投资人相关的业务service接口。
  * @author yinlei
- * @date 2016-3-8 14:19:05
+ * @date 2016-3-10 14:08:23
  */
 public interface InvestorService extends BasicService<Investor, Integer> {
 

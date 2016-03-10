@@ -1,5 +1,7 @@
 package com.vteba.batch.investor.model;
 
+import java.util.Date;
+
 public class Investor {
     /**
      * order by 排序语句
@@ -39,6 +41,11 @@ public class Investor {
      * 对应数据库表字段 investor.age
      */
     private Integer age;
+
+    /**
+     * 对应数据库表字段 investor.create_date
+     */
+    private Date createDate;
 
     /**
      * 设置 order by 排序语句
@@ -148,5 +155,23 @@ public class Investor {
      */
     public void setAge(Integer age) {
         this.age = age;
+    }
+
+    /**
+     * 获得字段 investor.create_date 的值
+     *
+     * @return the value of investor.create_date
+     */
+    public Date getCreateDate() {
+        return createDate;
+    }
+
+    /**
+     * 设置字段 investor.create_date 的值
+     *
+     * @param createDate the value for investor.create_date
+     */
+    public void setCreateDate(Date createDate) {
+        this.createDate = createDate;
     }
 }

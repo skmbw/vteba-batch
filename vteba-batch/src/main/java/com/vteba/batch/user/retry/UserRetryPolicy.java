@@ -17,13 +17,13 @@ public class UserRetryPolicy implements RetryPolicy {
 	@Override
 	public boolean canRetry(RetryContext context) {
 		// TODO Auto-generated method stub
-		return false;
+		return true;
 	}
 
 	@Override
 	public RetryContext open(RetryContext parent) {
 		// TODO Auto-generated method stub
-		return null;
+		return parent;
 	}
 
 	@Override

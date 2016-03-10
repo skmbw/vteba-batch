@@ -20,7 +20,7 @@ import com.vteba.web.action.JsonBean;
 /**
  * 投资人控制器
  * @author yinlei
- * @date 2016-3-8 14:19:05
+ * @date 2016-3-10 14:08:23
  */
 @Controller
 @RequestMapping("/investor")

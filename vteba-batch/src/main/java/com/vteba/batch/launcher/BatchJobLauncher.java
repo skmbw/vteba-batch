@@ -13,6 +13,12 @@ import org.springframework.batch.core.JobParameters;
 import org.springframework.batch.core.JobParametersBuilder;
 import org.springframework.batch.core.launch.JobLauncher;
 
+/**
+ * Job调度器
+ * 
+ * @author yinlei
+ * @date 2016年2月10日 上午11:54:17
+ */
 public class BatchJobLauncher {
 	
 	private static final Logger LOGGER = LoggerFactory.getLogger(BatchJobLauncher.class);
@@ -28,7 +34,8 @@ public class BatchJobLauncher {
 		if (jobParameters == null) {
 			jobParameters = new HashMap<String, String>();
 		}
-		jobParameters.put("now", Long.toString(System.currentTimeMillis()));
+		// 不能用这个参数，参数和job name是唯一确定Job的
+//		jobParameters.put("now", Long.toString(System.currentTimeMillis()));
 		JobParameters allParams = translateParams(job, jobParameters);
 
 		JobExecution je = jobLauncher.run(job, allParams);

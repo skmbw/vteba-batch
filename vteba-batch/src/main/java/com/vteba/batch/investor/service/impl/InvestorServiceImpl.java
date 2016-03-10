@@ -13,7 +13,7 @@ import com.vteba.tx.jdbc.mybatis.spi.BasicDao;
 /**
  * 投资人相关的service业务实现。
  * @author yinlei
- * @date 2016-3-8 14:19:05
+ * @date 2016-3-10 14:08:23
  */
 @Named
 public class InvestorServiceImpl extends BasicServiceImpl<Investor, Integer> implements InvestorService {
