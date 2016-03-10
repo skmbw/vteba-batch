@@ -12,67 +12,100 @@
 	
 	<bean id="fastJsonSerializer" class="com.vteba.batch.serializer.FastJsonExecutionContextSerializer"></bean>
 	
-	<bean id="jobOperator" class="org.springframework.batch.core.launch.support.SimpleJobOperator">
-		<property name="jobRepository" ref="jobRepository"/>	
-		<property name="jobLauncher" ref="jobLauncher"/>
-		<property name="jobExplorer" ref="jobExplorer"/>
-		<property name="jobRegistry" ref="jobRegistry"/>
-	</bean>
+<!-- 	<bean id="jobOperator" class="org.springframework.batch.core.launch.support.SimpleJobOperator"> -->
+<!-- 		<property name="jobRepository" ref="jobRepository"/>	 -->
+<!-- 		<property name="jobLauncher" ref="jobLauncher"/> -->
+<!-- 		<property name="jobExplorer" ref="jobExplorer"/> -->
+<!-- 		<property name="jobRegistry" ref="jobRegistry"/> -->
+<!-- 	</bean> -->
 		
 	<bean id="jobLauncher" class="org.springframework.batch.core.launch.support.SimpleJobLauncher">
 		<property name="jobRepository" ref="jobRepository" />
 		<property name="taskExecutor" ref="taskExecutor" />
 	</bean>
 	
-	<bean id="jobExplorer" class="org.springframework.batch.core.explore.support.JobExplorerFactoryBean">
-		<property name="dataSource" ref="tiantianDataSource" />
-		<property name="serializer" ref="fastJsonSerializer" />
-	</bean>
+<!-- 	<bean id="jobExplorer" class="org.springframework.batch.core.explore.support.JobExplorerFactoryBean"> -->
+<!-- 		<property name="dataSource" ref="tiantianDataSource" /> -->
+<!-- 		<property name="serializer" ref="fastJsonSerializer" /> -->
+<!-- 	</bean> -->
 	
 	<!-- Job注册后 Bean后处理器 -->
-	<bean class="org.springframework.batch.core.configuration.support.JobRegistryBeanPostProcessor">
-		<property name="jobRegistry" ref="jobRegistry" />
-  	</bean>
-	<bean id="jobRegistry" class="org.springframework.batch.core.configuration.support.MapJobRegistry" />
+<!-- 	<bean class="org.springframework.batch.core.configuration.support.JobRegistryBeanPostProcessor"> -->
+<!-- 		<property name="jobRegistry" ref="jobRegistry" /> -->
+<!--   	</bean> -->
+<!-- 	<bean id="jobRegistry" class="org.springframework.batch.core.configuration.support.MapJobRegistry" /> -->
 
-	<bean id="jobRepository" class="org.springframework.batch.core.repository.support.JobRepositoryFactoryBean">
-		<property name="dataSource" ref="tiantianDataSource"/>
-		<property name="transactionManager" ref="transactionManager"/>
-		<property name="serializer" ref="fastJsonSerializer" />
+<!-- 	<bean id="jobRepository" class="org.springframework.batch.core.repository.support.JobRepositoryFactoryBean"> -->
+<!-- 		<property name="dataSource" ref="tiantianDataSource"/> -->
+<!-- 		<property name="transactionManager" ref="transactionManager"/> -->
+<!-- 		<property name="serializer" ref="fastJsonSerializer" /> -->
+<!-- 	</bean> -->
+
+	<batch:job-repository id="jobRepository"
+		data-source="tiantianDataSource"
+		transaction-manager="transactionManager"
+		serializer="fastJsonSerializer"
+		isolation-level-for-create="REPEATABLE_READ" />
+
+	<!-- 投资人处理 -->
+	<bean id="investorItemReader" class="com.vteba.batch.user.MyBatisPagingItemReader" scope="step">
+	    <property name="sqlSessionFactory" ref="tiantianSqlSessionFactory"/>
+	    <property name="queryId" value="com.vteba.batch.investor.dao.InvestorDao.pagedList"/>
+ 		<property name="pageSize" value="3" />
 	</bean>
+	<bean id="investorItemProcessor" class="com.vteba.batch.investor.processor.InvestorItemProcessor"></bean>
+	<bean id="investorItemWriter" class="com.vteba.batch.user.MyBatisItemWriter" scope="step">
+	    <property name="sqlSessionFactory" ref="tiantianSqlSessionFactory"/>
+	    <property name="statementId" value="com.vteba.batch.investor.dao.InvestorDao.updateById"/>
+	</bean>
+	<batch:step id="investorProcessStep">
+		<batch:tasklet>
+			<batch:chunk reader="investorItemReader" processor="investorItemProcessor" writer="investorItemWriter" retry-policy="investorRetryPolicy" retry-limit="2" commit-interval="3" ><!-- retry-policy="" 重试次数限制，超过抛异常retry-limit="3" --><!-- 指定了skip-policy=""，次数和异常限制被忽略 -->
+				
+				<!-- 重试监听器，配置了重试监听器，将忽略重试策略和简单异常和次数的配置 -->
+				<batch:retry-listeners>
+					<batch:listener ref="investorRetryListener" />
+				</batch:retry-listeners>
 
-	<!-- 1 -->
-	<batch:step id="userInitStep">
-		<!-- taskExecutor，是用来重复执行的，防止任务不成功 task-executor="taskExecutor" -->
-		<!-- taskExecutor非空的情况下 会默认执行重复策略 -->
-		<batch:tasklet ref="userTasklet" />
+				<!-- 重试策略，立即进行重试，可以根据自己的业务规则定制复杂的重试策略 -->
+<!-- 				<batch:retry-policy> -->
+<!-- 					<ref bean="investorRetryPolicy"/> -->
+<!-- 				</batch:retry-policy> -->
+
+				<!-- 可重试异常，和retry-limit="2"是一对的，简单方式可以使用这种
+					哪些异常可以重试，哪些不可以重试，以及总的重试的次数，重试次数默认Integer.MAX_VALUE
+				-->
+				<batch:retryable-exception-classes>
+					<batch:include class="java.lang.RuntimeException"/>
+					<batch:exclude class="java.io.FileNotFoundException"/>
+				</batch:retryable-exception-classes>
+			</batch:chunk>
+		</batch:tasklet>
 	</batch:step>
 
+	<!-- 步骤3用户处理 -->
 	<bean id="userItemReader" class="com.vteba.batch.user.MyBatisPagingItemReader" scope="step">
 	    <property name="sqlSessionFactory" ref="tiantianSqlSessionFactory"/>
 	    <property name="queryId" value="com.vteba.batch.user.dao.UserDao.pagedList"/>
  		<property name="pageSize" value="3" />
 	</bean>
-	
 	<bean id="userItemWriter" class="com.vteba.batch.user.MyBatisItemWriter" scope="step">
 	    <property name="sqlSessionFactory" ref="tiantianSqlSessionFactory"/>
 	    <property name="statementId" value="com.vteba.batch.user.dao.UserDao.updateById"/>
 	</bean>
-
-	<!-- 2 -->
 	<batch:step id="userProcessStep">
 		<batch:tasklet>
-			<batch:chunk reader="userItemReader" processor="userItemProcessor" writer="userItemWriter" skip-limit="3" retry-limit="3" commit-interval="3" ><!-- retry-policy="" 重试次数限制，超过抛异常retry-limit="3" --><!-- 指定了skip-policy=""，次数和异常限制被忽略 -->
-				<batch:skippable-exception-classes>
-					<batch:include class="java.lang.RuntimeException"/>
-				</batch:skippable-exception-classes>
-				<batch:skip-policy>
-					<ref bean="userSkipPolicy"/>
-				</batch:skip-policy>
+			<batch:chunk reader="userItemReader" processor="userItemProcessor" writer="userItemWriter" retry-limit="3" commit-interval="3" ><!-- retry-policy="" 重试次数限制，超过抛异常retry-limit="3" --><!-- 指定了skip-policy=""，次数和异常限制被忽略 -->
+<!-- 				<batch:skippable-exception-classes> -->
+<!-- 					<batch:include class="java.lang.RuntimeException"/> -->
+<!-- 				</batch:skippable-exception-classes> -->
+<!-- 				<batch:skip-policy> -->
+<!-- 					<ref bean="userSkipPolicy"/> -->
+<!-- 				</batch:skip-policy> -->
 				<!-- 跳过 skip listener -->
-				<batch:listeners>
-					<batch:listener ref="userSkipListener"></batch:listener>
-				</batch:listeners>
+<!-- 				<batch:listeners> -->
+<!-- 					<batch:listener ref="userSkipListener"></batch:listener> -->
+<!-- 				</batch:listeners> -->
 				
 				<!-- 重试监听器 -->
 				<batch:retry-listeners>
@@ -91,16 +124,8 @@
 		</batch:tasklet>
 	</batch:step>
 
-<!-- 	<batch:step id="parallelStepA1"> -->
-<!-- 		<batch:tasklet ref="parallelStep1" /> -->
-<!-- 	</batch:step> -->
-	
-<!-- 	<batch:step id="parallelStepA2"> -->
-<!-- 		<batch:tasklet ref="parallelStep2" /> -->
-<!-- 	</batch:step> -->
-
-	<batch:job id="userJob">
-		<batch:split id="splitParallel" task-executor="taskExecutor" next="userJobStep1">
+	<batch:job id="userJob" restartable="true">
+		<batch:split id="splitParallel" task-executor="taskExecutor" next="userJobStepInit">
 			<batch:flow>
 				<batch:step id="parallelStep_1">
 					<batch:tasklet ref="parallelStep1" />
@@ -112,8 +137,15 @@
 				</batch:step>
 			</batch:flow>
 		</batch:split>
-		<batch:step id="userJobStep1" parent="userInitStep" next="userJobStep2" /><!-- parent就是表示当前执行是哪个业务 -->
-		<batch:step id="userJobStep2" parent="userProcessStep">
+		<batch:step id="userJobStepInit" next="investorJobStep">
+			<batch:tasklet ref="userTasklet" />
+		</batch:step>
+		<batch:step id="investorJobStep" parent="investorProcessStep" next="userJobStep">
+			
+		</batch:step>
+		
+		<!-- parent父类bean，继承属性，执行父类bean的业务，当前执行是哪个业务 -->
+		<batch:step id="userJobStep" parent="userProcessStep">
 <!-- 			<batch:next on="FAILED" to="currentsettlementStep2"/> -->
 <!-- 			<batch:next on="*" to="currentsettlementStep4"/> -->
 <!-- 			<batch:stop on="" restart=""/> -->
@@ -122,7 +154,7 @@
 	</batch:job>
 	
 	<!-- 任务调度器 -->
-	<task:scheduler id="myScheduler" pool-size="10" />
+	<task:scheduler id="taskScheduler" pool-size="10" />
 	
 	<!-- 线程池执行器 -->
 	<task:executor id="taskExecutor" pool-size="5-10" queue-capacity="1024" />
@@ -132,7 +164,7 @@
 	</bean>
 	
 	<!-- Job任务配置 -->
-	<task:scheduled-tasks scheduler="myScheduler">
-		<task:scheduled ref="userJobInstance" method="execute" cron="0 0/1 * * * ?"/>
+	<task:scheduled-tasks scheduler="taskScheduler">
+		<task:scheduled ref="userJobInstance" method="execute" cron="0 48 * * * ?"/>
 	</task:scheduled-tasks>
 </beans>

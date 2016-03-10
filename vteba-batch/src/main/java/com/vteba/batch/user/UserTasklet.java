@@ -48,8 +48,8 @@ public class UserTasklet implements Tasklet {
 			
 		}
 		
-		throw new RuntimeException("UserTasklet");
-		//return RepeatStatus.FINISHED;
+//		throw new RuntimeException("UserTasklet");
+		return RepeatStatus.FINISHED;
 	}
 
 }

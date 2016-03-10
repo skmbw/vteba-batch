@@ -13,6 +13,8 @@ import org.springframework.batch.core.JobParameters;
 import org.springframework.batch.core.JobParametersBuilder;
 import org.springframework.batch.core.launch.JobLauncher;
 
+import com.vteba.utils.date.DateUtils;
+
 /**
  * Job调度器
  * 
@@ -35,7 +37,7 @@ public class BatchJobLauncher {
 			jobParameters = new HashMap<String, String>();
 		}
 		// 不能用这个参数，参数和job name是唯一确定Job的
-//		jobParameters.put("now", Long.toString(System.currentTimeMillis()));
+		jobParameters.put("executeDatetime", DateUtils.toDateString("yyyyMMdd"));
 		JobParameters allParams = translateParams(job, jobParameters);
 
 		JobExecution je = jobLauncher.run(job, allParams);

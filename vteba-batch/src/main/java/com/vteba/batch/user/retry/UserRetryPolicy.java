@@ -2,6 +2,8 @@ package com.vteba.batch.user.retry;
 
 import javax.inject.Named;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.retry.RetryContext;
 import org.springframework.retry.RetryPolicy;
 
@@ -13,29 +15,36 @@ import org.springframework.retry.RetryPolicy;
  */
 @Named
 public class UserRetryPolicy implements RetryPolicy {
-
+	private static final Logger LOGGER = LoggerFactory.getLogger(UserRetryPolicy.class);
+	
 	@Override
 	public boolean canRetry(RetryContext context) {
-		// TODO Auto-generated method stub
+		if (LOGGER.isDebugEnabled()) {
+			LOGGER.debug("重试策略canRetry：[{}].", context);
+		}
 		return true;
 	}
 
 	@Override
 	public RetryContext open(RetryContext parent) {
-		// TODO Auto-generated method stub
+		if (LOGGER.isDebugEnabled()) {
+			LOGGER.debug("重试策略open：[{}].", parent);
+		}
 		return parent;
 	}
 
 	@Override
 	public void close(RetryContext context) {
-		// TODO Auto-generated method stub
-		
+		if (LOGGER.isDebugEnabled()) {
+			LOGGER.debug("重试策略close：[{}].", context);
+		}
 	}
 
 	@Override
 	public void registerThrowable(RetryContext context, Throwable throwable) {
-		// TODO Auto-generated method stub
-		
+		if (LOGGER.isDebugEnabled()) {
+			LOGGER.debug("重试策略registerThrowable：[{}], throw=[{}].", context, throwable);
+		}		
 	}
 
 }
