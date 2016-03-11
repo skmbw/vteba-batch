@@ -16,14 +16,14 @@ import org.springframework.batch.core.launch.JobLauncher;
 import com.vteba.utils.date.DateUtils;
 
 /**
- * Job调度器
+ * Job实例委托类，将调用JobLauncher执行Job。
  * 
  * @author yinlei
  * @date 2016年2月10日 上午11:54:17
  */
-public class BatchJobLauncher {
+public class JobInstanceDelegate {
 	
-	private static final Logger LOGGER = LoggerFactory.getLogger(BatchJobLauncher.class);
+	private static final Logger LOGGER = LoggerFactory.getLogger(JobInstanceDelegate.class);
 	
 	@Inject
 	private JobLauncher jobLauncher;
@@ -42,7 +42,9 @@ public class BatchJobLauncher {
 
 		JobExecution je = jobLauncher.run(job, allParams);
 		Long jobExecutionId = je.getId();
-		LOGGER.info("开始执行:" + job.getName() + "---" + jobExecutionId);
+		if (LOGGER.isInfoEnabled()) {
+			LOGGER.info("开始执行：JobName=[" + job.getName() + "], JobExecutionId=[" + jobExecutionId + "]");
+		}
 	}
 
 	private JobParameters translateParams(Job job, Map<String, String> params) {

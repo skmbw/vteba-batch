@@ -21,6 +21,10 @@ public class InvestorRetryCallback implements RetryCallback<Investor, Throwable>
 		if (LOGGER.isInfoEnabled()) {
 			LOGGER.debug("投资者Tasklet回调，context=[{}].", context);
 		}
+		int i = 1;
+		if (i == 1) {
+			throw new RuntimeException("测试异常重试。");
+		}
 		return null;
 	}
 
