@@ -30,7 +30,8 @@ public class UserRetryPolicy implements RetryPolicy {
 		if (LOGGER.isDebugEnabled()) {
 			LOGGER.debug("User重试策略open, parent=[{}].", parent);
 		}
-		return parent;
+		RetryContext context = new UserRetryContext(parent);
+		return context;
 	}
 
 	@Override
@@ -44,7 +45,11 @@ public class UserRetryPolicy implements RetryPolicy {
 	public void registerThrowable(RetryContext context, Throwable throwable) {
 		if (LOGGER.isDebugEnabled()) {
 			LOGGER.debug("User重试策略registerThrowable, context=[{}], throw=[{}].", context, throwable);
-		}		
+		}	
+		if (context instanceof UserRetryContext) {
+			UserRetryContext retryContext = (UserRetryContext) context;
+			retryContext.registerThrowable(throwable);
+		}
 	}
 
 }
