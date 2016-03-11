@@ -60,6 +60,17 @@
 	</bean>
 	<batch:step id="investorProcessStep">
 		<batch:tasklet>
+			<!-- 事务属性配置 -->
+<!-- 			<batch:transaction-attributes -->
+<!-- 				propagation="REQUIRED" -->
+<!-- 				isolation="REPEATABLE_READ" -->
+<!-- 				timeout="20" -->
+<!-- 				/> -->
+			<!-- 不回滚异常 -->
+<!-- 			<batch:no-rollback-exception-classes> -->
+<!-- 				<batch:include class="java.lang.Exception"/> -->
+<!-- 			</batch:no-rollback-exception-classes> -->
+			
 			<batch:chunk reader="investorItemReader" processor="investorItemProcessor" writer="investorItemWriter" commit-interval="3" ><!-- retry-policy="" 重试次数限制，超过抛异常retry-limit="3" --><!-- 指定了skip-policy=""，次数和异常限制被忽略 -->
 				<!-- 重试策略，立即进行重试，可以根据自己的业务规则定制复杂的重试策略 
 					 放在chunk的属性中也可以，和简单的重试可以同时存在。重试异常失效，
@@ -172,6 +183,7 @@
 	
 	<bean id="userJobInstance" class="com.vteba.batch.launcher.JobInstanceDelegate">
 		<property name="job" ref="userJob" />
+		<property name="dateFormat" value="yyyyMMdd" />
 	</bean>
 	
 	<!-- Job任务配置 -->

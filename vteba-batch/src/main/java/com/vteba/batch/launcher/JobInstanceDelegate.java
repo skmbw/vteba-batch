@@ -27,7 +27,7 @@ public class JobInstanceDelegate {
 	
 	@Inject
 	private JobLauncher jobLauncher;
-
+	private String dateFormat;
 	private Map<String, String> jobParameters;
 	private Job job;
 
@@ -36,7 +36,7 @@ public class JobInstanceDelegate {
 			jobParameters = new HashMap<String, String>();
 		}
 		// 不能用这个参数，参数和job name是唯一确定Job的
-		jobParameters.put("executeDatetime", DateUtils.toDateString("yyyyMMdd") + 8);
+		jobParameters.put("executeDatetime", DateUtils.toDateString(dateFormat) + 8);
 		JobParameters allParams = translateParams(job, jobParameters);
 
 		JobExecution je = jobLauncher.run(job, allParams);
@@ -68,5 +68,9 @@ public class JobInstanceDelegate {
 
 	public void setJobLauncher(JobLauncher jobLauncher) {
 		this.jobLauncher = jobLauncher;
+	}
+
+	public void setDateFormat(String dateFormat) {
+		this.dateFormat = dateFormat;
 	}
 }
