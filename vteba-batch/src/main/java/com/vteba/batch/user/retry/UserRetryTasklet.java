@@ -1,5 +1,7 @@
 package com.vteba.batch.user.retry;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.batch.core.StepContribution;
 import org.springframework.batch.core.scope.context.ChunkContext;
 import org.springframework.batch.core.step.tasklet.Tasklet;
@@ -21,7 +23,8 @@ import com.vteba.batch.user.model.User;
  * @date 2016年3月9日 上午10:39:39
  */
 public class UserRetryTasklet implements Tasklet {
-
+	private static final Logger LOGGER = LoggerFactory.getLogger(UserRetryTasklet.class);
+	
 	@Override
 	public RepeatStatus execute(StepContribution contribution, ChunkContext chunkContext) throws Exception {
 		RetryCallback<User, Throwable> retryCallback = new DefaultRetryCallback();
@@ -44,7 +47,7 @@ public class UserRetryTasklet implements Tasklet {
 //			retryTemplate.execute(retryCallback, recoveryCallback);
 			retryTemplate.execute(retryCallback, recoveryCallback, retryState);
 		} catch (Throwable e) {
-			
+			LOGGER.error(e.getMessage());
 		}
 		
 		return RepeatStatus.FINISHED;

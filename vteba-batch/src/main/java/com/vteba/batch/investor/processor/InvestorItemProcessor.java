@@ -21,9 +21,9 @@ public class InvestorItemProcessor implements ItemProcessor<Investor, Investor> 
 		} catch (Exception e) {
 			LOGGER.info("处理investor=[{}]失败, msg=[{}]", name, e);
 		}
-		if (item.getId() == 5) {
-			throw new RuntimeException("Test Transaction.");
-		}
+//		if (item.getId() == 5) {
+//			throw new RuntimeException("Test Transaction.");
+//		}
 		LOGGER.info("处理investor=[{}]成功。", name);
 		return item;
 	}
