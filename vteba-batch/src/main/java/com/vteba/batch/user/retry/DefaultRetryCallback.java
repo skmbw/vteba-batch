@@ -19,7 +19,7 @@ public class DefaultRetryCallback implements RetryCallback<User, Throwable> {
 	@Override
 	public User doWithRetry(RetryContext context) throws Throwable {
 		if (LOGGER.isDebugEnabled()) {
-			LOGGER.debug("用户User的重试上下文[{}].", context);
+			LOGGER.debug("用户User的Tasklet回调, context=[{}].", context);
 		}
 		return null;
 	}

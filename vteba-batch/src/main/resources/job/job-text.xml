@@ -171,6 +171,6 @@
 	
 	<!-- Job任务配置 -->
 	<task:scheduled-tasks scheduler="taskScheduler">
-		<task:scheduled ref="userJobInstance" method="execute" cron="0 01 * * * ?"/>
+		<task:scheduled ref="userJobInstance" method="execute" cron="0 48 * * * ?"/>
 	</task:scheduled-tasks>
 </beans>
