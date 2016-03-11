@@ -29,7 +29,6 @@ public class JobInstanceDelegate {
 	private JobLauncher jobLauncher;
 
 	private Map<String, String> jobParameters;
-
 	private Job job;
 
 	public void execute() throws Exception {
@@ -61,10 +60,6 @@ public class JobInstanceDelegate {
 
 	public void setJob(Job job) {
 		this.job = job;
-	}
-
-	public Map<String, String> getJobParameters() {
-		return jobParameters;
 	}
 
 	public void setJobParameters(Map<String, String> jobParameters) {
