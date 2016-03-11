@@ -37,7 +37,7 @@ public class InvestorRetryTasklet implements Tasklet {
 		
 //		int i = 1;
 //		if (i == 1) {
-//			throw new RuntimeException("测试异常重试。");
+//			throw new ServiceException("测试异常重试。");
 //		}
 		
 		return RepeatStatus.FINISHED;

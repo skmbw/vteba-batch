@@ -37,7 +37,6 @@ public class UserTasklet implements Tasklet {
 			LOGGER.error("User重试，msg=[{}].", e.getMessage());
 		}
 		
-//		throw new RuntimeException("UserTasklet");
 		return RepeatStatus.FINISHED;
 	}
 

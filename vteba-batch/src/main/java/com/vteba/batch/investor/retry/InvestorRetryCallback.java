@@ -6,6 +6,7 @@ import org.springframework.retry.RetryCallback;
 import org.springframework.retry.RetryContext;
 
 import com.vteba.batch.investor.model.Investor;
+import com.vteba.common.exception.ServiceException;
 
 /**
  * 投资者重试回调。如果开启了重试策略，那么Tasklet的业务应该写在回调当中。
@@ -23,7 +24,7 @@ public class InvestorRetryCallback implements RetryCallback<Investor, Throwable>
 		}
 		int i = 2;
 		if (i == 1) {
-			throw new RuntimeException("测试异常重试。");
+			throw new ServiceException("测试异常重试。");
 		}
 		return null;
 	}
