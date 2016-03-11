@@ -28,24 +28,13 @@ public class UserTasklet implements Tasklet {
 		
 		RetryPolicy retryPolicy = new UserRetryPolicy();
 		
-//		RetryListener[] retryListeners = { new UserRetryListener() };
-//		
-//		BackOffPolicy backOffPolicy = new DefaultBackOffPolicy();
-		
 		RetryTemplate retryTemplate = new RetryTemplate();
-//		retryTemplate.setBackOffPolicy(backOffPolicy);
-//		retryTemplate.setListeners(retryListeners);
 		retryTemplate.setRetryPolicy(retryPolicy);
 		
-//		RecoveryCallback<User> recoveryCallback = new DefaultRecoveryCallback();
-//		RetryState retryState = new DefaultRetryState();
-		
 		try {
-//			retryTemplate.execute(retryCallback, recoveryCallback);
-//			retryTemplate.execute(retryCallback, recoveryCallback, retryState);
 			retryTemplate.execute(retryCallback);
 		} catch (Throwable e) {
-			
+			LOGGER.error("User重试，msg=[{}].", e.getMessage());
 		}
 		
 //		throw new RuntimeException("UserTasklet");

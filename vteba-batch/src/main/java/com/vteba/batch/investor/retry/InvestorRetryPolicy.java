@@ -20,7 +20,7 @@ public class InvestorRetryPolicy implements RetryPolicy {
 	@Override
 	public boolean canRetry(RetryContext context) {
 		if (LOGGER.isDebugEnabled()) {
-			LOGGER.debug("重试策略canRetry, context=[{}].", context);
+			LOGGER.debug("Investor重试策略canRetry, context=[{}].", context);
 		}
 		
 		if (context.getRetryCount() <= 2) {
@@ -33,7 +33,7 @@ public class InvestorRetryPolicy implements RetryPolicy {
 	@Override
 	public RetryContext open(RetryContext parent) {
 		if (LOGGER.isDebugEnabled()) {
-			LOGGER.debug("重试策略open, parent context=[{}].", parent);
+			LOGGER.debug("Investor重试策略open, parent context=[{}].", parent);
 		}
 		RetryContext context = new DefaultRetryContext(parent);
 		return context;
@@ -42,14 +42,14 @@ public class InvestorRetryPolicy implements RetryPolicy {
 	@Override
 	public void close(RetryContext context) {
 		if (LOGGER.isDebugEnabled()) {
-			LOGGER.debug("重试策略close, context=[{}].", context);
+			LOGGER.debug("Investor重试策略close, context=[{}].", context);
 		}
 	}
 
 	@Override
 	public void registerThrowable(RetryContext context, Throwable throwable) {
 		if (LOGGER.isDebugEnabled()) {
-			LOGGER.debug("重试策略registerThrowable, context=[{}], throw=[{}].", context, throwable);
+			LOGGER.debug("Investor重试策略registerThrowable, context=[{}], throw=[{}].", context, throwable);
 		}
 		if (context instanceof DefaultRetryContext) {
 			DefaultRetryContext retryContext = (DefaultRetryContext) context;

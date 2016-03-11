@@ -20,7 +20,7 @@ public class UserRetryPolicy implements RetryPolicy {
 	@Override
 	public boolean canRetry(RetryContext context) {
 		if (LOGGER.isDebugEnabled()) {
-			LOGGER.debug("重试策略canRetry：[{}].", context);
+			LOGGER.debug("User重试策略canRetry, context=[{}].", context);
 		}
 		return true;
 	}
@@ -28,7 +28,7 @@ public class UserRetryPolicy implements RetryPolicy {
 	@Override
 	public RetryContext open(RetryContext parent) {
 		if (LOGGER.isDebugEnabled()) {
-			LOGGER.debug("重试策略open：[{}].", parent);
+			LOGGER.debug("User重试策略open, parent=[{}].", parent);
 		}
 		return parent;
 	}
@@ -36,14 +36,14 @@ public class UserRetryPolicy implements RetryPolicy {
 	@Override
 	public void close(RetryContext context) {
 		if (LOGGER.isDebugEnabled()) {
-			LOGGER.debug("重试策略close：[{}].", context);
+			LOGGER.debug("User重试策略close, context=[{}].", context);
 		}
 	}
 
 	@Override
 	public void registerThrowable(RetryContext context, Throwable throwable) {
 		if (LOGGER.isDebugEnabled()) {
-			LOGGER.debug("重试策略registerThrowable：[{}], throw=[{}].", context, throwable);
+			LOGGER.debug("User重试策略registerThrowable, context=[{}], throw=[{}].", context, throwable);
 		}		
 	}
 

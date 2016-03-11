@@ -18,8 +18,8 @@ public class DefaultRetryCallback implements RetryCallback<User, Throwable> {
 	
 	@Override
 	public User doWithRetry(RetryContext context) throws Throwable {
-		if (LOGGER.isInfoEnabled()) {
-			LOGGER.debug("重试上下文[{}].", context);
+		if (LOGGER.isDebugEnabled()) {
+			LOGGER.debug("用户User的重试上下文[{}].", context);
 		}
 		return null;
 	}
