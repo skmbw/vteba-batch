@@ -113,6 +113,11 @@
 				<batch:skippable-exception-classes>
 					<batch:include class="com.vteba.common.exception.BasicException"/>
 				</batch:skippable-exception-classes>
+				
+				<batch:listeners>
+					<batch:listener ref="chunkExecutionListener"/>
+				</batch:listeners>
+				
 <!-- 				<batch:skip-policy> -->
 <!-- 					<ref bean="userSkipPolicy"/> -->
 <!-- 				</batch:skip-policy> -->
@@ -144,8 +149,14 @@
 	</batch:step>
 
 	<batch:job id="userJob" restartable="true">
+		<batch:listeners>
+			<batch:listener ref="jobExecutionListener" />
+		</batch:listeners>
 		<batch:step id="investorRetryTaskletStep" next="splitParallel">
 			<batch:tasklet ref="investorRetryTasklet" />
+			<batch:listeners>
+				<batch:listener ref="stepExecutionListener" />
+			</batch:listeners>
 		</batch:step>
 		<batch:split id="splitParallel" task-executor="taskExecutor" next="userJobStepInit">
 			<batch:flow>
@@ -188,6 +199,6 @@
 	
 	<!-- Job任务配置 -->
 	<task:scheduled-tasks scheduler="taskScheduler">
-		<task:scheduled ref="userJobInstance" method="execute" cron="0 41 * * * ?"/>
+		<task:scheduled ref="userJobInstance" method="execute" cron="0 19 * * * ?"/>
 	</task:scheduled-tasks>
 </beans>

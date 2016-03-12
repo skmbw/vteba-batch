@@ -2,15 +2,13 @@ package com.vteba.batch.user.skip;
 
 import java.util.Map;
 
-import javax.inject.Named;
-
 import org.springframework.batch.core.step.skip.SkipLimitExceededException;
 import org.springframework.batch.core.step.skip.SkipPolicy;
 import org.springframework.beans.factory.InitializingBean;
 
 import com.vteba.utils.common.Assert;
 
-@Named
+//@Named
 public class UserSkipPolicy implements SkipPolicy, InitializingBean {
 	private Map<Class<?>, Integer> throwableSkipMap;
 	
