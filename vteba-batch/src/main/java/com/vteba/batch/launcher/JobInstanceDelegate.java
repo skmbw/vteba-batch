@@ -36,7 +36,7 @@ public class JobInstanceDelegate {
 			jobParameters = new HashMap<String, String>();
 		}
 		// 不能用这个参数，参数和job name是唯一确定Job的
-		jobParameters.put("executeDatetime", DateUtils.toDateString(dateFormat) + 8);
+		jobParameters.put("executeDatetime", DateUtils.toDateString(dateFormat) + 1);
 		JobParameters allParams = translateParams(job, jobParameters);
 
 		JobExecution je = jobLauncher.run(job, allParams);

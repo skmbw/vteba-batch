@@ -102,6 +102,8 @@
 	    <property name="sqlSessionFactory" ref="tiantianSqlSessionFactory"/>
 	    <property name="queryId" value="com.vteba.batch.user.dao.UserDao.pagedList"/>
  		<property name="pageSize" value="3" />
+ 		<!-- 可以在启动Job时，在jobParameters中动态添加 -->
+<!--  		<property name="resource" value="#{jobParameters['inputResource']}" /> -->
 	</bean>
 	<bean id="userItemWriter" class="com.vteba.batch.user.MyBatisItemWriter" scope="step">
 	    <property name="sqlSessionFactory" ref="tiantianSqlSessionFactory"/>
@@ -149,9 +151,10 @@
 	</batch:step>
 
 	<batch:job id="userJob" restartable="true">
-		<batch:listeners>
+		<batch:listeners><!-- 多个listener，按配置先后顺序执行，before方法按顺序执行，after逆序执行 -->
 			<batch:listener ref="jobExecutionListener" />
 		</batch:listeners>
+		
 		<batch:step id="investorRetryTaskletStep" next="splitParallel">
 			<batch:tasklet ref="investorRetryTasklet" />
 			<batch:listeners>
@@ -199,6 +202,6 @@
 	
 	<!-- Job任务配置 -->
 	<task:scheduled-tasks scheduler="taskScheduler">
-		<task:scheduled ref="userJobInstance" method="execute" cron="0 19 * * * ?"/>
+		<task:scheduled ref="userJobInstance" method="execute" cron="0 24 * * * ?"/>
 	</task:scheduled-tasks>
 </beans>
