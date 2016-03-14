@@ -62,7 +62,9 @@ public class JobDetailFactoryBean
 	@Autowired(required = false)
 	private JobLocator jobLocator;
 
-
+	private String dateFormat;
+	private Map<String, String> jobParameters;
+	
 	/**
 	 * Specify the job's name.
 	 */
@@ -195,12 +197,20 @@ public class JobDetailFactoryBean
 		}
 		
 		// jobDataMap中的参数会自动注入到Job中
+		// 这些参数（以下5个）其实在jobDataMap中设置也是可以的
 		if (jobLauncher != null) {
 			jobDataMap.put("jobLauncher", jobLauncher);
 		}
 		if (jobLocator != null) {
 			jobDataMap.put("jobLocator", jobLocator);
 		}
+		if (dateFormat != null) {
+			jobDataMap.put("dateFormat", dateFormat);
+		}
+		if (jobParameters != null) {
+			jobDataMap.put("jobParameters", jobParameters);
+		}
+		
 		String jobName = name.substring(0, name.length() - 6);
 		jobDataMap.put("jobName", jobName);
 		
@@ -233,6 +243,14 @@ public class JobDetailFactoryBean
 
 	public void setJobLocator(JobLocator jobLocator) {
 		this.jobLocator = jobLocator;
+	}
+
+	public void setDateFormat(String dateFormat) {
+		this.dateFormat = dateFormat;
+	}
+
+	public void setJobParameters(Map<String, String> jobParameters) {
+		this.jobParameters = jobParameters;
 	}
 
 }

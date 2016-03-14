@@ -31,7 +31,7 @@ public class LaunchQuartzJobBean extends QuartzJobBean {
 	
 	private JobLocator jobLocator;
 	private JobLauncher jobLauncher;
-	private String dataFormat;
+	private String dateFormat;
 	private Map<String, String> jobParameters;
 	private String jobName;
 
@@ -106,12 +106,12 @@ public class LaunchQuartzJobBean extends QuartzJobBean {
 		return builder.toJobParameters();
 	}
 
-	public String getDataFormat() {
-		return dataFormat;
+	public String getDateFormat() {
+		return dateFormat;
 	}
 
-	public void setDataFormat(String dataFormat) {
-		this.dataFormat = dataFormat;
+	public void setDateFormat(String dateFormat) {
+		this.dateFormat = dateFormat;
 	}
 
 	public Map<String, String> getJobParameters() {
