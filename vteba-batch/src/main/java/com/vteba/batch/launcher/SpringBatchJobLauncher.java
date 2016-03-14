@@ -21,9 +21,9 @@ import com.vteba.utils.date.DateUtils;
  * @author yinlei
  * @date 2016年2月10日 上午11:54:17
  */
-public class JobInstanceDelegate {
+public class SpringBatchJobLauncher {
 	
-	private static final Logger LOGGER = LoggerFactory.getLogger(JobInstanceDelegate.class);
+	private static final Logger LOGGER = LoggerFactory.getLogger(SpringBatchJobLauncher.class);
 	
 	@Inject
 	private JobLauncher jobLauncher;
