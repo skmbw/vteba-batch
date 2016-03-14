@@ -17,10 +17,10 @@
 	<!-- 默认是基于java interface代理，proxy-target-class="true"表示基于cglib代理。 expose-proxy="true"表示将aop放到AopContext中，供查询 -->
 	<aop:aspectj-autoproxy proxy-target-class="true"/>
 	
-	<!--扫描@Required,@Autowired等注解,自动装配bean-->
-	<context:annotation-config/>
+	<!--扫描@Autowired等注解，自动装配bean-->
+	<context:annotation-config />
 	
-	<!--自动扫描的基包,包含子包,可以使用切点表达式指定更精确一点。多个用逗号分隔-->
+	<!--自动扫描的包，包含子包，可以使用切点表达式指定更精确一点。多个用逗号分隔-->
 	<context:component-scan base-package="com.vteba">
 		<context:exclude-filter type="annotation" expression="org.springframework.stereotype.Controller"/>
 	</context:component-scan>
@@ -29,7 +29,7 @@
 	<bean id="propUtils" class="com.vteba.utils.common.PropUtils">
 		<property name="locations">
 			<list>
-				<value>classpath:config.properties</value>
+				<value>file:/opt/config.properties</value>
 			</list>
 		</property>
 	</bean>
