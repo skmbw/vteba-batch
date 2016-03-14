@@ -20,8 +20,8 @@ import org.springframework.scheduling.quartz.QuartzJobBean;
  * @author yinlei
  * @date 2016年3月12日 下午5:08:41
  */
-public class JobLauncherDetails extends QuartzJobBean {
-	private static final Logger LOGGER = LoggerFactory.getLogger(JobLauncherDetails.class);
+public class LaunchQuartzJobBean extends QuartzJobBean {
+	private static final Logger LOGGER = LoggerFactory.getLogger(LaunchQuartzJobBean.class);
 
 	/**
 	 * Special key in job data map for the name of a job to run.
