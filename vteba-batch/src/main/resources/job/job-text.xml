@@ -10,6 +10,14 @@
 	http://www.springframework.org/schema/mvc http://www.springframework.org/schema/mvc/spring-mvc-3.2.xsd http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util-3.2.xsd http://www.springframework.org/schema/batch http://www.springframework.org/schema/batch/spring-batch.xsd http://www.springframework.org/schema/task http://www.springframework.org/schema/task/spring-task-3.0.xsd"
 	default-autowire="byName">
 	
+	<bean id="springJobSchedulerFactoryBean" class="org.springframework.scheduling.quartz.SchedulerFactoryBean">
+		<property name="triggers">
+			<list>
+				<ref bean="userJobTrigger" />
+			</list>
+		</property>
+	</bean>
+	
 	<bean id="fastJsonSerializer" class="com.vteba.batch.serializer.FastJsonExecutionContextSerializer"></bean>
 	
 <!-- 	<bean id="jobOperator" class="org.springframework.batch.core.launch.support.SimpleJobOperator"> -->
@@ -30,10 +38,10 @@
 <!-- 	</bean> -->
 	
 	<!-- Job注册后 Bean后处理器 -->
-<!-- 	<bean class="org.springframework.batch.core.configuration.support.JobRegistryBeanPostProcessor"> -->
-<!-- 		<property name="jobRegistry" ref="jobRegistry" /> -->
-<!--   	</bean> -->
-<!-- 	<bean id="jobRegistry" class="org.springframework.batch.core.configuration.support.MapJobRegistry" /> -->
+	<bean class="org.springframework.batch.core.configuration.support.JobRegistryBeanPostProcessor">
+		<property name="jobRegistry" ref="jobRegistry" />
+  	</bean>
+	<bean id="jobRegistry" class="org.springframework.batch.core.configuration.support.MapJobRegistry" />
 
 <!-- 	<bean id="jobRepository" class="org.springframework.batch.core.repository.support.JobRepositoryFactoryBean"> -->
 <!-- 		<property name="dataSource" ref="tiantianDataSource"/> -->
@@ -195,13 +203,31 @@
 	<!-- 线程池执行器 -->
 	<task:executor id="taskExecutor" pool-size="5-10" queue-capacity="1024" />
 	
-	<bean id="userJobInstance" class="com.vteba.batch.launcher.JobInstanceDelegate">
-		<property name="job" ref="userJob" />
-		<property name="dateFormat" value="yyyyMMdd" />
-	</bean>
+<!-- 	<bean id="userJobInstance" class="com.vteba.batch.launcher.JobInstanceDelegate"> -->
+<!-- 		<property name="job" ref="userJob" /> -->
+<!-- 		<property name="dateFormat" value="yyyyMMdd" /> -->
+<!-- 	</bean> -->
 	
 	<!-- Job任务配置 -->
-	<task:scheduled-tasks scheduler="taskScheduler">
-		<task:scheduled ref="userJobInstance" method="execute" cron="0 24 * * * ?"/>
-	</task:scheduled-tasks>
+<!-- 	<task:scheduled-tasks scheduler="taskScheduler"> -->
+<!-- 		<task:scheduled ref="userJobInstance" method="execute" cron="0 24 * * * ?"/> -->
+<!-- 	</task:scheduled-tasks> -->
+	
+	<bean id="userJobDetail" class="com.vteba.batch.quartz.JobDetailFactoryBean">
+		<!-- 放在这里的参数，spring会自动设置给Job -->
+		<property name="jobDataAsMap">
+	        <map>
+	            <entry key="jobName" value="userJob"/><!-- spring batch的Job的bean的id -->
+	            <entry key="jobLocator" value-ref="jobRegistry"/>
+	            <entry key="jobLauncher" value-ref="jobLauncher"/>
+	        </map>
+	    </property>
+	</bean>
+	
+	<bean id="userJobTrigger" class="org.springframework.scheduling.quartz.CronTriggerFactoryBean">
+		<property name="jobDetail" ref="userJobDetail"></property>
+		<property name="cronExpression" value="0 31 * * * ?"></property>
+	</bean>
+	
+	
 </beans>

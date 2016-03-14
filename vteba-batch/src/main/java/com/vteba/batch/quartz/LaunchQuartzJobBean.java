@@ -5,6 +5,7 @@ import java.util.Map;
 import java.util.Map.Entry;
 
 import org.quartz.JobExecutionContext;
+import org.quartz.impl.JobDetailImpl;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.batch.core.JobExecutionException;
@@ -26,10 +27,13 @@ public class LaunchQuartzJobBean extends QuartzJobBean {
 	/**
 	 * Special key in job data map for the name of a job to run.
 	 */
-	static final String JOB_NAME = "jobName";
-
+	private static final String JOB_NAME = "jobName";
+	
 	private JobLocator jobLocator;
 	private JobLauncher jobLauncher;
+	private String dataFormat;
+	private Map<String, String> jobParameters;
+	private String jobName;
 
 	/**
 	 * Public setter for the {@link JobLocator}.
@@ -54,8 +58,16 @@ public class LaunchQuartzJobBean extends QuartzJobBean {
 	@Override
 	protected void executeInternal(JobExecutionContext context) {
 		Map<String, Object> jobDataMap = context.getMergedJobDataMap();
-		String jobName = (String) jobDataMap.get(JOB_NAME);
-		LOGGER.info("Quartz trigger firing with Spring Batch jobName=[{}]", jobName);
+		if (jobName == null) {
+			JobDetailImpl jobDetailImpl = (JobDetailImpl) context.getJobDetail();
+			// 不配置默认是Bean的名字，按照规范，名字是JobName + Detail
+			jobName = jobDetailImpl.getName();
+			jobName = jobName.substring(0, jobName.length() - 6);
+		}
+		//String jobName = (String) jobDataMap.get(JOB_NAME);
+		if (LOGGER.isInfoEnabled()) {
+			LOGGER.info("Quartz trigger firing with Spring Batch jobName=[{}]", jobName);
+		}
 		JobParameters jobParameters = getJobParametersFromJobMap(jobDataMap);
 		try {
 			jobLauncher.run(jobLocator.getJob(jobName), jobParameters);
@@ -64,9 +76,10 @@ public class LaunchQuartzJobBean extends QuartzJobBean {
 		}
 	}
 
-	/*
+	/**
 	 * Copy parameters that are of the correct type over to {@link
-	 * JobParameters}, ignoring jobName.
+	 * JobParameters}, ignoring jobName.<br>
+	 * 只能接受String Long Double Date四种数据类型。
 	 * 
 	 * @return a {@link JobParameters} instance
 	 */
@@ -91,5 +104,25 @@ public class LaunchQuartzJobBean extends QuartzJobBean {
 		}
 
 		return builder.toJobParameters();
+	}
+
+	public String getDataFormat() {
+		return dataFormat;
+	}
+
+	public void setDataFormat(String dataFormat) {
+		this.dataFormat = dataFormat;
+	}
+
+	public Map<String, String> getJobParameters() {
+		return jobParameters;
+	}
+
+	public void setJobParameters(Map<String, String> jobParameters) {
+		this.jobParameters = jobParameters;
+	}
+
+	public void setJobName(String jobName) {
+		this.jobName = jobName;
 	}
 }

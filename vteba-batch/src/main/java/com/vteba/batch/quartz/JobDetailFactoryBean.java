@@ -1,116 +1,140 @@
 package com.vteba.batch.quartz;
 
-import org.quartz.DisallowConcurrentExecution;
+import java.util.Map;
+
 import org.quartz.Job;
+import org.quartz.JobDataMap;
 import org.quartz.JobDetail;
-import org.quartz.PersistJobDataAfterExecution;
 import org.quartz.Scheduler;
 import org.quartz.impl.JobDetailImpl;
-import org.springframework.beans.factory.BeanClassLoaderAware;
-import org.springframework.beans.factory.BeanFactory;
-import org.springframework.beans.factory.BeanFactoryAware;
+import org.springframework.batch.core.configuration.JobLocator;
+import org.springframework.batch.core.launch.JobLauncher;
 import org.springframework.beans.factory.BeanNameAware;
 import org.springframework.beans.factory.FactoryBean;
 import org.springframework.beans.factory.InitializingBean;
-import org.springframework.beans.support.ArgumentConvertingMethodInvoker;
-import org.springframework.util.Assert;
-import org.springframework.util.ClassUtils;
-import org.springframework.util.MethodInvoker;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.ApplicationContextAware;
 
 /**
- * {@link org.springframework.beans.factory.FactoryBean} that exposes a
- * {@link org.quartz.JobDetail} object which delegates job execution to a
- * specified (static or non-static) method. Avoids the need for implementing
- * a one-line Quartz Job that just invokes an existing service method on a
- * Spring-managed target bean.
+ * A Spring {@link FactoryBean} for creating a Quartz {@link org.quartz.JobDetail}
+ * instance, supporting bean-style usage for JobDetail configuration.
  *
- * <p>Inherits common configuration properties from the {@link MethodInvoker}
- * base class, such as {@link #setTargetObject "targetObject"} and
- * {@link #setTargetMethod "targetMethod"}, adding support for lookup of the target
- * bean by name through the {@link #setTargetBeanName "targetBeanName"} property
- * (as alternative to specifying a "targetObject" directly, allowing for
- * non-singleton target objects).
- *
- * <p>Supports both concurrently running jobs and non-currently running
- * jobs through the "concurrent" property. Jobs created by this
- * MethodInvokingJobDetailFactoryBean are by default volatile and durable
- * (according to Quartz terminology).
- *
- * <p><b>NOTE: JobDetails created via this FactoryBean are <i>not</i>
- * serializable and thus not suitable for persistent job stores.</b>
- * You need to implement your own Quartz Job as a thin wrapper for each case
- * where you want a persistent job to delegate to a specific service method.
- *
- * <p>Compatible with Quartz 2.1.4 and higher, as of Spring 4.1.
+ * <p>{@code JobDetail(Impl)} itself is already a JavaBean but lacks
+ * sensible defaults. This class uses the Spring bean name as job name,
+ * and the Quartz default group ("DEFAULT") as job group if not specified.
  *
  * @author Juergen Hoeller
- * @author Alef Arendsen
- * @since 18.02.2004
- * @see #setTargetBeanName
- * @see #setTargetObject
- * @see #setTargetMethod
- * @see #setConcurrent
+ * @since 3.1
+ * @see #setName
+ * @see #setGroup
+ * @see org.springframework.beans.factory.BeanNameAware
+ * @see org.quartz.Scheduler#DEFAULT_GROUP
  */
-public class JobDetailFactoryBean extends ArgumentConvertingMethodInvoker
-		implements FactoryBean<JobDetail>, BeanNameAware, BeanClassLoaderAware, BeanFactoryAware, InitializingBean {
+public class JobDetailFactoryBean
+		implements FactoryBean<JobDetail>, BeanNameAware, ApplicationContextAware, InitializingBean {
 
 	private String name;
 
-	private String group = Scheduler.DEFAULT_GROUP;
+	private String group;
 
-	private boolean concurrent = true;
+	private Class<? extends Job> jobClass;
 
-	private String targetBeanName;
+	private JobDataMap jobDataMap = new JobDataMap();
+
+	private boolean durability = false;
+
+	private boolean requestsRecovery = false;
+
+	private String description;
 
 	private String beanName;
 
-	private ClassLoader beanClassLoader = ClassUtils.getDefaultClassLoader();
+	private ApplicationContext applicationContext;
 
-	private BeanFactory beanFactory;
+	private String applicationContextJobDataKey;
 
 	private JobDetail jobDetail;
+	
+	// job中需要，找不到不报错，可能在jobDataMap中设置了
+	@Autowired(required = false)
+	private JobLauncher jobLauncher;
+	@Autowired(required = false)
+	private JobLocator jobLocator;
 
 
 	/**
-	 * Set the name of the job.
-	 * <p>Default is the bean name of this FactoryBean.
+	 * Specify the job's name.
 	 */
 	public void setName(String name) {
 		this.name = name;
 	}
 
 	/**
-	 * Set the group of the job.
-	 * <p>Default is the default group of the Scheduler.
-	 * @see org.quartz.Scheduler#DEFAULT_GROUP
+	 * Specify the job's group.
 	 */
 	public void setGroup(String group) {
 		this.group = group;
 	}
 
 	/**
-	 * Specify whether or not multiple jobs should be run in a concurrent fashion.
-	 * The behavior when one does not want concurrent jobs to be executed is
-	 * realized through adding the {@code @PersistJobDataAfterExecution} and
-	 * {@code @DisallowConcurrentExecution} markers.
-	 * More information on stateful versus stateless jobs can be found
-	 * <a href="http://www.quartz-scheduler.org/documentation/quartz-2.1.x/tutorials/tutorial-lesson-03">here</a>.
-	 * <p>The default setting is to run jobs concurrently.
+	 * Specify the job's implementation class.
 	 */
-	public void setConcurrent(boolean concurrent) {
-		this.concurrent = concurrent;
+	public void setJobClass(Class<? extends Job> jobClass) {
+		this.jobClass = jobClass;
 	}
 
 	/**
-	 * Set the name of the target bean in the Spring BeanFactory.
-	 * <p>This is an alternative to specifying {@link #setTargetObject "targetObject"},
-	 * allowing for non-singleton beans to be invoked. Note that specified
-	 * "targetObject" and {@link #setTargetClass "targetClass"} values will
-	 * override the corresponding effect of this "targetBeanName" setting
-	 * (i.e. statically pre-define the bean type or even the bean object).
+	 * Set the job's JobDataMap.
+	 * @see #setJobDataAsMap
 	 */
-	public void setTargetBeanName(String targetBeanName) {
-		this.targetBeanName = targetBeanName;
+	public void setJobDataMap(JobDataMap jobDataMap) {
+		this.jobDataMap = jobDataMap;
+	}
+
+	/**
+	 * Return the job's JobDataMap.
+	 */
+	public JobDataMap getJobDataMap() {
+		return this.jobDataMap;
+	}
+
+	/**
+	 * Register objects in the JobDataMap via a given Map.
+	 * <p>These objects will be available to this Job only,
+	 * in contrast to objects in the SchedulerContext.
+	 * <p>Note: When using persistent Jobs whose JobDetail will be kept in the
+	 * database, do not put Spring-managed beans or an ApplicationContext
+	 * reference into the JobDataMap but rather into the SchedulerContext.
+	 * @param jobDataAsMap Map with String keys and any objects as values
+	 * (for example Spring-managed beans)
+	 * @see org.springframework.scheduling.quartz.SchedulerFactoryBean#setSchedulerContextAsMap
+	 */
+	public void setJobDataAsMap(Map<String, ?> jobDataAsMap) {
+		getJobDataMap().putAll(jobDataAsMap);
+	}
+
+	/**
+	 * Specify the job's durability, i.e. whether it should remain stored
+	 * in the job store even if no triggers point to it anymore.
+	 */
+	public void setDurability(boolean durability) {
+		this.durability = durability;
+	}
+
+	/**
+	 * Set the recovery flag for this job, i.e. whether or not the job should
+	 * get re-executed if a 'recovery' or 'fail-over' situation is encountered.
+	 */
+	public void setRequestsRecovery(boolean requestsRecovery) {
+		this.requestsRecovery = requestsRecovery;
+	}
+
+	/**
+	 * Set a textual description for this job.
+	 */
+	public void setDescription(String description) {
+		this.description = description;
 	}
 
 	@Override
@@ -119,77 +143,72 @@ public class JobDetailFactoryBean extends ArgumentConvertingMethodInvoker
 	}
 
 	@Override
-	public void setBeanClassLoader(ClassLoader classLoader) {
-		this.beanClassLoader = classLoader;
+	public void setApplicationContext(ApplicationContext applicationContext) {
+		this.applicationContext = applicationContext;
 	}
 
-	@Override
-	public void setBeanFactory(BeanFactory beanFactory) {
-		this.beanFactory = beanFactory;
+	/**
+	 * Set the key of an ApplicationContext reference to expose in the JobDataMap,
+	 * for example "applicationContext". Default is none.
+	 * Only applicable when running in a Spring ApplicationContext.
+	 * <p>In case of a QuartzJobBean, the reference will be applied to the Job
+	 * instance as bean property. An "applicationContext" attribute will correspond
+	 * to a "setApplicationContext" method in that scenario.
+	 * <p>Note that BeanFactory callback interfaces like ApplicationContextAware
+	 * are not automatically applied to Quartz Job instances, because Quartz
+	 * itself is responsible for the lifecycle of its Jobs.
+	 * <p><b>Note: When using persistent job stores where JobDetail contents will
+	 * be kept in the database, do not put an ApplicationContext reference into
+	 * the JobDataMap but rather into the SchedulerContext.</b>
+	 * @see org.springframework.scheduling.quartz.SchedulerFactoryBean#setApplicationContextSchedulerContextKey
+	 * @see org.springframework.context.ApplicationContext
+	 */
+	public void setApplicationContextJobDataKey(String applicationContextJobDataKey) {
+		this.applicationContextJobDataKey = applicationContextJobDataKey;
 	}
 
-	@Override
-	protected Class<?> resolveClassName(String className) throws ClassNotFoundException {
-		return ClassUtils.forName(className, this.beanClassLoader);
-	}
-
 
 	@Override
-	@SuppressWarnings("unchecked")
-	public void afterPropertiesSet() throws ClassNotFoundException, NoSuchMethodException {
-		prepare();
+	public void afterPropertiesSet() {
+		if (this.name == null) {
+			this.name = this.beanName;
+		}
+		if (this.group == null) {
+			this.group = Scheduler.DEFAULT_GROUP;
+		}
+		if (this.applicationContextJobDataKey != null) {
+			if (this.applicationContext == null) {
+				throw new IllegalStateException(
+					"JobDetailBean needs to be set up in an ApplicationContext " +
+					"to be able to handle an 'applicationContextJobDataKey'");
+			}
+			getJobDataMap().put(this.applicationContextJobDataKey, this.applicationContext);
+		}
 
-		// Use specific name if given, else fall back to bean name.
-		String name = (this.name != null ? this.name : this.beanName);
-
-		// Consider the concurrent flag to choose between stateful and stateless job.
-		Class<?> jobClass = (this.concurrent ? JobLauncherDetails.class : StatefulJobLauncherDetails.class);
-
-		// Build JobDetail instance.
 		JobDetailImpl jdi = new JobDetailImpl();
-		jdi.setName(name);
+		jdi.setName(this.name);
 		jdi.setGroup(this.group);
-		jdi.setJobClass((Class<? extends Job>) jobClass);
-		jdi.setDurability(true);
-		jdi.getJobDataMap().put("methodInvoker", this);
+		if (this.jobClass == null) {
+			jdi.setJobClass(LaunchQuartzJobBean.class);
+		} else {
+			jdi.setJobClass(this.jobClass);
+		}
+		
+		// jobDataMap中的参数会自动注入到Job中
+		if (jobLauncher != null) {
+			jobDataMap.put("jobLauncher", jobLauncher);
+		}
+		if (jobLocator != null) {
+			jobDataMap.put("jobLocator", jobLocator);
+		}
+		String jobName = name.substring(0, name.length() - 6);
+		jobDataMap.put("jobName", jobName);
+		
+		jdi.setJobDataMap(this.jobDataMap);
+		jdi.setDurability(this.durability);
+		jdi.setRequestsRecovery(this.requestsRecovery);
+		jdi.setDescription(this.description);
 		this.jobDetail = jdi;
-
-		postProcessJobDetail(this.jobDetail);
-	}
-
-	/**
-	 * Callback for post-processing the JobDetail to be exposed by this FactoryBean.
-	 * <p>The default implementation is empty. Can be overridden in subclasses.
-	 * @param jobDetail the JobDetail prepared by this FactoryBean
-	 */
-	protected void postProcessJobDetail(JobDetail jobDetail) {
-	}
-
-
-	/**
-	 * Overridden to support the {@link #setTargetBeanName "targetBeanName"} feature.
-	 */
-	@Override
-	public Class<?> getTargetClass() {
-		Class<?> targetClass = super.getTargetClass();
-		if (targetClass == null && this.targetBeanName != null) {
-			Assert.state(this.beanFactory != null, "BeanFactory must be set when using 'targetBeanName'");
-			targetClass = this.beanFactory.getType(this.targetBeanName);
-		}
-		return targetClass;
-	}
-
-	/**
-	 * Overridden to support the {@link #setTargetBeanName "targetBeanName"} feature.
-	 */
-	@Override
-	public Object getTargetObject() {
-		Object targetObject = super.getTargetObject();
-		if (targetObject == null && this.targetBeanName != null) {
-			Assert.state(this.beanFactory != null, "BeanFactory must be set when using 'targetBeanName'");
-			targetObject = this.beanFactory.getBean(this.targetBeanName);
-		}
-		return targetObject;
 	}
 
 
@@ -199,8 +218,8 @@ public class JobDetailFactoryBean extends ArgumentConvertingMethodInvoker
 	}
 
 	@Override
-	public Class<? extends JobDetail> getObjectType() {
-		return (this.jobDetail != null ? this.jobDetail.getClass() : JobDetail.class);
+	public Class<?> getObjectType() {
+		return JobDetail.class;
 	}
 
 	@Override
@@ -208,17 +227,12 @@ public class JobDetailFactoryBean extends ArgumentConvertingMethodInvoker
 		return true;
 	}
 
-	/**
-	 * Extension of the MethodInvokingJob, implementing the StatefulJob interface.
-	 * Quartz checks whether or not jobs are stateful and if so,
-	 * won't let jobs interfere with each other.
-	 */
-	@PersistJobDataAfterExecution
-	@DisallowConcurrentExecution
-	public static class StatefulJobLauncherDetails extends JobLauncherDetails {
+	public void setJobLauncher(JobLauncher jobLauncher) {
+		this.jobLauncher = jobLauncher;
+	}
 
-		// No implementation, just an addition of the tag interface StatefulJob
-		// in order to allow stateful method invoking jobs.
+	public void setJobLocator(JobLocator jobLocator) {
+		this.jobLocator = jobLocator;
 	}
 
 }
