@@ -34,8 +34,10 @@ import org.springframework.context.ApplicationContextAware;
 public class JobDetailFactoryBean
 		implements FactoryBean<JobDetail>, BeanNameAware, ApplicationContextAware, InitializingBean {
 
-	private String name;
+	private String jobName; // 这个是spring batch的job name
 
+	private String name; // 这个是quartz的job name
+	
 	private String group;
 
 	private Class<? extends Job> jobClass;
@@ -210,9 +212,13 @@ public class JobDetailFactoryBean
 		if (jobParameters != null) {
 			jobDataMap.put("jobParameters", jobParameters);
 		}
-		
-		String jobName = name.substring(0, name.length() - 6);
-		jobDataMap.put("jobName", jobName);
+		if (jobName == null) { // 没有明确配置spring batch的job name
+			// 这个可能是配置的job name或者是bean的名字
+			String jobName = name.substring(0, name.length() - 6);
+			jobDataMap.put("jobName", jobName);
+		} else {
+			jobDataMap.put("jobName", this.jobName);
+		}
 		
 		jdi.setJobDataMap(this.jobDataMap);
 		jdi.setDurability(this.durability);
@@ -251,6 +257,10 @@ public class JobDetailFactoryBean
 
 	public void setJobParameters(Map<String, String> jobParameters) {
 		this.jobParameters = jobParameters;
+	}
+
+	public void setJobName(String jobName) {
+		this.jobName = jobName;
 	}
 
 }
