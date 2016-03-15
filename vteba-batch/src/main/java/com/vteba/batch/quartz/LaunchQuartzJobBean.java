@@ -15,6 +15,8 @@ import org.springframework.batch.core.configuration.JobLocator;
 import org.springframework.batch.core.launch.JobLauncher;
 import org.springframework.scheduling.quartz.QuartzJobBean;
 
+import com.vteba.utils.date.DateUtils;
+
 /**
  * Sprin Batch和Quartz的Job的桥接Bean。
  * 
@@ -69,6 +71,7 @@ public class LaunchQuartzJobBean extends QuartzJobBean {
 			LOGGER.info("Quartz trigger firing with Spring Batch jobName=[{}]", jobName);
 		}
 		JobParameters jobParameters = getJobParametersFromJobMap(jobDataMap);
+		
 		try {
 			jobLauncher.run(jobLocator.getJob(jobName), jobParameters);
 		} catch (JobExecutionException e) {
@@ -102,7 +105,9 @@ public class LaunchQuartzJobBean extends QuartzJobBean {
 				LOGGER.debug("JobDataMap contains values which are not job parameters (ignoring).");
 			}
 		}
-
+		
+		builder.addString("executeDatetime", DateUtils.toDateString("yyyyMMddHHmm"));
+		
 		return builder.toJobParameters();
 	}
 

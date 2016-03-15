@@ -21,14 +21,14 @@ public class JobExecutionListener {
 	@BeforeJob
 	public void beforeJob(JobExecution execution) {
 		if (LOGGER.isDebugEnabled()) {
-			LOGGER.debug("start to execute Job=[{}].", execution.getJobId());
+			LOGGER.debug("start to execute Job jobId=[{}].", execution.getJobId());
 		}
 	}
 	
 	@AfterJob
 	public void afterJob(JobExecution execution) {
 		if (LOGGER.isDebugEnabled()) {
-			LOGGER.debug("end to execute Job=[{}].", execution.getJobId());
+			LOGGER.debug("end to execute Job jobId=[{}].", execution.getJobId());
 		}
 	}
 }

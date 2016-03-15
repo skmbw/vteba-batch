@@ -27,7 +27,7 @@ public class DefaultApplicationListener implements ApplicationListener<ContextRe
 		XmlWebApplicationContext context = (XmlWebApplicationContext) event.getSource();
 		
 		String displayName = context.getDisplayName();
-		LOGGER.info("事件来源[{}].", displayName);
+		LOGGER.info("Context Refreshed Successfully. EventName=[{}].", displayName);
 		
 		String namespace = context.getNamespace();
 		// spring root 名空间是null，其他为非null，例如spring-mvc
