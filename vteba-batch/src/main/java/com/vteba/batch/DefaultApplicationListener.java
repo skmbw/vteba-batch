@@ -14,7 +14,7 @@ import org.springframework.web.context.support.XmlWebApplicationContext;
 import com.vteba.batch.user.model.User;
 
 /**
- * Spring上下文启动成功监听器
+ * Spring上下文启动成功监听器。可以在这里做一些动态添加Bean的操作等。
  * @author yinlei
  * @date 2016-2-24
  */
@@ -32,6 +32,7 @@ public class DefaultApplicationListener implements ApplicationListener<ContextRe
 		String namespace = context.getNamespace();
 		// spring root 名空间是null，其他为非null，例如spring-mvc
 		if (namespace != null || !"Root WebApplicationContext".equals(displayName)) {
+			// 只将Bean注册到spring root上下文，不注册到其他上下文中，如spring mvc的上下文，所以返回，如果需要也可以注入的
 			return;
 		}
 		DefaultListableBeanFactory factory = (DefaultListableBeanFactory) context.getAutowireCapableBeanFactory();
