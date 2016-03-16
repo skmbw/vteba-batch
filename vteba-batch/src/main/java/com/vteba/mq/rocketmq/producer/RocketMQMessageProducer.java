@@ -15,8 +15,8 @@ import com.vteba.utils.serialize.Kryoer;
 
 /**
  * RocketMQ生产者封装。主要的改进有：<br>
- * 1、对Message Body序列化的处理，可以直接传递JavaBean对象，使用Kryo将其<br>
- * 序列化成字节数组。
+ * 1、对Message Body序列化的处理，可以直接传递JavaBean对象，使用Kryo将其
+ * 序列化成字节数组。<br>
  * 2、该生产者可以配置默认的Topic和Tags，否则需要通过参数或者Message传入<br>
  * 3、重载了一些便捷的方法。但是注意参数的顺序，不清楚，记得看注释。
  * 
