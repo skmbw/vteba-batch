@@ -118,11 +118,6 @@
 		<aop:pointcut expression="execution(* com.vteba..*.service.impl.*.*(..))" id="financeTxMethodPointCut"/>
 		<aop:advisor advice-ref="transactionAdvice" pointcut-ref="financeTxMethodPointCut" order="12"/>
 	</aop:config>
-	
-	<!--1,256,384,512-->
-<!-- 	<bean id="shaPasswordEncoder" class="org.springframework.security.authentication.encoding.ShaPasswordEncoder"> -->
-<!-- 		<constructor-arg value="1"/> -->
-<!-- 	</bean> -->
 
 <!-- 	<tx:annotation-driven transaction-manager="transactionManager" order="11"/> -->
 
