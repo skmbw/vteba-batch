@@ -140,6 +140,15 @@
         <url-pattern>*.swf</url-pattern> 
     </servlet-mapping>
     
+    	<servlet>
+		<servlet-name>druidStatView</servlet-name>
+		<servlet-class>com.alibaba.druid.support.http.StatViewServlet</servlet-class>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>druidStatView</servlet-name>
+		<url-pattern>/druid/*</url-pattern>
+	</servlet-mapping>
+    
 	<!-- session 30分钟失效 -->
 	<session-config>
 		<session-timeout>30</session-timeout>
