@@ -43,6 +43,35 @@
 		c:configProfile-ref="configProfile" 
 		c:node="system" />
 	
+	<bean id="stat-filter" class="com.alibaba.druid.filter.stat.StatFilter">
+		<property name="slowSqlMillis" value="1000" />
+		<property name="logSlowSql" value="false" />
+		<!-- 参数化SQL(多个语句相同,参数不同)合并 -->
+		<property name="mergeSql" value="true" />
+	</bean>
+	
+	<!-- WallFilter基于SQL语义分析来实现防御SQL注入攻击. 把logViolation设置为true，而throwException设置为false。就可以观察是否存在违规的情况，同时不影响业务运行。 -->
+	<bean id="wall-filter" class="com.alibaba.druid.wall.WallFilter">
+		<property name="dbType" value="mysql" />
+		<!-- 对被认为是攻击的SQL进行LOG.error输出 -->
+		<property name="logViolation" value="true" />
+		<!-- 对被认为是攻击的SQL抛出SQLExcepton -->
+		<property name="throwException" value="false" />
+	</bean>
+	
+	<bean id="log-filter" class="com.alibaba.druid.filter.logging.Log4jFilter">
+		<property name="resultSetLogEnabled" value="false" />
+		<!-- 输出可执行的SQL log4j里设置log4j.logger.druid.sql.Statement=DEBUG,生产环境设置为false,log级别设置为ERROR -->
+		<property name="statementExecutableSqlLogEnable" value="true" />
+		<property name="connectionConnectAfterLogEnabled" value="false" />
+		<property name="statementLogEnabled" value="false" />
+		<property name="statementCloseAfterLogEnabled" value="false" />
+		<property name="statementParameterSetLogEnabled" value="false" />
+		<property name="statementPrepareAfterLogEnabled" value="false" />
+		<property name="statementExecuteAfterLogEnabled" value="false" />
+		<property name="resultSetCloseAfterLogEnabled" value="false" />
+	</bean>
+	
 	<bean id="tiantianDataSource" class="com.alibaba.druid.pool.DruidDataSource" init-method="init" destroy-method="close"> 
 	    <!-- 基本属性 url、user、password -->
 	    <property name="url" value="${jdbc.url}" />
@@ -72,8 +101,25 @@
 	    <property name="poolPreparedStatements" value="true" />
 	    <property name="maxPoolPreparedStatementPerConnectionSize" value="20" />
 	 
-	    <!-- 配置监控统计拦截的filters，去掉后监控界面sql无法统计 -->
-	    <property name="filters" value="stat"/>
+	    <!-- 配置监控统计拦截的filters，去掉后监控界面sql无法统计，重复 -->
+<!-- 	    <property name="filters" value="stat"/> -->
+	    <!-- 自动清除无用连接 -->
+		<property name="removeAbandoned" value="true" />
+		<!-- 清除无用连接的等待时间1800秒，也就是30分钟.关闭长时间不使用的连接 -->
+		<property name="removeAbandonedTimeout" value="180" />
+		<!-- 关闭abanded连接时输出错误日志 -->
+		<property name="logAbandoned" value="true" />
+		<!-- 连接属性 -->
+		<property name="connectionProperties" value="clientEncoding=UTF-8" />
+		<!-- 用于统计监控信息 ,StatFilter的几种配置方式: 1、proxyFilters属性自定义 2、StatFilter简化配置方式，通过filters属性value="mergeStat" 
+			3、可以通过connectProperties属性来打开mergeSql功能druid.stat.mergeSql=true 4、通过JVM参数:-Ddruid.stat.mergeSql=true -->
+		<property name="proxyFilters">
+			<list>
+				<ref bean="stat-filter" />
+				<ref bean="log-filter" />
+				<ref bean="wall-filter" />
+			</list>
+		</property>
 	</bean>
 	
 	<!-- SpringJdbcTemplate -->
