@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.vteba.batch.investor.model.Investor;
 import com.vteba.batch.investor.service.spi.InvestorService;
-
+import com.vteba.utils.id.IdsGenerator;
 import com.vteba.web.action.GenericAction;
 import com.vteba.web.action.JsonBean;
 
@@ -30,6 +30,9 @@ public class InvestorAction extends GenericAction<Investor> {
 	@Inject
 	private InvestorService investorServiceImpl;
 	
+	@Inject
+	private IdsGenerator idsGenerator;
+	
 	/**
      * 获得投资人List，初始化列表页。
      * @param model 参数
@@ -38,6 +41,8 @@ public class InvestorAction extends GenericAction<Investor> {
     @RequestMapping("/initial")
     public String initial(Investor model, Map<String, Object> maps) {
     	try {
+    		String id = idsGenerator.get();
+    		LOGGER.info(id);
     		List<Investor> list = investorServiceImpl.pagedList(model);
             maps.put("list", list);
 		} catch (Exception e) {
