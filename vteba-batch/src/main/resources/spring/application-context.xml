@@ -206,4 +206,8 @@
 <!-- 		<property name="tags" value="Test" /> -->
 <!-- 		<property name="kryoer" ref="kryoer" /> -->
 <!-- 	</bean> -->
+
+	<bean id="idsGenerator" class="com.vteba.utils.id.IdsGenerator">
+		<property name="length" value="7" />
+	</bean>
 </beans>
