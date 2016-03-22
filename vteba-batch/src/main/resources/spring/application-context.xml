@@ -168,14 +168,16 @@
 <!-- 	<tx:annotation-driven transaction-manager="transactionManager" order="11"/> -->
 
 	<!-- 基于Kryo的序列化工具 -->
-<!-- 	<bean id="kryoer" class="com.vteba.utils.serialize.Kryoer"> -->
-<!-- 		<property name="packagesToScan"> -->
-<!-- 			<set> -->
-<!-- 				<value>com.vteba.batch.user.model</value> -->
-<!-- 			</set> -->
-<!-- 		</property> -->
-<!-- 		<property name="startupInitial" value="true" /> -->
-<!-- 	</bean> -->
+	<bean id="kryoer" class="com.vteba.utils.serialize.Kryoer">
+		<property name="packagesToScan">
+			<set>
+				<value>com.vteba.batch.user.model</value>
+				<value>com.vteba.batch.investor.model</value>
+				<value>com.vteba.batch.send.model</value>
+			</set>
+		</property>
+		<property name="startupInitial" value="true" />
+	</bean>
 	
 	<!-- RocketMQ消费者， 建议一个Topic配置一个，注意订阅的Topic要和MessageListener是配对的-->
 <!-- 	<bean id="rocketMQMessageConsumer" class="com.vteba.mq.rocketmq.consumer.RocketMQMessageConsumer" init-method="init" destroy-method="destroy"> -->
@@ -225,7 +227,9 @@
 		<property name="port" value="${redis.port}" />
 	</bean>
 
-	<bean id="kryoerRedisSerializer" class="com.vteba.cache.redis.KryoerRedisSerializer"></bean>
+	<bean id="kryoerRedisSerializer" class="com.vteba.cache.redis.KryoerRedisSerializer">
+		<property name="kryoer" ref="kryoer" />
+	</bean>
 
 	<bean id="stringSerializer" class="org.springframework.data.redis.serializer.StringRedisSerializer"/>
 
