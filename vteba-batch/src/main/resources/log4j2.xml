@@ -42,7 +42,7 @@
 		<Logger name="com.vteba.user.dao" level="INFO" additivity="true">
 		</Logger>
 
-		<Logger name="org.mybatis" level="INFO" additivity="true">
+		<Logger name="org.mybatis" level="DEBUG" additivity="true">
 		</Logger>
 
 		<Logger name="com.vteba.batch" level="TRACE" additivity="true">
@@ -60,7 +60,7 @@
 		</Logger>
 		<Logger name="org.springframework" level="INFO" additivity="true">
 		</Logger>
-		<Logger name="org.springframework.tx" level="INFO" additivity="true">
+		<Logger name="org.springframework.tx" level="DEBUG" additivity="true">
 		</Logger>
 		<Logger name="org.springframework.web" level="INFO" additivity="true">
 		</Logger>

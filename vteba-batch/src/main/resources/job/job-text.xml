@@ -119,6 +119,14 @@
 	</bean>
 	<batch:step id="userProcessStep">
 		<batch:tasklet>
+			<batch:transaction-attributes
+				propagation="REQUIRED"
+				isolation="REPEATABLE_READ"
+				timeout="20"
+				/>
+<!-- 			<batch:no-rollback-exception-classes> -->
+<!-- 				<batch:include class="com.vteba.common.exception.BasicException"/> -->
+<!-- 			</batch:no-rollback-exception-classes> -->
 			<batch:chunk reader="userItemReader" processor="userItemProcessor" writer="userItemWriter" skip-limit="1" retry-limit="1" commit-interval="3" ><!-- retry-policy="" 重试次数限制，超过抛异常retry-limit="3" --><!-- 指定了skip-policy=""，次数和异常限制被忽略 -->
 				<batch:skippable-exception-classes>
 					<batch:include class="com.vteba.common.exception.BasicException"/>
@@ -227,7 +235,7 @@
 	
 	<bean id="userJobTrigger" class="org.springframework.scheduling.quartz.CronTriggerFactoryBean">
 		<property name="jobDetail" ref="userJobDetail"></property>
-		<property name="cronExpression" value="0 35 * * * ?"></property>
+		<property name="cronExpression" value="0 51 * * * ?"></property>
 	</bean>
 	
 	

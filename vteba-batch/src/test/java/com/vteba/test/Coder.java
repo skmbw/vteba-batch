@@ -15,7 +15,7 @@ public class Coder {
 
 	public static void main(String[] args) {
 		Map<String, String> tableListMap = new HashMap<String, String>();
-		tableListMap.put("investor", "投资人");
+		tableListMap.put("send", "发送");
 //		tableListMap.put("user", "用户");
 //		tableListMap.put("trading", "交易流水");
 //		tableListMap.put("account", "资金账户");
@@ -32,7 +32,7 @@ public class Coder {
 		//.tableDesc("应用配置信息")
 		//.tableName("app_info")
 		.setTableList(tableListMap)
-		.module("com.vteba.batch.investor")
+		.module("com.vteba.batch.send")
 		.setPojo(false)
 		.setMongo(false)
 		.setGenAction(false)
