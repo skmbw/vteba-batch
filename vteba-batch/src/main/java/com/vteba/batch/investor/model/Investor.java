@@ -2,6 +2,9 @@ package com.vteba.batch.investor.model;
 
 import java.util.Date;
 
+import com.vteba.annotation.KryoBean;
+
+@KryoBean
 public class Investor {
     /**
      * order by 排序语句
