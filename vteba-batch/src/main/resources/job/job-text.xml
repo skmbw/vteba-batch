@@ -126,6 +126,7 @@
 				
 				<batch:listeners>
 					<batch:listener ref="chunkExecutionListener"/>
+					<batch:listener ref="processExecutionListener"/>
 				</batch:listeners>
 				
 <!-- 				<batch:skip-policy> -->
@@ -226,7 +227,7 @@
 	
 	<bean id="userJobTrigger" class="org.springframework.scheduling.quartz.CronTriggerFactoryBean">
 		<property name="jobDetail" ref="userJobDetail"></property>
-		<property name="cronExpression" value="0 31 * * * ?"></property>
+		<property name="cronExpression" value="0 35 * * * ?"></property>
 	</bean>
 	
 	

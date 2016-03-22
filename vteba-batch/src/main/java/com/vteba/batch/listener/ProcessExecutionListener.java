@@ -1,5 +1,7 @@
 package com.vteba.batch.listener;
 
+import javax.inject.Named;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.batch.core.ItemProcessListener;
@@ -11,11 +13,12 @@ import com.alibaba.rocketmq.common.message.Message;
 import com.vteba.common.exception.ServiceException;
 
 /**
- * 步骤step处理器监听器。可以使用注解，也可以实现对应的监听器
+ * 步骤step处理器监听器。可以使用注解，也可以实现对应的监听器。和chunk放在相同的位置。Read和Write应该也是的。
  * 
  * @author yinlei
  * @date 2016年3月12日 上午11:08:09
  */
+@Named
 public class ProcessExecutionListener<T, S> extends AbstractExecutionListener implements ItemProcessListener<T, S> {
 	private static final Logger LOGGER = LoggerFactory.getLogger(ProcessExecutionListener.class);
 	
