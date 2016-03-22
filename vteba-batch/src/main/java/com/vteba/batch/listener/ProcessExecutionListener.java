@@ -60,6 +60,8 @@ public class ProcessExecutionListener extends AbstractExecutionListener implemen
 			Send send = new Send();
 			send.setName("yinlei");
 			
+			// spring的事务是绑定到当前线程的，出现异常了当前线程的事务标记为rollback，
+			// listener和ItemProcess是在同一个线程上执行的，如果不开启新的线程，会导致和ItemProcess一起回滚数据
 			Task task = new Task();
 			task.setSend(send);
 			task.setSendServiceImpl(sendServiceImpl);
