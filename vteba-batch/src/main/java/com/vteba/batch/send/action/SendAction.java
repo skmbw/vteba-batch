@@ -13,7 +13,8 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.vteba.batch.send.model.Send;
 import com.vteba.batch.send.service.spi.SendService;
-
+import com.vteba.cache.redis.JedisTemplate;
+import com.vteba.cache.redis.RedisService;
 import com.vteba.web.action.GenericAction;
 import com.vteba.web.action.JsonBean;
 
@@ -29,6 +30,10 @@ public class SendAction extends GenericAction<Send> {
 	
 	@Inject
 	private SendService sendServiceImpl;
+	@Inject
+	private JedisTemplate jedisTemplate;
+	@Inject
+	private RedisService<String, Send> redisService;
 	
 	/**
      * 获得发送List，初始化列表页。
@@ -38,6 +43,19 @@ public class SendAction extends GenericAction<Send> {
     @RequestMapping("/initial")
     public String initial(Send model, Map<String, Object> maps) {
     	try {
+    		model.setId(1222);
+    		model.setName("尹雷");
+    		model.setOrderBy("order by name desc");
+    		long d = System.currentTimeMillis();
+    		redisService.set("yinlei2", model);
+    		redisService.get("yinlei2");
+    		System.out.println(System.currentTimeMillis() - d);
+    		
+    		d = System.currentTimeMillis();
+    		jedisTemplate.set("yinlei1", model);
+    		jedisTemplate.get("yinlei1", Send.class);
+    		System.out.println(System.currentTimeMillis() - d);
+    		
     		List<Send> list = sendServiceImpl.pagedList(model);
             maps.put("list", list);
 		} catch (Exception e) {
