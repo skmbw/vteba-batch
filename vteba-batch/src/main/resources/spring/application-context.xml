@@ -218,7 +218,8 @@
 		<property name="maxIdle" value="${redis.maxIdle}" />
 		<property name="maxWaitMillis" value="${redis.maxWait}" />
 		<property name="testOnBorrow" value="${redis.testOnBorrow}" />
- 		<property name="testOnReturn" value="false"/>
+		<!-- 对于ShardsJedisSentinelPool，应该为true，否则可能获取到失效的连接，在切换master的时候 -->
+ 		<property name="testOnReturn" value="true"/>
  		<property name="testWhileIdle" value="true"/>
 <!--  		<property name="numTestsPerEvictionRun" value="1024"/> -->
 <!--         <property name="timeBetweenEvictionRunsMillis" value="30000" /> -->
