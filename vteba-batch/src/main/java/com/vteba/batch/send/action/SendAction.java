@@ -45,12 +45,15 @@ public class SendAction extends GenericAction<Send> {
     	try {
     		model.setId(1222);
     		model.setName("尹雷");
-    		model.setOrderBy("order by name desc");
+    		model.setPageSize(10);
     		long d = System.currentTimeMillis();
     		redisService.set("yinlei2", model);
     		redisService.get("yinlei2");
     		System.out.println(System.currentTimeMillis() - d);
     		
+    		model.setId(32112);
+    		model.setName("好家伙");
+    		model.setPageSize(35);
     		d = System.currentTimeMillis();
     		jedisTemplate.set("yinlei1", model);
     		jedisTemplate.get("yinlei1", Send.class);

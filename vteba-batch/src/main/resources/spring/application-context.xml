@@ -218,6 +218,49 @@
 		<property name="maxIdle" value="${redis.maxIdle}" />
 		<property name="maxWaitMillis" value="${redis.maxWait}" />
 		<property name="testOnBorrow" value="${redis.testOnBorrow}" />
+ 		<property name="testOnReturn" value="false"/>
+ 		<property name="testWhileIdle" value="true"/>
+<!--  		<property name="numTestsPerEvictionRun" value="1024"/> -->
+<!--         <property name="timeBetweenEvictionRunsMillis" value="30000" /> -->
+<!--         <property name="minEvictableIdleTimeMillis" value="-1" /> -->
+<!--         <property name="softMinEvictableIdleTimeMillis" value="10000" /> -->
+        
+<!--         <property name="jmxEnabled" value="true"/> -->
+<!--         <property name="jmxNamePrefix" value="youyuan"/> -->
+<!--         <property name="blockWhenExhausted" value="false"/> -->
+	</bean>
+
+	<bean id="shardedJedisPool" class="redis.clients.jedis.ShardedJedisPool" destroy-method="destroy">
+	 	<constructor-arg ref="jedisPoolConfig"/>
+	 	<constructor-arg>
+			<list>
+			 	<bean class="redis.clients.jedis.JedisShardInfo">
+					<constructor-arg value="127.0.0.1"/>
+					<constructor-arg type="int" value="7000"/>
+					<constructor-arg value="instance:01"/>
+			 	</bean>
+				<bean class="redis.clients.jedis.JedisShardInfo">
+					<constructor-arg value="127.0.0.1"/>
+					<constructor-arg type="int" value="7001"/>
+					<constructor-arg value="instance:02"/>
+				</bean>
+				<bean class="redis.clients.jedis.JedisShardInfo">
+					<constructor-arg value="127.0.0.1"/>
+					<constructor-arg type="int" value="7003"/>
+					<constructor-arg value="instance:03"/>
+				</bean>
+			 </list>
+	 	</constructor-arg>
+	</bean>
+
+	<bean id="redisSentinelPool" class="redis.clients.jedis.JedisSentinelPool">
+	 	<constructor-arg index="0" value="redis-master" />
+	 	<constructor-arg index="1">
+			<set>
+				<value>localhost:6379</value>
+			</set>
+	 	</constructor-arg>
+	 	<constructor-arg index="2" ref="jedisPoolConfig" />
 	</bean>
 
 	<bean id="jedisConnectionFactory"
