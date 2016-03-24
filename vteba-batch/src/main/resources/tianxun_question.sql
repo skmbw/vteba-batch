@@ -27,7 +27,7 @@ CREATE TABLE `answer` (
   `question_id` varchar(50) NOT NULL COMMENT '对应的问题id',
   `orders` int(10) NOT NULL COMMENT '回答问题的顺序',
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='答案表';
 
 -- ----------------------------
 -- Table structure for answer_image
@@ -39,7 +39,7 @@ CREATE TABLE `answer_image` (
   `image_path` varchar(250) NOT NULL COMMENT '图片路径',
   `create_date` datetime NOT NULL COMMENT '创建时间',
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='答案图片附件表';
 
 -- ----------------------------
 -- Table structure for category
@@ -52,7 +52,7 @@ CREATE TABLE `category` (
   `level` int(10) NOT NULL COMMENT '分类层级',
   `parent` int(10) NOT NULL COMMENT '父级代码',
   PRIMARY KEY (`code`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='问题分类表';
 
 -- ----------------------------
 -- Table structure for question
@@ -72,7 +72,7 @@ CREATE TABLE `question` (
   `satisfied_user_id` varchar(50) DEFAULT NULL COMMENT '满意的回答者',
   `satisfied_user_name` varchar(100) DEFAULT NULL COMMENT '满意的回答者的用户名',
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='问题表';
 
 -- ----------------------------
 -- Table structure for question_image
@@ -84,4 +84,4 @@ CREATE TABLE `question_image` (
   `image_path` varchar(250) NOT NULL COMMENT '图片路径',
   `create_date` datetime NOT NULL COMMENT '创建时间',
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='问题图片附件表';

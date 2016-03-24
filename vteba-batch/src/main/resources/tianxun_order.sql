@@ -28,4 +28,4 @@ CREATE TABLE `order` (
   `buyer` varchar(50) NOT NULL COMMENT '买方id',
   `seller` varchar(50) NOT NULL COMMENT '卖方id',
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='订单表';

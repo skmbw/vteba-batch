@@ -34,7 +34,7 @@ CREATE TABLE `account` (
   PRIMARY KEY (`id`),
   UNIQUE KEY `idx_account_account` (`account`) USING BTREE,
   UNIQUE KEY `idx_account_user_id` (`user_id`) USING BTREE
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='用户资金账户表';
 
 -- ----------------------------
 -- Table structure for account_detail
@@ -51,7 +51,7 @@ CREATE TABLE `account_detail` (
   KEY `idx_account_detail_user_id` (`user_id`) USING BTREE,
   KEY `idx_account_detail_account_id` (`account_id`) USING BTREE,
   KEY `idx_account_detail_category` (`category`) USING BTREE
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='用户资金账户明细表';
 
 -- ----------------------------
 -- Table structure for platform_account
@@ -63,7 +63,7 @@ CREATE TABLE `platform_account` (
   `total` decimal(18,2) NOT NULL DEFAULT '0.00',
   `discount` decimal(18,2) NOT NULL DEFAULT '0.00' COMMENT '优惠',
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='平台账户表';
 
 -- ----------------------------
 -- Table structure for platform_flow
@@ -77,4 +77,4 @@ CREATE TABLE `platform_flow` (
   `category` int(10) NOT NULL COMMENT '操作类型1充值2消费3收入',
   `operation_time` datetime NOT NULL COMMENT '操作时间',
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='平台账户流水表';

@@ -44,7 +44,7 @@ CREATE TABLE `user` (
   UNIQUE KEY `idx_user_mobile` (`mobile`) USING BTREE,
   UNIQUE KEY `idx_user_alipay` (`alipay`) USING BTREE,
   UNIQUE KEY `idx_user_weixin` (`weixin`) USING BTREE
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='用户表';
 
 -- 积分表
 CREATE TABLE `score` (
@@ -58,4 +58,16 @@ CREATE TABLE `score` (
   `update_date` datetime DEFAULT NULL COMMENT '更新时间',
   PRIMARY KEY (`id`),
   KEY `score_idx_user_id` (`user_id`,`year`) USING BTREE
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='用户积分表';
+
+-- 积分明细表
+CREATE TABLE `score_detail` (
+  `id` varchar(50) NOT NULL,
+  `score_id` varchar(50) NOT NULL COMMENT '积分id',
+  `score` int(10) NOT NULL COMMENT '分数',
+  `key` varchar(50) NOT NULL COMMENT '相关业务主键',
+  `key_type` varchar(50) NOT NULL COMMENT '业务类型',
+  `create_date` datetime DEFAULT NULL COMMENT '创建时间',
+  `comment` varchar(200) DEFAULT NULL COMMENT '获取积分的描述',
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='积分明细表';
