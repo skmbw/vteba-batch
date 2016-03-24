@@ -45,3 +45,17 @@ CREATE TABLE `user` (
   UNIQUE KEY `idx_user_alipay` (`alipay`) USING BTREE,
   UNIQUE KEY `idx_user_weixin` (`weixin`) USING BTREE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+-- 积分表
+CREATE TABLE `score` (
+  `id` varchar(50) NOT NULL COMMENT '主键',
+  `user_id` varchar(50) NOT NULL COMMENT '用户id',
+  `year` varchar(4) DEFAULT NULL COMMENT '积分年度',
+  `score` bigint(12) DEFAULT NULL COMMENT '积分',
+  `last_score` bigint(12) DEFAULT NULL COMMENT '去年的积分',
+  `state` int(11) DEFAULT NULL COMMENT '1有效，2无效',
+  `create_date` datetime DEFAULT NULL COMMENT '创建时间',
+  `update_date` datetime DEFAULT NULL COMMENT '更新时间',
+  PRIMARY KEY (`id`),
+  KEY `score_idx_user_id` (`user_id`,`year`) USING BTREE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
