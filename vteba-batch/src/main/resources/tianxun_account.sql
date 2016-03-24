@@ -63,13 +63,13 @@ CREATE TABLE `platform_account` (
   `total` decimal(18,2) NOT NULL DEFAULT '0.00',
   `discount` decimal(18,2) NOT NULL DEFAULT '0.00' COMMENT '优惠',
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='平台账户表';
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='平台资金账户表';
 
 -- ----------------------------
 -- Table structure for platform_flow
 -- ----------------------------
-DROP TABLE IF EXISTS `platform_flow`;
-CREATE TABLE `platform_flow` (
+DROP TABLE IF EXISTS `platform_detail`;
+CREATE TABLE `platform_detail` (
   `id` varchar(50) NOT NULL,
   `user_id` varchar(50) NOT NULL COMMENT '用户id',
   `account_id` varchar(50) NOT NULL COMMENT '账户id',
@@ -77,4 +77,4 @@ CREATE TABLE `platform_flow` (
   `category` int(10) NOT NULL COMMENT '操作类型1充值2消费3收入',
   `operation_time` datetime NOT NULL COMMENT '操作时间',
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='平台账户流水表';
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='平台资金账户明细表';
