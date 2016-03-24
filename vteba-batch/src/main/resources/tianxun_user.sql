@@ -71,3 +71,17 @@ CREATE TABLE `score_detail` (
   `comment` varchar(200) DEFAULT NULL COMMENT '获取积分的描述',
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='积分明细表';
+
+-- 系统参数
+CREATE TABLE `params` (
+  `id` varchar(50) NOT NULL COMMENT '主键',
+  `name` varchar(100) NOT NULL COMMENT 'key中文名',
+  `code` varchar(50) NOT NULL COMMENT 'key代码',
+  `value` varchar(250) NOT NULL COMMENT 'key值',
+  `state` int(10) DEFAULT '0' COMMENT 'key状态1有效,0失效',
+  `remark` varchar(250) DEFAULT NULL COMMENT '注释',
+  `create_date` datetime NOT NULL COMMENT '创建时间',
+  `update_date` datetime NOT NULL COMMENT '更新时间',
+  PRIMARY KEY (`id`),
+  KEY `idx_params_code` (`code`) USING BTREE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='参数设置';

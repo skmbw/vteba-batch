@@ -85,3 +85,13 @@ CREATE TABLE `question_image` (
   `create_date` datetime NOT NULL COMMENT '创建时间',
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='问题图片附件表';
+
+-- 标签
+CREATE TABLE `tags` (
+  `id` varchar(50) NOT NULL,
+  `name` varchar(50) NOT NULL COMMENT '标签名',
+  `state` int(10) DEFAULT NULL COMMENT '状态',
+  `hot` int(10) DEFAULT NULL COMMENT '热度',
+  `create_date` datetime DEFAULT NULL COMMENT '创建时间',
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='热门标签';
