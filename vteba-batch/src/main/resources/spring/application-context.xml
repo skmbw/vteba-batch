@@ -213,6 +213,14 @@
 		<property name="length" value="7" />
 	</bean>
 	
+	<!-- zookeeper -->
+	<bean id="curatorFrameworkService" class="com.vteba.zookeeper.CuratorFrameworkService" init-method="init" destroy-method="close">
+		<property name="connectionString" value="${zookeeper.hosts}" />
+		<property name="maxRetries" value="3" />
+		<property name="acquireTimeout" value="5000" />
+		<property name="baseSleepTimeMs" value="1000" />
+	</bean>
+	
 	<bean id="jedisPoolConfig" class="redis.clients.jedis.JedisPoolConfig">
 		<property name="maxTotal" value="${redis.maxTotal}" />
 		<property name="maxIdle" value="${redis.maxIdle}" />

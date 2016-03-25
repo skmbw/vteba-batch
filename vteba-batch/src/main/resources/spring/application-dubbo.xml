@@ -28,14 +28,6 @@
 	<dubbo:registry address="#{sysConfig['dubbo.registry']}" />
 	<dubbo:monitor protocol="registry" />
 
-	<!-- zookeeper -->
-	<bean id="curatorFrameworkService" class="com.vteba.zookeeper.CuratorFrameworkService" init-method="init" destroy-method="close">
-		<property name="connectionString" value="${zookeeper.hosts}" />
-		<property name="maxRetries" value="3" />
-		<property name="acquireTimeout" value="5000" />
-		<property name="baseSleepTimeMs" value="1000" />
-	</bean>
-
 <!-- 	<bean id="loginChannelActiveRmiService" class="com.tzg.rmi.service.impl.LoginChannelActiveServiceImpl" /> -->
 	<dubbo:service interface="com.vteba.batch.user.service.spi.UserService"
 		ref="userServiceImpl" timeout="#{sysConfig['service.timeout']}" retries="1"

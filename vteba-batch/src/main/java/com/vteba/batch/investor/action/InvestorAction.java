@@ -5,6 +5,7 @@ import java.util.Map;
 
 import javax.inject.Inject;
 
+import org.apache.curator.framework.recipes.locks.InterProcessLock;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.stereotype.Controller;
@@ -16,6 +17,7 @@ import com.vteba.batch.investor.service.spi.InvestorService;
 import com.vteba.utils.id.IdsGenerator;
 import com.vteba.web.action.GenericAction;
 import com.vteba.web.action.JsonBean;
+import com.vteba.zookeeper.CuratorFrameworkService;
 
 /**
  * 投资人控制器
@@ -32,6 +34,9 @@ public class InvestorAction extends GenericAction<Investor> {
 	
 	@Inject
 	private IdsGenerator idsGenerator;
+	
+	@Inject
+	private CuratorFrameworkService curatorFrameworkService;
 	
 	/**
      * 获得投资人List，初始化列表页。
@@ -62,6 +67,18 @@ public class InvestorAction extends GenericAction<Investor> {
 	public List<Investor> list(Investor model) {
 		List<Investor> list = null;
 		try {
+			InterProcessLock lock = null;
+			try {
+				lock = curatorFrameworkService.getLock("/ccd");
+			} finally {
+				if (lock != null) {
+					lock.release();
+				}
+			}
+			
+			boolean result = curatorFrameworkService.isExist("/ccd", false);
+			LOGGER.debug(result);
+			
 			list = investorServiceImpl.pagedList(model);
 		} catch (Exception e) {
 			LOGGER.error("get record list error, errorMsg=[{}].", e.getMessage());
