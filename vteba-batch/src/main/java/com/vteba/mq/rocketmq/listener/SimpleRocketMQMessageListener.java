@@ -2,6 +2,7 @@ package com.vteba.mq.rocketmq.listener;
 
 import java.util.List;
 
+import javax.inject.Inject;
 import javax.inject.Named;
 
 import org.slf4j.Logger;
@@ -24,9 +25,9 @@ public class SimpleRocketMQMessageListener implements RocketMQMessageListener {
 	private static final String USER_TAG_TEST1 = "Test1";
 	
 	// 支付topoc
-	private static final String TOPIC_PAY = "TOPIC_PAY";
+	private static final String TOPIC_USER2 = "YinleiUser2";
 	
-//	@Inject
+	@Inject
 	private Kryoer kryoer;
 	
 	
@@ -36,13 +37,12 @@ public class SimpleRocketMQMessageListener implements RocketMQMessageListener {
 			String msgId = message.getMsgId();
 			String topic = message.getTopic();
 			String tags = message.getTags();
+			if (LOGGER.isInfoEnabled()) {
+				LOGGER.info("开始处理消息，msgId=[{}], topic=[{}], tags=[{}].", msgId, topic, tags);
+			}
 			switch (topic) {
 			case TOPIC_USER:
 				if (USER_TAG_TEST.equals(tags)) {
-					if (LOGGER.isDebugEnabled()) {
-						LOGGER.debug("开始处理消息，msgId=[{}], topic=[{}], tags=[{}].", msgId, topic, tags);
-					}
-					
 					// 处理业务
 					// 如果使用了Kryo，这里要使用Kryo反序列化回来
 					User user = kryoer.fromByte(message.getBody());
@@ -50,15 +50,15 @@ public class SimpleRocketMQMessageListener implements RocketMQMessageListener {
 						LOGGER.info("处理用户信息，userId=[{}], userName=[{}].", user.getId(), user.getName());
 					}
 					
-					if (LOGGER.isDebugEnabled()) {
-						LOGGER.debug("消息处理成功，msgId=[{}], topic=[{}], tags=[{}].", msgId, topic, tags);
+					if (LOGGER.isInfoEnabled()) {
+						LOGGER.info("Test消息处理成功，msgId=[{}], topic=[{}], tags=[{}].", msgId, topic, tags);
 					}
 				} else if (USER_TAG_TEST1.equals(tags)) {
-					
+					LOGGER.info("Test1消息处理成功，msgId=[{}], topic=[{}], tags=[{}].", msgId, topic, tags);
 				}
 				break;
-			case TOPIC_PAY:
-				
+			case TOPIC_USER2:
+				LOGGER.info("YinleiUser.Test2消息处理成功，msgId=[{}], topic=[{}], tags=[{}].", msgId, topic, tags);
 				break;
 			default:
 				break;

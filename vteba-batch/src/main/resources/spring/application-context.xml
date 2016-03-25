@@ -12,7 +12,7 @@
 	
 	<import resource="application-mybatis.xml"/>
 <!-- 	<import resource="application-dubbo.xml"/> -->
-	<import resource="classpath:job/job-text.xml"/>
+<!-- 	<import resource="classpath:job/job-text.xml"/> -->
 	
 	<!-- 默认是基于java interface代理，proxy-target-class="true"表示基于cglib代理。 expose-proxy="true"表示将aop放到AopContext中，供查询 -->
 	<aop:aspectj-autoproxy proxy-target-class="true"/>
@@ -180,34 +180,34 @@
 	</bean>
 	
 	<!-- RocketMQ消费者， 建议一个Topic配置一个，注意订阅的Topic要和MessageListener是配对的-->
-<!-- 	<bean id="rocketMQMessageConsumer" class="com.vteba.mq.rocketmq.consumer.RocketMQMessageConsumer" init-method="init" destroy-method="destroy"> -->
-<!-- 		<property name="namesrvAddr" value="192.168.1.31:9876" /> -->
-<!-- 		<property name="consumerGroup" value="userGroup" /> -->
-<!-- 		<property name="topic" value="YinleiUser" /> -->
-<!-- 		<property name="subExpression" value="Test" /> -->
+	<bean id="rocketMQMessageConsumer" class="com.vteba.mq.rocketmq.consumer.RocketMQMessageConsumer" init-method="init" destroy-method="destroy">
+		<property name="namesrvAddr" value="192.168.1.31:9876" />
+		<property name="consumerGroup" value="userGroup" />
+		<property name="topic" value="YinleiUser" />
+		<property name="subExpression" value="Test" />
 		<!-- 如果有多个Topic，建议使用这种方式：key是Topic，value是tags -->
-<!-- 		<property name="topicSubExpressionMap"> -->
-<!-- 			<map> -->
-<!-- 				<entry key="YinleiUser" value="Test||Test1" /> -->
-<!-- 				<entry key="YinleiUser2" value="Test2" /> -->
-<!-- 			</map> -->
-<!-- 		</property> -->
-<!-- 		<property name="kryoer" ref="kryoer" /> -->
+		<property name="topicSubExpressionMap">
+			<map>
+				<entry key="YinleiUser" value="Test||Test1" />
+				<entry key="YinleiUser2" value="Test2" />
+			</map>
+		</property>
+		<property name="kryoer" ref="kryoer" />
 		<!-- 业务监听器 -->
-<!-- 		<property name="messageListener" ref="simpleRocketMQMessageListener" /> -->
+		<property name="messageListener" ref="simpleRocketMQMessageListener" />
 		<!-- 强制业务层自己使用kryo反序列化 -->
-<!-- 		<property name="forceServiceDeserialize" value="true" /> -->
-<!-- 		<property name="initTopic" value="false" /> -->
-<!-- 	</bean> -->
+		<property name="forceServiceDeserialize" value="true" />
+		<property name="initTopic" value="false" />
+	</bean>
 	
 	<!-- RocketMQ生产者，建议使用一个应用配置一个 -->
-<!-- 	<bean id="rocketMQMessageProducer" class="com.vteba.mq.rocketmq.producer.RocketMQMessageProducer"  init-method="init" destroy-method="destroy"> -->
-<!-- 		<property name="namesrvAddr" value="192.168.1.31:9876" /> -->
-<!-- 		<property name="producerGroup" value="userGroup" /> -->
-<!-- 		<property name="topic" value="YinleiUser" /> -->
-<!-- 		<property name="tags" value="Test" /> -->
-<!-- 		<property name="kryoer" ref="kryoer" /> -->
-<!-- 	</bean> -->
+	<bean id="rocketMQMessageProducer" class="com.vteba.mq.rocketmq.producer.RocketMQMessageProducer"  init-method="init" destroy-method="destroy">
+		<property name="namesrvAddr" value="192.168.1.31:9876" />
+		<property name="producerGroup" value="userGroup" />
+		<property name="topic" value="YinleiUser" />
+		<property name="tags" value="Test" />
+		<property name="kryoer" ref="kryoer" />
+	</bean>
 
 	<bean id="idsGenerator" class="com.vteba.utils.id.IdsGenerator">
 		<property name="length" value="7" />
