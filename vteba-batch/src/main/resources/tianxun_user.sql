@@ -26,6 +26,7 @@ CREATE TABLE `user` (
   `account` varchar(50) NOT NULL COMMENT '用户的登录账户名',
   `email` varchar(100) DEFAULT NULL COMMENT '邮箱',
   `mobile` varchar(50) NOT NULL COMMENT '手机号码',
+  `password` varchar(50) NOT NULL COMMENT '密码',
   `regsiter_date` datetime DEFAULT NULL COMMENT '注册日期',
   `age` int(10) DEFAULT NULL COMMENT '年龄',
   `last_login_date` datetime DEFAULT NULL COMMENT '上次登录日期',
