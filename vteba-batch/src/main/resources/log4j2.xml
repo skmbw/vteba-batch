@@ -39,7 +39,7 @@
 		</Logger>
 		<Logger name="com.vteba" level="INFO" additivity="true">
 		</Logger>
-		<Logger name="com.vteba.user.dao" level="INFO" additivity="true">
+		<Logger name="com.vteba.tx" level="DEBUG" additivity="true">
 		</Logger>
 
 		<Logger name="org.mybatis" level="DEBUG" additivity="true">

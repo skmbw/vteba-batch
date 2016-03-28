@@ -159,10 +159,13 @@
 			<tx:method name="*" propagation="REQUIRED" isolation="DEFAULT" timeout="6000" rollback-for="com.vteba.common.exception.ServiceException" no-rollback-for="com.vteba.common.exception.BasicException"/>
 		</tx:attributes> 
 	</tx:advice>
-	<!-- expose-proxy="true" -->
-	<aop:config><!--为指定包下所有类的所有方法应用事务切点-->
-		<aop:pointcut expression="execution(* com.vteba..*.service.impl.*.*(..))" id="financeTxMethodPointCut"/>
-		<aop:advisor advice-ref="transactionAdvice" pointcut-ref="financeTxMethodPointCut" order="12"/>
+	
+	<aop:config>
+		<aop:pointcut expression="execution(* com.vteba..*.service.impl.*.*(..))" id="serviceMethodPointCut"/>
+		<!-- 基于类的代理，所以，继承的基类上也要切事务 -->
+		<aop:pointcut expression="execution(* com.vteba..*.generic.impl.*.*(..))" id="commonMethodPointCut"/>
+		<aop:advisor advice-ref="transactionAdvice" pointcut-ref="serviceMethodPointCut"/>
+		<aop:advisor advice-ref="transactionAdvice" pointcut-ref="commonMethodPointCut"/>
 	</aop:config>
 
 <!-- 	<tx:annotation-driven transaction-manager="transactionManager" order="11"/> -->
@@ -180,34 +183,34 @@
 	</bean>
 	
 	<!-- RocketMQ消费者， 建议一个Topic配置一个，注意订阅的Topic要和MessageListener是配对的-->
-	<bean id="rocketMQMessageConsumer" class="com.vteba.mq.rocketmq.consumer.RocketMQMessageConsumer" init-method="init" destroy-method="destroy">
-		<property name="namesrvAddr" value="192.168.1.31:9876" />
-		<property name="consumerGroup" value="userGroup" />
-		<property name="topic" value="YinleiUser" />
-		<property name="subExpression" value="Test" />
+<!-- 	<bean id="rocketMQMessageConsumer" class="com.vteba.mq.rocketmq.consumer.RocketMQMessageConsumer" init-method="init" destroy-method="destroy"> -->
+<!-- 		<property name="namesrvAddr" value="192.168.1.31:9876" /> -->
+<!-- 		<property name="consumerGroup" value="userGroup" /> -->
+<!-- 		<property name="topic" value="YinleiUser" /> -->
+<!-- 		<property name="subExpression" value="Test" /> -->
 		<!-- 如果有多个Topic，建议使用这种方式：key是Topic，value是tags -->
-		<property name="topicSubExpressionMap">
-			<map>
-				<entry key="YinleiUser" value="Test||Test1" />
-				<entry key="YinleiUser2" value="Test2" />
-			</map>
-		</property>
-		<property name="kryoer" ref="kryoer" />
+<!-- 		<property name="topicSubExpressionMap"> -->
+<!-- 			<map> -->
+<!-- 				<entry key="YinleiUser" value="Test||Test1" /> -->
+<!-- 				<entry key="YinleiUser2" value="Test2" /> -->
+<!-- 			</map> -->
+<!-- 		</property> -->
+<!-- 		<property name="kryoer" ref="kryoer" /> -->
 		<!-- 业务监听器 -->
-		<property name="messageListener" ref="simpleRocketMQMessageListener" />
+<!-- 		<property name="messageListener" ref="simpleRocketMQMessageListener" /> -->
 		<!-- 强制业务层自己使用kryo反序列化 -->
-		<property name="forceServiceDeserialize" value="true" />
-		<property name="initTopic" value="false" />
-	</bean>
+<!-- 		<property name="forceServiceDeserialize" value="true" /> -->
+<!-- 		<property name="initTopic" value="false" /> -->
+<!-- 	</bean> -->
 	
 	<!-- RocketMQ生产者，建议使用一个应用配置一个 -->
-	<bean id="rocketMQMessageProducer" class="com.vteba.mq.rocketmq.producer.RocketMQMessageProducer"  init-method="init" destroy-method="destroy">
-		<property name="namesrvAddr" value="192.168.1.31:9876" />
-		<property name="producerGroup" value="userGroup" />
-		<property name="topic" value="YinleiUser" />
-		<property name="tags" value="Test" />
-		<property name="kryoer" ref="kryoer" />
-	</bean>
+<!-- 	<bean id="rocketMQMessageProducer" class="com.vteba.mq.rocketmq.producer.RocketMQMessageProducer"  init-method="init" destroy-method="destroy"> -->
+<!-- 		<property name="namesrvAddr" value="192.168.1.31:9876" /> -->
+<!-- 		<property name="producerGroup" value="userGroup" /> -->
+<!-- 		<property name="topic" value="YinleiUser" /> -->
+<!-- 		<property name="tags" value="Test" /> -->
+<!-- 		<property name="kryoer" ref="kryoer" /> -->
+<!-- 	</bean> -->
 
 	<bean id="idsGenerator" class="com.vteba.utils.id.IdsGenerator">
 		<property name="length" value="7" />

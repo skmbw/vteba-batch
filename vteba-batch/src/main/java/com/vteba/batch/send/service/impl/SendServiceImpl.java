@@ -17,13 +17,18 @@ import com.vteba.tx.jdbc.mybatis.spi.BasicDao;
  */
 @Named
 public class SendServiceImpl extends BasicServiceImpl<Send, Integer> implements SendService {
-	// 添加了方法后，记得改为private
-	protected SendDao sendDao;
+	
+	private SendDao sendDao;
 	
 	@Override
 	@Inject
 	public void setBasicDao(BasicDao<Send, Integer> sendDao) {
 		this.basicDao = sendDao;
 		this.sendDao = (SendDao) sendDao;
+	}
+
+	@Override
+	public int saveSend(Send send) {
+		return sendDao.save(send);
 	}
 }

@@ -121,7 +121,8 @@ public class SendAction extends GenericAction<Send> {
     public JsonBean doAdd(Send model) {
     	JsonBean bean = new JsonBean();
     	try {
-    		int result = sendServiceImpl.save(model);
+    		model.setName("ygg");
+    		int result = sendServiceImpl.saveSend(model);//sendServiceImpl.save(model);
             if (result == 1) {
                 bean.setMessage(SUCCESS);
                 bean.setCode(1);

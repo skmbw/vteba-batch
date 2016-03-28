@@ -34,8 +34,8 @@ public class UserAction extends GenericAction<User> {
 //	@Inject
 //	private Kryoer kryoer;
 	
-	@Inject
-	private RocketMQMessageProducer rocketMQMessageProducer;
+//	@Inject
+//	private RocketMQMessageProducer rocketMQMessageProducer;
 	
 	/**
      * 获得用户List，初始化列表页。
@@ -78,16 +78,16 @@ public class UserAction extends GenericAction<User> {
 			model.setAge(18);
 			model.setName("YinleiUser.Test1");
 			
-			rocketMQMessageProducer.send(model);
-			model.setAge(19);
-			model.setId(2);
-			model.setName("Yinlei.Test2");
-			rocketMQMessageProducer.send("Test1", model);
-			
-			model.setId(3);
-			model.setAge(20);
-			model.setName("YinleiUser2.Test2");
-			rocketMQMessageProducer.send("YinleiUser2", "Test2", model);
+//			rocketMQMessageProducer.send(model);
+//			model.setAge(19);
+//			model.setId(2);
+//			model.setName("Yinlei.Test2");
+//			rocketMQMessageProducer.send("Test1", model);
+//			
+//			model.setId(3);
+//			model.setAge(20);
+//			model.setName("YinleiUser2.Test2");
+//			rocketMQMessageProducer.send("YinleiUser2", "Test2", model);
 			//list = userServiceImpl.pagedList(model);
 		} catch (Exception e) {
 			LOGGER.error("get record list error, errorMsg=[{}].", e.getMessage());

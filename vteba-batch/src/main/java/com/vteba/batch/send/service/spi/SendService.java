@@ -11,4 +11,5 @@ import com.vteba.service.generic.BasicService;
  */
 public interface SendService extends BasicService<Send, Integer> {
 
+	public int saveSend(Send send);
 }
