@@ -54,8 +54,6 @@
 		</Logger>
 		<Logger name="com.ibatis" level="TRACE" additivity="true">
 		</Logger>
-		<Logger name="com.vteba.tx" level="INFO" additivity="true">
-		</Logger>
 		<Logger name="org.jboss" level="INFO" additivity="true">
 		</Logger>
 		<Logger name="org.springframework" level="INFO" additivity="true">
