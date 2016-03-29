@@ -29,7 +29,7 @@
 	<bean id="propUtils" class="com.vteba.utils.common.PropUtils">
 		<property name="locations">
 			<list>
-				<value>file:/opt/config.properties</value>
+				<value>classpath:config.properties</value>
 			</list>
 		</property>
 	</bean>

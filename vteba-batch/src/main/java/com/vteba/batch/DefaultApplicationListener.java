@@ -1,7 +1,5 @@
 package com.vteba.batch;
 
-import javax.inject.Named;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.config.BeanDefinition;
@@ -18,7 +16,7 @@ import com.vteba.batch.user.model.User;
  * @author yinlei
  * @date 2016-2-24
  */
-@Named
+//@Named
 public class DefaultApplicationListener implements ApplicationListener<ContextRefreshedEvent> {
 	private static final Logger LOGGER = LoggerFactory.getLogger(DefaultApplicationListener.class);
 	
