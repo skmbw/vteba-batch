@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans" xmlns:security="http://www.springframework.org/schema/security"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:jee="http://www.springframework.org/schema/jee"
+	xmlns:tx="http://www.springframework.org/schema/tx" xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:aop="http://www.springframework.org/schema/aop" xmlns:dwr="http://www.directwebremoting.org/schema/spring-dwr"
+	xmlns:cache="http://www.springframework.org/schema/cache" xmlns:spring="http://www.infinispan.org/schemas/spring" 
+	xmlns:util="http://www.springframework.org/schema/util" xmlns:mvc="http://www.springframework.org/schema/mvc"
+	xmlns:dubbo="http://code.alibabatech.com/schema/dubbo" xmlns:c="http://www.springframework.org/schema/c"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.2.xsd http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx-3.2.xsd http://www.springframework.org/schema/jee http://www.springframework.org/schema/jee/spring-jee-3.2.xsd http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop-3.2.xsd http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-3.2.xsd http://www.directwebremoting.org/schema/spring-dwr http://www.directwebremoting.org/schema/spring-dwr-3.0.xsd http://www.springframework.org/schema/security http://www.springframework.org/schema/security/spring-security-3.1.xsd http://www.springframework.org/schema/cache http://www.springframework.org/schema/cache/spring-cache-3.2.xsd http://www.infinispan.org/schemas/spring http://www.infinispan.org/schemas/infinispan-spring-5.0.xsd 
+	http://www.springframework.org/schema/mvc http://www.springframework.org/schema/mvc/spring-mvc-3.2.xsd http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util-3.2.xsd http://code.alibabatech.com/schema/dubbo http://code.alibabatech.com/schema/dubbo/dubbo.xsd"
+	default-autowire="byName">
+	<!-- logger="slf4j" dubbo的日志配置，也可以在jvm启动时-Ddubbo.application.logger=slf4j System.setProperty() -->
+	<!--dubbo 服务提供者应用名称 -->
+	<dubbo:application name="vteba-dubbo" />
+	
+	<!--loadbalance="random"  随机，按权重设置随机概率。-->
+    <!--loadbalance="roundrobin"  轮循，按公约后权重设置轮循比率。-->
+    <!--loadbalance="LeastActive"  最少活跃调用数，相同活跃数的随机，活跃数指调用前后计数差。-->
+    <!--loadbalance="ConsistentHash"  一致性Hash，相同参数的请求总是发到同一提供者。-->
+	<!-- 服务提供者缺省值配置为<dubbo:service>和<dubbo:protocol>标签的缺省值设置 -->
+	<dubbo:provider retries="0"
+		timeout="#{sysConfig['service.timeout']}" loadbalance="#{sysConfig['dubbo.loadbalance']}" />
+	<!--服务提供者 协议和端口 -->
+	<dubbo:protocol name="#{sysConfig['dubbo.protocol.name']}"
+		port="#{sysConfig['dubbo.protocol.dubbo.port']}" />
+	
+	<!--dubbo 注册中心， address可以使用逗号分割。protocol="zookeeper" -->
+	<dubbo:registry address="#{sysConfig['dubbo.registry']}" />
+	<dubbo:monitor protocol="registry" />
+
+<!-- 	<bean id="loginChannelActiveRmiService" class="com.tzg.rmi.service.impl.LoginChannelActiveServiceImpl" /> -->
+	<dubbo:service interface="com.vteba.batch.user.service.spi.UserService"
+		ref="userServiceImpl" timeout="#{sysConfig['service.timeout']}" retries="1"
+		version="#{sysConfig['service.version']}" />
+
+</beans>
