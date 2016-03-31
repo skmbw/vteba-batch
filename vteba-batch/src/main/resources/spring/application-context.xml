@@ -12,10 +12,10 @@
 	
 	<import resource="application-mybatis.xml"/>
 <!-- 	<import resource="application-dubbo.xml"/> -->
-	<import resource="classpath:job/job-text.xml"/>
+<!-- 	<import resource="classpath:job/job-text.xml"/> -->
 	
 	<!-- 默认是基于java interface代理，proxy-target-class="true"表示基于cglib代理。 expose-proxy="true"表示将aop放到AopContext中，供查询 -->
-	<aop:aspectj-autoproxy proxy-target-class="true"/>
+<!-- 	<aop:aspectj-autoproxy proxy-target-class="true"/> -->
 	
 	<!--扫描@Autowired等注解，自动装配bean-->
 	<context:annotation-config />
@@ -73,6 +73,56 @@
 	</bean>
 	
 	<bean id="tiantianDataSource" class="com.alibaba.druid.pool.DruidDataSource" init-method="init" destroy-method="close"> 
+	    <!-- 基本属性 url、user、password -->
+	    <property name="url" value="${jdbc.url}" />
+	    <property name="username" value="${jdbc.username}" />
+	    <property name="password" value="${jdbc.password}" />
+	      
+	    <!-- 配置初始化大小、最小、最大 -->
+	    <property name="initialSize" value="1" />
+	    <property name="minIdle" value="1" /> 
+	    <property name="maxActive" value="20" />
+	 
+	    <!-- 配置获取连接等待超时的时间 -->
+	    <property name="maxWait" value="60000" />
+	 
+	    <!-- 配置间隔多久才进行一次检测，检测需要关闭的空闲连接，单位是毫秒 -->
+	    <property name="timeBetweenEvictionRunsMillis" value="60000" />
+	 
+	    <!-- 配置一个连接在池中最小生存的时间，单位是毫秒 -->
+	    <property name="minEvictableIdleTimeMillis" value="300000" />
+	  
+	    <property name="validationQuery" value="SELECT 'x'" />
+	    <property name="testWhileIdle" value="true" />
+	    <property name="testOnBorrow" value="false" />
+	    <property name="testOnReturn" value="false" />
+	 
+	    <!-- 打开PSCache，并且指定每个连接上PSCache的大小 -->
+	    <property name="poolPreparedStatements" value="true" />
+	    <property name="maxPoolPreparedStatementPerConnectionSize" value="20" />
+	 
+	    <!-- 配置监控统计拦截的filters，去掉后监控界面sql无法统计，重复 -->
+<!-- 	    <property name="filters" value="stat"/> -->
+	    <!-- 自动清除无用连接 -->
+		<property name="removeAbandoned" value="true" />
+		<!-- 清除无用连接的等待时间1800秒，也就是30分钟.关闭长时间不使用的连接 -->
+		<property name="removeAbandonedTimeout" value="180" />
+		<!-- 关闭abanded连接时输出错误日志 -->
+		<property name="logAbandoned" value="true" />
+		<!-- 连接属性 -->
+		<property name="connectionProperties" value="clientEncoding=UTF-8" />
+		<!-- 用于统计监控信息 ,StatFilter的几种配置方式: 1、proxyFilters属性自定义 2、StatFilter简化配置方式，通过filters属性value="mergeStat" 
+			3、可以通过connectProperties属性来打开mergeSql功能druid.stat.mergeSql=true 4、通过JVM参数:-Ddruid.stat.mergeSql=true -->
+		<property name="proxyFilters">
+			<list>
+				<ref bean="stat-filter" />
+				<ref bean="log-filter" />
+				<ref bean="wall-filter" />
+			</list>
+		</property>
+	</bean>
+	
+	<bean id="tiantian2DataSource" class="com.alibaba.druid.pool.DruidDataSource" init-method="init" destroy-method="close"> 
 	    <!-- 基本属性 url、user、password -->
 	    <property name="url" value="${jdbc.url}" />
 	    <property name="username" value="${jdbc.username}" />
@@ -304,4 +354,17 @@
 		<property name="port" value="6379" />
 		<property name="kryoer" ref="kryoer" />
 	</bean>
+	
+	<!-- 根据配置运行时选择schema -->
+	<bean id="schemaServiceInterceptor" class="com.vteba.tx.jdbc.mybatis.interceptor.SchemaServiceInterceptor">
+		<property name="proxyInterface" value="true" />
+	</bean>
+	<aop:config>
+<!-- 		<aop:pointcut expression="execution(* com.vteba.*.*.service.impl.*.*(..))" id="serviceSessionPointCut"/> -->
+<!-- 		<aop:pointcut expression="execution(* com.vteba..*.generic.impl.*.*(..))" id="commonSessionPointCut"/> -->
+		<aop:pointcut expression="execution(* com.vteba.*.*.dao.*.*(..))" id="serviceSessionPointCut"/>
+<!-- 		<aop:pointcut expression="execution(* com.vteba..*.mybatis.spi.*.*(..))" id="commonSessionPointCut"/> -->
+		<aop:advisor advice-ref="schemaServiceInterceptor" pointcut-ref="serviceSessionPointCut"/>
+<!-- 		<aop:advisor advice-ref="serviceSchemaInterceptor" pointcut-ref="commonSessionPointCut"/> -->
+	</aop:config>
 </beans>

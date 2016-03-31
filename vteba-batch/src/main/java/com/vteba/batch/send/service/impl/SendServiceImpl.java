@@ -6,7 +6,6 @@ import javax.inject.Named;
 import com.vteba.batch.send.dao.SendDao;
 import com.vteba.batch.send.model.Send;
 import com.vteba.batch.send.service.spi.SendService;
-
 import com.vteba.service.generic.impl.BasicServiceImpl;
 import com.vteba.tx.jdbc.mybatis.spi.BasicDao;
 
@@ -29,6 +28,6 @@ public class SendServiceImpl extends BasicServiceImpl<Send, Integer> implements 
 
 	@Override
 	public int saveSend(Send send) {
-		return sendDao.save(send);
+		return sendDao.saveSend(send);
 	}
 }

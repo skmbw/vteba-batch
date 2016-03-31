@@ -170,6 +170,29 @@
       </if>
     </trim>
   </insert>
+  <insert id="saveSend" parameterType="com.vteba.batch.send.model.Send" >
+    <!--
+      WARNING - 插入记录，只有非空字段才会插入到数据库。
+      MyBatis代码工具自动生成，不要修改！
+    -->
+    insert into send
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="name != null" >
+        name,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="name != null" >
+        #{name,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
   <select id="countBy" parameterType="com.vteba.batch.send.model.Send" resultType="java.lang.Integer" >
     <!--
       WARNING - 根据params所携带条件计数。

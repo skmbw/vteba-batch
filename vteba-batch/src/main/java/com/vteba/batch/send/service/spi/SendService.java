@@ -1,7 +1,6 @@
 package com.vteba.batch.send.service.spi;
 
 import com.vteba.batch.send.model.Send;
-
 import com.vteba.service.generic.BasicService;
 
 /**

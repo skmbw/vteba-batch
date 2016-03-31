@@ -23,6 +23,20 @@
 		</property>
 	</bean>	
 
+	<bean id="tiantian2SqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean">
+<!-- 	<bean id="tiantianSqlSessionFactory" class="com.vteba.tx.jdbc.mybatis.session.SqlSessionFactoryBean"> -->
+		<property name="dataSource" ref="tiantian2DataSource" /><!-- sqlSessionFactory对应的数据源，要和事务管理器transactionManager的数据源一致 -->
+		<!--指定MyBatis的基本配置文件路径-->
+		<property name="configLocation" value="classpath:mybatis/mybatis-tiantian.xml"/>
+		<!--指定Mapper映射文件的位置 ，如果映射文件与相应的接口同名，且在同一路径下，
+		可以不配置该选项。或者在mybatis基本配置文件中配置，不在此处配置-->
+		<property name="mapperLocations">
+			<list>
+				<value>classpath:/com/vteba/batch/**/mapper/*Mapper.xml</value>
+			</list>
+		</property>
+	</bean>	
+
 	<!-- 注册Mapper方式二：也可不指定特定mapper，而使用自动扫描包的方式来注册各种Mapper ，配置如下-->
 <!-- 	<bean id="tiantianMapperScanner" class="org.mybatis.spring.mapper.MapperScannerConfigurer"> -->
 	<bean id="tiantianMapperScanner" class="com.vteba.tx.jdbc.mybatis.mapper.MapperScannerConfigurer">
@@ -30,15 +44,15 @@
 		<property name="basePackage" value="com.vteba.batch,com.vteba.common" />
 		<!--<property name="markerInterface" value="com.vteba.tx.jdbc.mybatis.mapper.BaseMapper"/> 扫描该接口的子接口 -->
 		<property name="annotationClass" value="com.vteba.tx.jdbc.mybatis.annotation.DaoMapper"/><!-- 扫描被该注解标注的接口 -->
-		<property name="sqlSessionTemplateBeanName" value="masterSlaveSqlSessionTemplate"/>
+		<property name="sqlSessionTemplateBeanName" value="defaultSqlSessionTemplate"/>
 <!-- 		<property name="sqlSessionFactoryBeanName" value="tiantianSqlSessionFactory"/> -->
 	</bean>
 	
-	<bean id="masterSlaveSqlSessionTemplate" class="com.vteba.tx.jdbc.mybatis.session.MasterSlaveSqlSessionTemplate">
+	<bean id="defaultSqlSessionTemplate" class="com.vteba.tx.jdbc.mybatis.session.DefaultSqlSessionTemplate">
 		<constructor-arg ref="tiantianSqlSessionFactory"/>
 		<property name="slaveSqlSessionFactory">
 			<map>
-				<entry key-ref="tiantianSqlSessionFactory" value="2"/>
+				<entry key-ref="tiantian2SqlSessionFactory" value="20"/>
 			</map>
 		</property>
 	</bean>
