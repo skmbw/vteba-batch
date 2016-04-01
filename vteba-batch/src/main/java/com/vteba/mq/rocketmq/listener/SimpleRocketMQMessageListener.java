@@ -30,7 +30,6 @@ public class SimpleRocketMQMessageListener implements RocketMQMessageListener {
 	@Inject
 	private Kryoer kryoer;
 	
-	
 	@Override
 	public boolean onMessage(List<MessageExt> messageList, ConsumeConcurrentlyContext context) {
 		for (MessageExt message : messageList) {
@@ -38,7 +37,7 @@ public class SimpleRocketMQMessageListener implements RocketMQMessageListener {
 			String topic = message.getTopic();
 			String tags = message.getTags();
 			if (LOGGER.isInfoEnabled()) {
-				LOGGER.info("开始处理消息，msgId=[{}], topic=[{}], tags=[{}].", msgId, topic, tags);
+				LOGGER.info("开始处理消息，msg=[{}]", message);
 			}
 			switch (topic) {
 			case TOPIC_USER:
@@ -51,14 +50,14 @@ public class SimpleRocketMQMessageListener implements RocketMQMessageListener {
 					}
 					
 					if (LOGGER.isInfoEnabled()) {
-						LOGGER.info("Test消息处理成功，msgId=[{}], topic=[{}], tags=[{}].", msgId, topic, tags);
+						LOGGER.info("YinleiUser.Test消息处理成功，msgId=[{}], topic=[{}], tags=[{}].", msgId, topic, tags);
 					}
 				} else if (USER_TAG_TEST1.equals(tags)) {
-					LOGGER.info("Test1消息处理成功，msgId=[{}], topic=[{}], tags=[{}].", msgId, topic, tags);
+					LOGGER.info("YinleiUser.Test1消息处理成功，msgId=[{}], topic=[{}], tags=[{}].", msgId, topic, tags);
 				}
 				break;
 			case TOPIC_USER2:
-				LOGGER.info("YinleiUser.Test2消息处理成功，msgId=[{}], topic=[{}], tags=[{}].", msgId, topic, tags);
+				LOGGER.info("YinleiUser2.Test2消息处理成功，msgId=[{}], topic=[{}], tags=[{}].", msgId, topic, tags);
 				break;
 			default:
 				break;
@@ -70,8 +69,6 @@ public class SimpleRocketMQMessageListener implements RocketMQMessageListener {
 	@Override
 	public boolean onConsume(List<Message> messageList, ConsumeConcurrentlyContext context) {
 		for (Message message : messageList) {
-			System.out.println(message.getTopic());
-			System.out.println(message.getTags());
 			System.out.println(message);
 			User user = message.getBodyEntity();
 			System.out.println(user);
