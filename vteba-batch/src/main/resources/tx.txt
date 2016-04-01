@@ -38,3 +38,14 @@ PROPAGATION_REQUIRES_NEW :内部的事务独立运行，在各自的作用域中
 ROPAGATION_NESTED :NESTED的事务，基于单一的事务来管理，提供了多个保存点。 由于这个设置基于JDBC的保存点，所以只能工作在JDBC的保存点机制之上。
 两者都是事务嵌套，不同之处在于，内外事务之间是否存在彼此之间的影响；NESTED之间会受到影响，内部不会影响外部，但是外部会影响内部（如果外部回滚的话，那么内部也会回滚）。
 而REQUIRED_NEW则是独立的。
+
+
+分享一个比较有意思的SQL小技巧 (后台变态的需求)
+自定义排序 实现效果： 2,1,3,4,5,6....
+
+mysql关于自定义排序的函数有：
+order by field，ORDER BY INSTR，ORDER BY locate
+以上3个函数的缺点是必须把所有值罗列出来
+而这样:
+SELECT id,istate FROM tbsubject ORDER BY istate=2 DESC,istate 
+则没有以上限制

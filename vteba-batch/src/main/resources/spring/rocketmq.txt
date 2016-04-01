@@ -6,3 +6,7 @@ sh mqbroker -m > broker.p 将默认配置项写到broker.p中
 listenPort=10912 修改mqbroker监听的端口
 
 nohup sh mqbroker -c broker.p 使用当前文件夹下的配置文件broker.p启动mq
+
+nohup sh mqbroker -n 192.168.1.1:9876 -c $ROCKETMQ_HOME/conf/2m-2s-sync/broker-a.properties &
+-n 指定名服务地址
+$ROCKETMQ_HOME 这个要自己指定 用export导出一下
