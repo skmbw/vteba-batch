@@ -1,0 +1,110 @@
+前提：需要java环境
+
+主1：
+# echo "192.168.1.18  tzgredis1" >> /etc/hosts
+# echo "192.168.1.19  tzgredis2" >> /etc/hosts
+# tar zxf alibaba-rocketmq-3.2.6.tar.gz -C /usr/local/
+# mv /usr/local/alibaba-rocketmq /usr/local/alibaba-rocketmq-3.2.6
+# ln -s /usr/local/alibaba-rocketmq-3.2.6 /usr/local/rocketmq
+# cat > /usr/local/rocketmq/conf/2m-noslave/broker-a.properties << EOF
+brokerClusterName=TzgMqCluster
+brokerName=broker-a
+brokerId=0
+namesrvAddr=tzgredis1:9876;tzgredis2:9876
+defaultTopicQueueNums=4
+autoCreateTopicEnable=true
+autoCreateSubscriptionGroup=true
+listenPort=10911
+deleteWhen=04
+fileReservedTime=120
+mapedFileSizeCommitLog=1073741824
+mapedFileSizeConsumeQueue=50000000
+destroyMapedFileIntervalForcibly=120000
+redeleteHangedFileInterval=120000
+diskMaxUsedSpaceRatio=88
+storePathRootDir=/opt/rocketmq/store
+storePathCommitLog=/opt/rocketmq/store/commitlog
+maxMessageSize=65536
+flushCommitLogLeastPages=4
+flushConsumeQueueLeastPages=2
+flushCommitLogThoroughInterval=10000
+flushConsumeQueueThoroughInterval=60000
+brokerRole=ASYNC_MASTER
+flushDiskType=ASYNC_FLUSH
+checkTransactionMessageEnable=false
+sendMessageThreadPoolNums=128
+pullMessageThreadPoolNums=128
+EOF
+# vi /usr/local/rocketmq/bin/runbroker.sh 
+JAVA_OPT="${JAVA_OPT} -server -Xms512m -Xmx2048m -Xmn128m -XX:PermSize=64m -XX:MaxPermSize=512m"
+# mkdir -p /opt/rocketmq/store/commitlog /opt/rocketmq/logs
+# cd /usr/local/rocketmq/conf && sed -i  's#${user.home}#/opt/rocketmq#g' *.xml
+# chmod +x /usr/local/rocketmq/bin/*.sh
+# chmod +x /usr/local/rocketmq/bin/mqadmin
+# chmod +x /usr/local/rocketmq/bin/mqbroker
+# chmod +x /usr/local/rocketmq/bin/mqfiltersrv
+# chmod +x /usr/local/rocketmq/bin/mqnamesrv
+# chmod +x /usr/local/rocketmq/bin/mqshutdown
+# vi /usr/local/rocketmq/bin/runserver.sh 
+JAVA_OPT="${JAVA_OPT} -server -Xms512m -Xmx2048m -Xmn128m -XX:PermSize=64m -XX:MaxPermSize=512m"
+# /usr/local/rocketmq/bin/mqnamesrv &
+# /usr/local/rocketmq/bin/mqbroker -c /usr/local/rocketmq/conf/2m-noslave/broker-a.properties &
+# echo "/usr/local/rocketmq/bin/mqnamesrv &" >> /etc/rc.local
+# echo "/usr/local/rocketmq/bin/mqbroker -c /usr/local/rocketmq/conf/2m-noslave/broker-a.properties &" >> /etc/rc.local
+ 
+
+
+主2：
+# echo "192.168.1.18  tzgredis1" >> /etc/hosts
+# echo "192.168.1.19  tzgredis2" >> /etc/hosts
+# tar zxf alibaba-rocketmq-3.2.6.tar.gz -C /usr/local/
+# mv /usr/local/alibaba-rocketmq /usr/local/alibaba-rocketmq-3.2.6
+# ln -s /usr/local/alibaba-rocketmq-3.2.6 /usr/local/rocketmq
+# cat > /usr/local/rocketmq/conf/2m-noslave/broker-b.properties << EOF
+brokerClusterName=TzgMqCluster
+brokerName=broker-b
+brokerId=0
+namesrvAddr=tzgredis1:9876;tzgredis2:9876
+defaultTopicQueueNums=4
+autoCreateTopicEnable=true
+autoCreateSubscriptionGroup=true
+listenPort=10911
+deleteWhen=04
+fileReservedTime=120
+mapedFileSizeCommitLog=1073741824
+mapedFileSizeConsumeQueue=50000000
+destroyMapedFileIntervalForcibly=120000
+redeleteHangedFileInterval=120000
+diskMaxUsedSpaceRatio=88
+storePathRootDir=/opt/rocketmq/store
+storePathCommitLog=/opt/rocketmq/store/commitlog
+maxMessageSize=65536
+flushCommitLogLeastPages=4
+flushConsumeQueueLeastPages=2
+flushCommitLogThoroughInterval=10000
+flushConsumeQueueThoroughInterval=60000
+brokerRole=ASYNC_MASTER
+flushDiskType=ASYNC_FLUSH
+checkTransactionMessageEnable=false
+sendMessageThreadPoolNums=128
+pullMessageThreadPoolNums=128
+EOF
+# vi /usr/local/rocketmq/bin/runbroker.sh 
+JAVA_OPT="${JAVA_OPT} -server -Xms512m -Xmx2048m -Xmn128m -XX:PermSize=64m -XX:MaxPermSize=512m"
+# mkdir -p /opt/rocketmq/store/commitlog /opt/rocketmq/logs
+# cd /usr/local/rocketmq/conf && sed -i  's#${user.home}#/opt/rocketmq#g' *.xml
+# chmod +x /usr/local/rocketmq/bin/*.sh
+# chmod +x /usr/local/rocketmq/bin/mqadmin
+# chmod +x /usr/local/rocketmq/bin/mqbroker
+# chmod +x /usr/local/rocketmq/bin/mqfiltersrv
+# chmod +x /usr/local/rocketmq/bin/mqnamesrv
+# chmod +x /usr/local/rocketmq/bin/mqshutdown
+# vi /usr/local/rocketmq/bin/runserver.sh 
+JAVA_OPT="${JAVA_OPT} -server -Xms512m -Xmx2048m -Xmn128m -XX:PermSize=64m -XX:MaxPermSize=512m"
+# /usr/local/rocketmq/bin/mqnamesrv &
+# /usr/local/rocketmq/bin/mqbroker -c /usr/local/rocketmq/conf/2m-noslave/broker-b.properties &
+# echo "/usr/local/rocketmq/bin/mqnamesrv &" >> /etc/rc.local
+# echo "/usr/local/rocketmq/bin/mqbroker -c /usr/local/rocketmq/conf/2m-noslave/broker-b.properties &" >> /etc/rc.local
+ 
+
+
