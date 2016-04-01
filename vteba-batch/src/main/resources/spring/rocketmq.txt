@@ -1,0 +1,8 @@
+mqbroker -p 显示所有配置项
+mqbroker -m 获取默认配置项
+
+sh mqbroker -m > broker.p 将默认配置项写到broker.p中
+
+listenPort=10912 修改mqbroker监听的端口
+
+nohup sh mqbroker -c broker.p 使用当前文件夹下的配置文件broker.p启动mq
