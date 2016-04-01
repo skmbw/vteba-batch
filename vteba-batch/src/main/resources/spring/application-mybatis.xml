@@ -55,6 +55,13 @@
 				<entry key-ref="tiantian2SqlSessionFactory" value="20"/>
 			</map>
 		</property>
+		<!-- 强制使用主库的dao，包含dao中的所有方法 -->
+<!-- 		<property name="forceMasterDaoList"> -->
+<!-- 			<list> -->
+<!-- 				<value>com.tzg.task.fixedbao.Fixedbao</value> -->
+<!-- 				<value>com.tzg.call.back.app.dao.BindbankcardMapper</value> -->
+<!-- 			</list> -->
+<!-- 		</property> -->
 	</bean>
 	
 </beans>
