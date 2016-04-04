@@ -47,6 +47,7 @@ CREATE TABLE `user` (
   UNIQUE KEY `idx_user_weixin` (`weixin`) USING BTREE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='用户表';
 
+DROP TABLE IF EXISTS `score`;
 -- 积分表
 CREATE TABLE `score` (
   `id` varchar(50) NOT NULL COMMENT '主键',
@@ -61,6 +62,7 @@ CREATE TABLE `score` (
   KEY `score_idx_user_id` (`user_id`,`year`) USING BTREE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='用户积分表';
 
+DROP TABLE IF EXISTS `score_detail`;
 -- 积分明细表
 CREATE TABLE `score_detail` (
   `id` varchar(50) NOT NULL,
@@ -73,6 +75,7 @@ CREATE TABLE `score_detail` (
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='积分明细表';
 
+DROP TABLE IF EXISTS `params`;
 -- 系统参数
 CREATE TABLE `params` (
   `id` varchar(50) NOT NULL COMMENT '主键',
@@ -86,3 +89,20 @@ CREATE TABLE `params` (
   PRIMARY KEY (`id`),
   KEY `idx_params_code` (`code`) USING BTREE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='参数设置';
+
+DROP TABLE IF EXISTS `article`;
+CREATE TABLE `article` (
+  `id` varchar(50) NOT NULL,
+  `title` varchar(100) NOT NULL COMMENT '标题',
+  `summary` varchar(100) DEFAULT NULL COMMENT '摘要',
+  `category_id` varchar(50) DEFAULT NULL COMMENT '问题分类id',
+  `answer_id` varchar(50) DEFAULT NULL COMMENT '来源回答id',
+  `question_id` varchar(50) DEFAULT NULL COMMENT '来源问题id',
+  `author_id` varchar(50) DEFAULT NULL COMMENT '作者id',
+  `create_date` datetime DEFAULT NULL COMMENT '创建时间',
+  `update_date` datetime DEFAULT NULL COMMENT '更新时间',
+  `state` int(11) DEFAULT '0' COMMENT '问题状态',
+  `platform` tinyint(1) DEFAULT '0' COMMENT '是否平台',
+  `open` tinyint(1) DEFAULT '1' COMMENT '是否开放',
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='精选文章';
