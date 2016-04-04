@@ -104,5 +104,6 @@ CREATE TABLE `article` (
   `state` int(11) DEFAULT '0' COMMENT '问题状态',
   `platform` tinyint(1) DEFAULT '0' COMMENT '是否平台',
   `open` tinyint(1) DEFAULT '1' COMMENT '是否开放',
+  `content` varchar(250) DEFAULT NULL COMMENT '文章内容，可能不会用',
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='精选文章';
