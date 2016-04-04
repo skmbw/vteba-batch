@@ -95,7 +95,7 @@ CREATE TABLE `article` (
   `id` varchar(50) NOT NULL,
   `title` varchar(100) NOT NULL COMMENT '标题',
   `summary` varchar(100) DEFAULT NULL COMMENT '摘要',
-  `category_id` varchar(50) DEFAULT NULL COMMENT '问题分类id',
+  `category_code` int(11) DEFAULT NULL COMMENT '问题分类id',
   `answer_id` varchar(50) DEFAULT NULL COMMENT '来源回答id',
   `question_id` varchar(50) DEFAULT NULL COMMENT '来源问题id',
   `author_id` varchar(50) DEFAULT NULL COMMENT '作者id',
