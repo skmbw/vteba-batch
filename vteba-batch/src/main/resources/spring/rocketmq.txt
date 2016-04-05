@@ -10,3 +10,14 @@ nohup sh mqbroker -c broker.p 使用当前文件夹下的配置文件broker.p启
 nohup sh mqbroker -n 192.168.1.1:9876 -c $ROCKETMQ_HOME/conf/2m-2s-sync/broker-a.properties &
 -n 指定名服务地址
 $ROCKETMQ_HOME 这个要自己指定 用export导出一下
+
+jps -v 查看java 虚拟机进程统计 jps -m
+
+window下查看端口占用
+C:\netstat -aon|findstr 8080
+TCP 127.0.0.1:80 0.0.0.0:0 LISTENING 2448
+端口被进程号为2448的进程占用，继续执行下面命令：
+C:\tasklist|findstr 2448
+thread.exe 2016 Console 0 16,064 K
+很清楚，thread占用了你的端口,Kill it
+命令：taskkill -F -PID 2448
