@@ -21,3 +21,8 @@ C:\tasklist|findstr 2448
 thread.exe 2016 Console 0 16,064 K
 很清楚，thread占用了你的端口,Kill it
 命令：taskkill -F -PID 2448
+
+二、rocketmq名服务
+mqnamesrv -p > namesrv.p
+将名服务的配置打印到 文件中。可以修改其中的端口配置等。
+如果没有slave，就不要配置同步双写了，那样会找不到slave。异步复制就行了。
