@@ -107,3 +107,20 @@ CREATE TABLE `article` (
   `content` varchar(250) DEFAULT NULL COMMENT '文章内容，可能不会用',
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='精选文章';
+
+DROP TABLE IF EXISTS `rocketmq_message`;
+CREATE TABLE `rocketmq_message` (
+  `id` varchar(100) NOT NULL COMMENT '主键',
+  `topic` varchar(100) NOT NULL COMMENT '消息topic',
+  `tags` varchar(100) NOT NULL COMMENT '消息子tags',
+  `keys` varchar(100) NOT NULL COMMENT '业务唯一键',
+  `body` varchar(1024) NOT NULL COMMENT '消息体',
+  `born_address` varchar(50) DEFAULT NULL COMMENT '创建消息的客户端',
+  `born_date` datetime DEFAULT NULL COMMENT '创建时间',
+  `update_address` varchar(50) DEFAULT NULL COMMENT '消费消息的server',
+  `update_date` datetime DEFAULT NULL COMMENT '消费的时间',
+  `state` int(11) NOT NULL DEFAULT '1' COMMENT '状态1待消费2消费成功3异常',
+  PRIMARY KEY (`id`),
+  KEY `idx_mq_msg_keys` (`keys`) USING BTREE,
+  KEY `idx_mq_msg_tags` (`tags`) USING BTREE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='rocketmq消息记录';
