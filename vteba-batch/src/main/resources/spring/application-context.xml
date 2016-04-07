@@ -230,6 +230,11 @@
 			</set>
 		</property>
 		<property name="startupInitial" value="true" />
+		<property name="classSet">
+			<set>
+				<value>com.alibaba.rocketmq.common.message.Message</value>
+			</set>
+		</property>
 	</bean>
 	
 	<!-- RocketMQ消费者， 建议一个Topic配置一个，注意订阅的Topic要和MessageListener是配对的-->
