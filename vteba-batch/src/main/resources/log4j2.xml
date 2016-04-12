@@ -2,10 +2,10 @@
 <!-- status=debug 可以查看log4j的装配过程 -->
 <Configuration status="INFO">
 	<Properties>
-		<Property name="LOG_HOME">C:\\logs\\</Property>
+		<Property name="LOG_HOME">C:\\logs\\batch\\</Property>
 		<!-- 日志备份目录 -->
 		<Property name="BACKUP_HOME">{LOG_HOME}/backup</Property>
-		<Property name="STAT_NAME">stat</Property>
+		<Property name="MQ_NAME">mq.log</Property>
 		<Property name="SERVER_NAME">global.log</Property>
 		<Property name="FILE_NAME">log.log</Property>
 	</Properties>
@@ -27,9 +27,17 @@
 			</Policies>
 		</RollingRandomAccessFile>
 		
+		<RollingRandomAccessFile name="RocketMQFileAppender" fileName="${LOG_HOME}/${MQ_NAME}"
+			filePattern="${LOG_HOME}/${MQ_NAME}.%d{yyyy-MM-dd-HH}.log">
+			<PatternLayout
+				pattern="%date{yyyy-MM-dd HH:mm:ss.SSS} %level [%thread][%file:%line] - %msg%n" />
+			<Policies>
+				<TimeBasedTriggeringPolicy interval="1"
+					modulate="true" />
+			</Policies>
+		</RollingRandomAccessFile>
 	</Appenders>
 	<Loggers>
-		<!-- 第三方 Loggers -->
 		<Logger name="org.apache" level="INFO" additivity="true">
 		</Logger>
 		<Logger name="com.mchange.v2" level="INFO" additivity="true">
@@ -41,19 +49,15 @@
 		</Logger>
 		<Logger name="com.vteba.tx" level="DEBUG" additivity="true">
 		</Logger>
-
 		<Logger name="org.mybatis" level="DEBUG" additivity="true">
 		</Logger>
 
-		<Logger name="com.vteba.batch" level="TRACE" additivity="true">
-		</Logger>
 		<!-- 打印mybatis sql -->
-		<Logger name="org.apache.ibatis" level="TRACE" additivity="true">
+		<Logger name="com.vteba.batch" level="INFO" additivity="true">
 		</Logger>
-		<Logger name="java.sql" level="TRACE" additivity="true">
+		<Logger name="org.apache.ibatis" level="INFO" additivity="true">
 		</Logger>
-		<Logger name="com.ibatis" level="TRACE" additivity="true">
-		</Logger>
+		
 		<Logger name="org.jboss" level="INFO" additivity="true">
 		</Logger>
 		<Logger name="org.springframework" level="INFO" additivity="true">
@@ -70,8 +74,9 @@
 		</Logger>
 		<Logger name="com.alibaba.dubbo" level="INFO" additivity="true">
 		</Logger>
-<!-- 		<Logger name="org.hibernate.type.descriptor.sql.BasicBinder" level="TRACE" additivity="true"> -->
-<!-- 		</Logger> -->
+		<Logger name="com.vteba.mq.rocketmq" level="DEBUG">
+			<AppenderRef ref="RocketMQFileAppender" />
+		</Logger>
 
 		<!-- Root Logger -->
 		<Root level="INFO">
