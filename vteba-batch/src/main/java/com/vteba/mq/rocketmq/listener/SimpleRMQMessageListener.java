@@ -17,13 +17,9 @@ public class SimpleRMQMessageListener implements RMQMessageListener {
 	private static final Logger LOGGER = LoggerFactory.getLogger(SimpleRMQMessageListener.class);
 	
 	// 用户topic
-	private static final String TOPIC_USER = "YinleiUser";
+	private static final String TOPIC = "RMQTopic";
 	// 用户topic下的tags
-	private static final String USER_TAG_TEST = "Test";
-	private static final String USER_TAG_TEST1 = "Test1";
-	
-	// 支付topoc
-	private static final String TOPIC_USER2 = "YinleiUser2";
+	private static final String TAG = "RMQTags";
 	
 	@Inject
 	private Kryoer kryoer;
@@ -34,11 +30,11 @@ public class SimpleRMQMessageListener implements RMQMessageListener {
 		String topic = message.getTopic();
 		String tags = message.getTags();
 		if (LOGGER.isInfoEnabled()) {
-			LOGGER.info("开始处理消息，msg=[{}]", message);
+			LOGGER.info("开始处理RMQ消息，msg=[{}]", message);
 		}
 		switch (topic) {
-		case TOPIC_USER:
-			if (USER_TAG_TEST.equals(tags)) {
+		case TOPIC:
+			if (TAG.equals(tags)) {
 				// 处理业务
 				// 如果使用了Kryo，这里要使用Kryo反序列化回来
 				User user = kryoer.fromByte(message.getBody());
@@ -47,16 +43,14 @@ public class SimpleRMQMessageListener implements RMQMessageListener {
 				}
 				
 				if (LOGGER.isInfoEnabled()) {
-					LOGGER.info("YinleiUser.Test消息处理成功，msgId=[{}], topic=[{}], tags=[{}].", msgId, topic, tags);
+					LOGGER.info("消息处理成功，msgId=[{}], topic=[{}], tags=[{}].", msgId, topic, tags);
 				}
-			} else if (USER_TAG_TEST1.equals(tags)) {
-				LOGGER.info("YinleiUser.Test1消息处理成功，msgId=[{}], topic=[{}], tags=[{}].", msgId, topic, tags);
 			}
 			break;
-		case TOPIC_USER2:
-			LOGGER.info("YinleiUser2.Test2消息处理成功，msgId=[{}], topic=[{}], tags=[{}].", msgId, topic, tags);
-			break;
 		default:
+			if (LOGGER.isInfoEnabled()) {
+				LOGGER.info("未监听的Topic{}，{}，{}。", msgId, topic, tags);
+			}
 			break;
 		}
 		return true;
