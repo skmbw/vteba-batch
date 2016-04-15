@@ -56,7 +56,7 @@ public class SendAction extends GenericAction<Send> {
     		model.setPageSize(35);
     		d = System.currentTimeMillis();
     		jedisTemplate.set("yinlei1", model);
-    		jedisTemplate.get("yinlei1", Send.class);
+    		jedisTemplate.get("yinlei1");
     		System.out.println(System.currentTimeMillis() - d);
     		
     		List<Send> list = sendServiceImpl.pagedList(model);
