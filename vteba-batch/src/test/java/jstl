@@ -1,0 +1,124 @@
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%> 
+<tbody>
+<c:forEach var="instance" items="${requestScope.list}" varStatus="status">
+    <c:choose>
+        <c:when test="${status.index%2==0}" >//斑马线
+             <tr class="SelcetOff">
+         </c:when>
+        <c:when test="${status.index%2==1}" >
+             <tr class="SelcetOn">
+       </c:when>
+     </c:choose>
+             <td><div align="center">${instance.userName}</div></td>
+             <td><div align="center">${instance.address }</div></td>
+             <td><div align="center">${instance.role }</div></td>
+              
+            </tr>
+</c:forEach>
+</tbody>
+	
+<tbody>
+<c:forEach var="instance" items="${requestScope.list}" varStatus="status">
+    <c:choose>
+        <c:when test="${status.index%2==0}" >//斑马线
+             <tr class="SelcetOff">
+         </c:when>
+        <c:when test="${status.index%2==1}" >
+             <tr class="SelcetOn">
+       </c:when>
+     </c:choose>
+             <td><div align="center">${instance.userName}</div></td>
+             <td><div align="center">${instance.address }</div></td>
+             <td><div align="center">${instance.role }</div></td>
+              
+            </tr>
+</c:forEach>
+</tbody>
+
+status.current 当前这次迭代的（集合中的）项 
+status.index 索引，从0开始，相当于for循环里的i 
+status.count 计数器，从1开始 
+status.first 判断是否是第一条 
+status.last  判断是否是最后一条 
+status.begin 获得开始时的记录 
+status.end   获得结束时的记录 
+status.step  获得步长 
+
+${requestScope.list}是一个List<User>，instance是其中的一个实例 
+<c:forEach items="${requestScope.winMap}" var="entry" varStatus="status" >
+                 
+    <tr><td><c:out value="${entry.key}" />等奖</td><td><c:out value="${entry.value.winCount}" /></td><td><c:out value="${entry.value.winMoney}" /></td></tr>
+    <c:if test="${!status.last}">
+    <tr><td>追加</td><td><c:out value="${entry.value.winAddCount}" /></td><td><c:out value="${entry.value.winAddMoney}" /></td></tr>
+    </c:if>
+</c:forEach>
+	
+<c:forEach items="${requestScope.winMap}" var="entry" varStatus="status" >
+                 
+    <tr><td><c:out value="${entry.key}" />等奖</td><td><c:out value="${entry.value.winCount}" /></td><td><c:out value="${entry.value.winMoney}" /></td></tr>
+    <c:if test="${!status.last}">
+    <tr><td>追加</td><td><c:out value="${entry.value.winAddCount}" /></td><td><c:out value="${entry.value.winAddMoney}" /></td></tr>
+    </c:if>
+</c:forEach>
+
+${requestScope.winMap}是一个Map<String,Win>,entry是其中的一个实例,${!status.last}表示不是最后一项 
+
+Map map=request.getParameterMap();
+Iterator ite = map.entrySet().iterator();
+while (ite.hasNext()) {
+      Map.Entry mapEntry = (Map.Entry)_ite.next();
+      request.setAttribute((String)mapEntry.getKey(), mapEntry.getValue());
+}
+	
+Map map=request.getParameterMap();
+Iterator ite = map.entrySet().iterator();
+while (ite.hasNext()) {
+      Map.Entry mapEntry = (Map.Entry)_ite.next();
+      request.setAttribute((String)mapEntry.getKey(), mapEntry.getValue());
+}
+
+可参考： 
+JSTL标签用法 详解 
+http://blog.csdn.net/zwhfyy/archive/2009/07/09/4335200.aspx 
+
+迭代 
+http://www.java2000.net/p3893 
+
+使用JSTL标签格式化时间与货币形式 
+<%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt" %> 
+?
+1
+	
+<fmt:formatDate value="${date}" pattern="yyyy年MM月dd日 HH:mm:ss"/>
+
+这里的value值是你要格式化的值,一般是后台传送到前台的Date对象  后面的pattern对应的是要显示的格式,可以自定义. 
+?
+1
+	
+<fmt:formatNumber value="${ entry.pretaxprize/100 }" pattern="##.##" minFractionDigits="2" />元
+
+EL表达式拾遗： 
+pageScope、requestScope、sessionScope 和applicationScope对应JSP的pageContext、request、session和application 
+
+request.getParameter(String name) 
+request.getParameterValues(String name) 
+application.getInitParameter("userid") 
+分别等价于： 
+${param.name} 
+${paramValues.name} 
+${initParam.userid} 
+
+${pageContext.request.queryString}         取得请求的参数字符串 
+${pageContext.request.requestURL}         取得请求的URL，但不包括请求之参数字符串 
+${pageContext.request.contextPath}         服务的web application 的名称 
+${pageContext.request.method}           取得HTTP 的方法(GET、POST) 
+${pageContext.request.protocol}         取得使用的协议(HTTP/1.1、HTTP/1.0) 
+${pageContext.request.remoteUser}         取得用户名称 
+${pageContext.request.remoteAddr }         取得用户的IP 地址 
+${pageContext.session.new}             判断session 是否为新的 
+${pageContext.session.id}               取得session 的ID 
+${pageContext.servletContext.serverInfo}   取得主机端的服务信息 
+${header["User-Agent"]}  要取得用户浏览器的版本 
+
+运算符empty，?: 
+例：${empty param.name}、${A?B:C}、${A*(B+C)}
