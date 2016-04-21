@@ -21,8 +21,9 @@
 	<dubbo:provider retries="0"
 		timeout="#{sysConfig['service.timeout']}" loadbalance="#{sysConfig['dubbo.loadbalance']}" />
 	<!--服务提供者 协议和端口 -->
-	<dubbo:protocol name="#{sysConfig['dubbo.protocol.name']}"
-		port="#{sysConfig['dubbo.protocol.dubbo.port']}" />
+<!-- 	<dubbo:protocol name="#{sysConfig['dubbo.protocol.name']}" -->
+<!-- 		port="#{sysConfig['dubbo.protocol.dubbo.port']}" /> -->
+	<dubbo:protocol name="dubbo" port="9090" server="netty" client="netty" codec="dubbo" serialization="dubbo" charset="UTF-8" />
 	
 	<!--dubbo 注册中心， address可以使用逗号分割。protocol="zookeeper" -->
 	<dubbo:registry address="#{sysConfig['dubbo.registry']}" />
