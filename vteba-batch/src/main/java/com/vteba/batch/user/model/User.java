@@ -1,12 +1,15 @@
 package com.vteba.batch.user.model;
 
+import java.io.Serializable;
 import java.util.Date;
 
 import com.vteba.annotation.KryoBean;
 
 @KryoBean
-public class User {
-    /**
+public class User implements Serializable {
+	private static final long serialVersionUID = 8033017135287622794L;
+
+	/**
      * order by 排序语句
      * 对应数据库表字段 user
      */
