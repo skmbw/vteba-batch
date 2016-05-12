@@ -7,6 +7,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.alibaba.rocketmq.client.consumer.listener.ConsumeConcurrentlyContext;
+import com.alibaba.rocketmq.client.consumer.listener.ConsumeOrderlyContext;
 import com.alibaba.rocketmq.common.message.MessageExt;
 import com.vteba.batch.user.model.User;
 import com.vteba.mq.rocketmq.model.Message;
@@ -62,6 +63,12 @@ public class SimpleRMQMessageListener implements RMQMessageListener {
 		User user = message.getBodyEntity();
 		System.out.println(user);
 		return true;
+	}
+
+	@Override
+	public boolean onMessage(MessageExt message, ConsumeOrderlyContext context) {
+		// TODO Auto-generated method stub
+		return false;
 	}
 
 }
