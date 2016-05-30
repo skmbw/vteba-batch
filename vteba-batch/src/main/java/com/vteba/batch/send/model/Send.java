@@ -1,8 +1,8 @@
 package com.vteba.batch.send.model;
 
-import com.vteba.annotation.KryoBean;
+import com.vteba.annotation.Kryo;
 
-@KryoBean
+@Kryo
 public class Send {
     /**
      * order by 排序语句

@@ -3,9 +3,9 @@ package com.vteba.batch.user.model;
 import java.io.Serializable;
 import java.util.Date;
 
-import com.vteba.annotation.KryoBean;
+import com.vteba.annotation.Kryo;
 
-@KryoBean
+@Kryo
 public class User implements Serializable {
 	private static final long serialVersionUID = 8033017135287622794L;
 
