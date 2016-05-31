@@ -11,7 +11,7 @@ import com.alibaba.rocketmq.client.consumer.listener.ConsumeOrderlyContext;
 import com.alibaba.rocketmq.common.message.MessageExt;
 import com.vteba.batch.user.model.User;
 import com.vteba.mq.rocketmq.model.Message;
-import com.vteba.utils.serialize.Kryoer;
+import com.vteba.utils.serialize.kryo.Kryoer;
 
 @Named
 public class SimpleRMQMessageListener implements RMQMessageListener {
