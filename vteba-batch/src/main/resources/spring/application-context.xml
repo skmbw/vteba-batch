@@ -11,7 +11,7 @@
 	default-autowire="byName">
 	
 	<import resource="application-mybatis.xml"/>
-<!-- 	<import resource="application-dubbo.xml"/> -->
+	<import resource="application-dubbo.xml"/>
 <!-- 	<import resource="classpath:job/job-text.xml"/> -->
 	<import resource="application-rocketmq.xml"/>
 	
@@ -222,7 +222,7 @@
 <!-- 	<tx:annotation-driven transaction-manager="transactionManager" order="11"/> -->
 
 	<!-- 基于Kryo的序列化工具 -->
-	<bean id="kryoer" class="com.vteba.utils.serialize.Kryoer">
+	<bean id="kryoer" class="com.vteba.utils.serialize.kryo.Kryoer">
 		<property name="packagesToScan">
 			<set>
 				<value>com.vteba.batch.user.model</value>
