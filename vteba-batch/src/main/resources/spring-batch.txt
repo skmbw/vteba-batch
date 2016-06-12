@@ -1,0 +1,4 @@
+对于spring batch的分页查询 reader -- processor -- writer
+如果 processor处理后导致reader读取的数据发生变化，会导致数据读取不完
+比如修改了数据的状态，reader再去读取，数据已经变化分页会错误
+解决方法：每次分页读取 0,pageSize,每次都从0开始
