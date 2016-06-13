@@ -1,7 +1,12 @@
 package com.vteba.batch.launcher;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import java.util.concurrent.Callable;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ConcurrentMap;
+
+import org.apache.commons.lang3.StringUtils;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.springframework.batch.core.BatchStatus;
 import org.springframework.batch.core.ExitStatus;
 import org.springframework.batch.core.Job;
@@ -46,11 +51,14 @@ import org.springframework.util.Assert;
  */
 public class DefaultJobLauncher implements JobLauncher, InitializingBean {
 
-	private static final Logger LOGGER = LoggerFactory.getLogger(DefaultJobLauncher.class);
+	private static final Logger LOGGER = LogManager.getLogger(DefaultJobLauncher.class);
 
 	private JobRepository jobRepository;
 
 	private TaskExecutor taskExecutor;
+	
+	/** 用来保存系统中正在执行的任务，key是jobName，value是线程id */
+	private volatile ConcurrentMap<String, String> concurrentMap = new ConcurrentHashMap<>();
 
 	/**
 	 * Run the provided job with the given {@link JobParameters}. The
@@ -107,37 +115,37 @@ public class DefaultJobLauncher implements JobLauncher, InitializingBean {
 		jobExecution = jobRepository.createJobExecution(job.getName(), jobParameters);
 
 		try {
-			taskExecutor.execute(new Runnable() {
+			Callable<Boolean> callable = new Callable<Boolean>() {
 
 				@Override
-				public void run() {
+				public Boolean call() throws Exception {
 					try {
 						LOGGER.info("Job: [" + job + "] launched with the following parameters: [" + jobParameters
 								+ "]");
 						job.execute(jobExecution);
 						LOGGER.info("Job: [" + job + "] completed with the following parameters: [" + jobParameters
 								+ "] and the following status: [" + jobExecution.getStatus() + "]");
-					}
-					catch (Throwable t) {
+						return true;
+					} catch (Throwable t) {
 						LOGGER.info("Job: [" + job
 								+ "] failed unexpectedly and fatally with the following parameters: [" + jobParameters
 								+ "]", t);
 						rethrow(t);
 					}
+					return false;
 				}
-
+				
 				private void rethrow(Throwable t) {
 					if (t instanceof RuntimeException) {
 						throw (RuntimeException) t;
-					}
-					else if (t instanceof Error) {
+					} else if (t instanceof Error) {
 						throw (Error) t;
 					}
 					throw new IllegalStateException(t);
 				}
-			});
-		}
-		catch (TaskRejectedException e) {
+			};
+			taskExecutor.execute(null);
+		} catch (TaskRejectedException e) {
 			jobExecution.upgradeStatus(BatchStatus.FAILED);
 			if (jobExecution.getExitStatus().equals(ExitStatus.UNKNOWN)) {
 				jobExecution.setExitStatus(ExitStatus.FAILED.addExitDescription(e));
@@ -178,5 +186,23 @@ public class DefaultJobLauncher implements JobLauncher, InitializingBean {
 			taskExecutor = new SyncTaskExecutor();
 		}
 	}
+	
+	/**
+	 * 查询任务是否在运行
+	 * @param jobName job名字，Spring bean的名字
+	 * @return true运行，false否
+	 */
+	public boolean isRunning(String jobName) {
+		String thread = concurrentMap.get(jobName);
+		if (StringUtils.isNotBlank(thread)) {
+			return true;
+		}
+		return false;
+	}
+
+	public ConcurrentMap<String, String> getConcurrentMap() {
+		return concurrentMap;
+	}
+	
 }
 
