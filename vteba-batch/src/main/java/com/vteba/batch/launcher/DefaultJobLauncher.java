@@ -21,10 +21,12 @@ import org.springframework.batch.core.repository.JobInstanceAlreadyCompleteExcep
 import org.springframework.batch.core.repository.JobRepository;
 import org.springframework.batch.core.repository.JobRestartException;
 import org.springframework.beans.factory.InitializingBean;
+import org.springframework.core.task.AsyncListenableTaskExecutor;
 import org.springframework.core.task.SyncTaskExecutor;
 import org.springframework.core.task.TaskExecutor;
 import org.springframework.core.task.TaskRejectedException;
 import org.springframework.util.Assert;
+import org.springframework.util.concurrent.ListenableFuture;
 
 /**
  * 简单实现 {@link JobLauncher} 这个接口. 接口
@@ -55,7 +57,7 @@ public class DefaultJobLauncher implements JobLauncher, InitializingBean {
 
 	private JobRepository jobRepository;
 
-	private TaskExecutor taskExecutor;
+	private AsyncListenableTaskExecutor taskExecutor;
 	
 	/** 用来保存系统中正在执行的任务，key是jobName，value是线程id */
 	private volatile ConcurrentMap<String, String> concurrentMap = new ConcurrentHashMap<>();
@@ -144,7 +146,8 @@ public class DefaultJobLauncher implements JobLauncher, InitializingBean {
 					throw new IllegalStateException(t);
 				}
 			};
-			taskExecutor.execute(null);
+			ListenableFuture<Boolean> future = taskExecutor.submitListenable(callable);
+			
 		} catch (TaskRejectedException e) {
 			jobExecution.upgradeStatus(BatchStatus.FAILED);
 			if (jobExecution.getExitStatus().equals(ExitStatus.UNKNOWN)) {
@@ -170,7 +173,7 @@ public class DefaultJobLauncher implements JobLauncher, InitializingBean {
 	 *
 	 * @param taskExecutor
 	 */
-	public void setTaskExecutor(TaskExecutor taskExecutor) {
+	public void setTaskExecutor(AsyncListenableTaskExecutor taskExecutor) {
 		this.taskExecutor = taskExecutor;
 	}
 
@@ -183,7 +186,8 @@ public class DefaultJobLauncher implements JobLauncher, InitializingBean {
 		Assert.state(jobRepository != null, "A JobRepository has not been set.");
 		if (taskExecutor == null) {
 			LOGGER.info("No TaskExecutor has been set, defaulting to synchronous executor.");
-			taskExecutor = new SyncTaskExecutor();
+			// taskExecutor = new SyncTaskExecutor();
+			throw new IllegalArgumentException("No TaskExecutor has been set.");
 		}
 	}
 	
