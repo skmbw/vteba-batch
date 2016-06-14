@@ -40,35 +40,12 @@ public class SpringBatchJobLauncher {
 		if (jobParameters == null) {
 			jobParameters = new HashMap<String, String>();
 		}
-		// 不能用这个参数，参数和job name是唯一确定Job的
-		jobParameters.put("executeDatetime", DateUtils.toDateString(dateFormat) + 1);
+		// 参数和job name是唯一确定Job的
+		jobParameters.put("executeDatetime", DateUtils.toDateString(dateFormat));
 		JobParameters allParams = translateParams(job, jobParameters);
 		
-//		boolean jobExist = jobRepository.isJobInstanceExists(jobName, allParams);
-//		if (jobExist) {
-//			JobExecution jobExecution = jobRepository.getLastJobExecution(jobName, allParams);
-//			BatchStatus batchStatus = jobExecution.getStatus();
-//			Date endTime = jobExecution.getEndTime();
-//			if (endTime == null || batchStatus != BatchStatus.COMPLETED) {
-//				
-//			}
-//		}
-		
-//		Set<JobExecution> jobExecutionSets = jobExplorer.findRunningJobExecutions(jobName);
-//		int size = jobExecutionSets.size();
-//		if (size > 1) {
-//			if (LOGGER.isInfoEnabled()) {
-//				LOGGER.info("已经有任务在运行{},size=[{}].", jobExecutionSets, size);
-//			}
-//			return;
-//		} else {
-//			if (LOGGER.isInfoEnabled()) {
-//				LOGGER.info("开始执行：JobName=[{}]", jobName);
-//			}
-//		}
-		
+		// 如果已有任务正在运行，返回
 		boolean running = jobLauncher.isRunning(jobName);
-		
 		if (running) {
 			if (LOGGER.isInfoEnabled()) {
 				LOGGER.info("任务jobName=[{}]正在运行，线程id=[{}]，如果线程id=[null]，说明数据被回调清除，是正常的.", jobName, jobLauncher.getRunningThreadId(jobName));
