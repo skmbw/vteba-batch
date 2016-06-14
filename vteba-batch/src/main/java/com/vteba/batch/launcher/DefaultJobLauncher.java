@@ -136,16 +136,12 @@ public class DefaultJobLauncher implements JobLauncher, InitializingBean {
 						map.put(jobName, threadId.toString());
 						concurrentMap.put(jobName, threadId.toString());
 						
-						LOGGER.info("Job: [" + job + "] launched with the following parameters: [" + jobParameters
-								+ "]");
+						LOGGER.info("Job: [{}] launched with the parameters: [{}]", jobName, jobParameters);
 						job.execute(jobExecution);
-						LOGGER.info("Job: [" + job + "] completed with the following parameters: [" + jobParameters
-								+ "] and the following status: [" + jobExecution.getStatus() + "]");
+						LOGGER.info("Job: [{}] completed with the parameters: [{}] and the status: [{}]", jobName, jobParameters, jobExecution.getStatus());
 						return map;
 					} catch (Throwable t) {
-						LOGGER.info("Job: [" + job
-								+ "] failed unexpectedly and fatally with the following parameters: [" + jobParameters
-								+ "]", t);
+						LOGGER.info("Job: [{}] failed unexpectedly and fatally with the parameters: [{}]", jobName, jobParameters, t);
 						rethrow(t);
 					}
 					return map;
@@ -180,8 +176,8 @@ public class DefaultJobLauncher implements JobLauncher, InitializingBean {
 
 				@Override
 				public void onFailure(Throwable ex) {
-					LOGGER.error("任务运行失败[{}], 将从缓存中删除运行状态，等待下一次运行.", jobName, ex);
 					concurrentMap.remove(jobName);
+					LOGGER.error("任务运行失败[{}], 将从缓存中删除运行状态，等待下一次运行.", jobName, ex);
 				}
 			});
 		} catch (TaskRejectedException e) {
