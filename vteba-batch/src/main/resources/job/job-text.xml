@@ -27,15 +27,16 @@
 <!-- 		<property name="jobRegistry" ref="jobRegistry"/> -->
 <!-- 	</bean> -->
 		
-	<bean id="jobLauncher" class="org.springframework.batch.core.launch.support.SimpleJobLauncher">
+<!-- 	<bean id="jobLauncher" class="org.springframework.batch.core.launch.support.SimpleJobLauncher"> -->
+	<bean id="jobLauncher" class="com.vteba.batch.launcher.DefaultJobLauncher">
 		<property name="jobRepository" ref="jobRepository" />
 		<property name="taskExecutor" ref="taskExecutor" />
 	</bean>
 	
-<!-- 	<bean id="jobExplorer" class="org.springframework.batch.core.explore.support.JobExplorerFactoryBean"> -->
-<!-- 		<property name="dataSource" ref="tiantianDataSource" /> -->
-<!-- 		<property name="serializer" ref="fastJsonSerializer" /> -->
-<!-- 	</bean> -->
+	<bean id="jobExplorer" class="org.springframework.batch.core.explore.support.JobExplorerFactoryBean">
+		<property name="dataSource" ref="tiantianDataSource" />
+		<property name="serializer" ref="fastJsonSerializer" />
+	</bean>
 	
 	<!-- Job注册后 Bean后处理器 -->
 	<bean class="org.springframework.batch.core.configuration.support.JobRegistryBeanPostProcessor">
@@ -109,7 +110,7 @@
 	<bean id="userItemReader" class="com.vteba.batch.user.MyBatisPagingItemReader" scope="step">
 	    <property name="sqlSessionFactory" ref="tiantianSqlSessionFactory"/>
 	    <property name="queryId" value="com.vteba.batch.user.dao.UserDao.pagedList"/>
- 		<property name="pageSize" value="3" />
+ 		<property name="pageSize" value="10" />
  		<!-- 可以在启动Job时，在jobParameters中动态添加 -->
 <!--  		<property name="resource" value="#{jobParameters['inputResource']}" /> -->
 	</bean>
@@ -127,7 +128,7 @@
 <!-- 			<batch:no-rollback-exception-classes> -->
 <!-- 				<batch:include class="com.vteba.common.exception.BasicException"/> -->
 <!-- 			</batch:no-rollback-exception-classes> -->
-			<batch:chunk reader="userItemReader" processor="userItemProcessor" writer="userItemWriter" skip-limit="1" retry-limit="1" commit-interval="3" ><!-- retry-policy="" 重试次数限制，超过抛异常retry-limit="3" --><!-- 指定了skip-policy=""，次数和异常限制被忽略 -->
+			<batch:chunk reader="userItemReader" processor="userItemProcessor" writer="userItemWriter" skip-limit="1" retry-limit="1" commit-interval="10" ><!-- retry-policy="" 重试次数限制，超过抛异常retry-limit="3" --><!-- 指定了skip-policy=""，次数和异常限制被忽略 -->
 				<batch:skippable-exception-classes>
 					<batch:include class="com.vteba.common.exception.BasicException"/>
 				</batch:skippable-exception-classes>
@@ -172,30 +173,30 @@
 			<batch:listener ref="jobExecutionListener" />
 		</batch:listeners>
 		
-		<batch:step id="investorRetryTaskletStep" next="splitParallel">
-			<batch:tasklet ref="investorRetryTasklet" />
-			<batch:listeners>
-				<batch:listener ref="stepExecutionListener" />
-			</batch:listeners>
-		</batch:step>
-		<batch:split id="splitParallel" task-executor="taskExecutor" next="userJobStepInit">
-			<batch:flow>
-				<batch:step id="parallelStep_1">
-					<batch:tasklet ref="parallelStep1" />
-				</batch:step>
-			</batch:flow>
-			<batch:flow>
-				<batch:step id="parallelStep_2">
-					<batch:tasklet ref="parallelStep2" />
-				</batch:step>
-			</batch:flow>
-		</batch:split>
-		<batch:step id="userJobStepInit" next="investorJobStep">
-			<batch:tasklet ref="userTasklet" />
-		</batch:step>
-		<batch:step id="investorJobStep" parent="investorProcessStep" next="userJobStep">
+<!-- 		<batch:step id="investorRetryTaskletStep" next="splitParallel"> -->
+<!-- 			<batch:tasklet ref="investorRetryTasklet" /> -->
+<!-- 			<batch:listeners> -->
+<!-- 				<batch:listener ref="stepExecutionListener" /> -->
+<!-- 			</batch:listeners> -->
+<!-- 		</batch:step> -->
+<!-- 		<batch:split id="splitParallel" task-executor="taskExecutor" next="userJobStepInit"> -->
+<!-- 			<batch:flow> -->
+<!-- 				<batch:step id="parallelStep_1"> -->
+<!-- 					<batch:tasklet ref="parallelStep1" /> -->
+<!-- 				</batch:step> -->
+<!-- 			</batch:flow> -->
+<!-- 			<batch:flow> -->
+<!-- 				<batch:step id="parallelStep_2"> -->
+<!-- 					<batch:tasklet ref="parallelStep2" /> -->
+<!-- 				</batch:step> -->
+<!-- 			</batch:flow> -->
+<!-- 		</batch:split> -->
+<!-- 		<batch:step id="userJobStepInit" next="investorJobStep"> -->
+<!-- 			<batch:tasklet ref="userTasklet" /> -->
+<!-- 		</batch:step> -->
+<!-- 		<batch:step id="investorJobStep" parent="investorProcessStep" next="userJobStep"> -->
 			
-		</batch:step>
+<!-- 		</batch:step> -->
 		
 		<!-- parent父类bean，继承属性，执行父类bean的业务，当前执行是哪个业务 -->
 		<batch:step id="userJobStep" parent="userProcessStep">
@@ -219,14 +220,14 @@
 	
 	<!-- Job任务配置 -->
 	<task:scheduled-tasks scheduler="taskScheduler">
-		<task:scheduled ref="userJobInstance" method="execute" fixed-delay="10000"/>
+		<task:scheduled ref="userJobInstance" method="execute" fixed-delay="2000"/>
 	</task:scheduled-tasks>
 	
 	<!-- 要么bean的id规范命名，以Detail结尾，前面是spring batch的job的bean id -->
 <!-- 	<bean id="userJobDetail" class="com.vteba.batch.quartz.JobDetailFactoryBean"> -->
 <!-- 		<property name="jobDataAsMap"> -->
 <!-- 	        <map> -->
-<!-- 	            <entry key="jobName" value="footballJob"/> -->
+<!-- 	            <entry key="jobName" value="userJob"/> -->
 <!-- 	            <entry key="jobLocator" value-ref="jobRegistry"/> -->
 <!-- 	            <entry key="jobLauncher" value-ref="jobLauncher"/> -->
 <!-- 	        </map> -->

@@ -31,7 +31,7 @@ public class UserItemProcessor implements ItemProcessor<User, User> {
 		
 		if (item.getId() == 5) {
 			LOGGER.error("抛出跳过异常。");
-			throw new BasicException("抛出的跳过异常");
+			//throw new BasicException("抛出的跳过异常");
 		}
 		
 		LOGGER.info("处理user=[{}]成功。", name);
