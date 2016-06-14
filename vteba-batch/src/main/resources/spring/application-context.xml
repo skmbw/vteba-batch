@@ -11,9 +11,9 @@
 	default-autowire="byName">
 	
 	<import resource="application-mybatis.xml"/>
-	<import resource="application-dubbo.xml"/>
-<!-- 	<import resource="classpath:job/job-text.xml"/> -->
-	<import resource="application-rocketmq.xml"/>
+<!-- 	<import resource="application-dubbo.xml"/> -->
+	<import resource="classpath:job/job-text.xml"/>
+<!-- 	<import resource="application-rocketmq.xml"/> -->
 	
 	<!-- 默认是基于java interface代理，proxy-target-class="true"表示基于cglib代理。 expose-proxy="true"表示将aop放到AopContext中，供查询 -->
 <!-- 	<aop:aspectj-autoproxy proxy-target-class="true"/> -->
@@ -239,35 +239,35 @@
 	</bean>
 	
 	<!-- RocketMQ消费者， 建议一个Topic配置一个，注意订阅的Topic要和MessageListener是配对的-->
-	<bean id="rocketMQMessageConsumer" class="com.vteba.mq.rocketmq.consumer.RocketMQMessageConsumer" init-method="init" destroy-method="destroy">
-		<property name="namesrvAddr" value="localhost:9876;localhost:9875" />
+<!-- 	<bean id="rocketMQMessageConsumer" class="com.vteba.mq.rocketmq.consumer.RocketMQMessageConsumer" init-method="init" destroy-method="destroy"> -->
+<!-- 		<property name="namesrvAddr" value="localhost:9876;localhost:9875" /> -->
 		<!-- 消费者组，处理相同业务的消费者，这个属性要相同，建议和生成这种消息的生产者组相同 -->
-		<property name="consumerGroup" value="userGroup" />
+<!-- 		<property name="consumerGroup" value="userGroup" /> -->
 		<!-- 默认监听的topic -->
-		<property name="topic" value="YinleiUser" />
+<!-- 		<property name="topic" value="YinleiUser" /> -->
 		<!-- 默认的tags -->
-		<property name="subExpression" value="Test" />
+<!-- 		<property name="subExpression" value="Test" /> -->
 		<!-- 如果有多个Topic，建议使用这种方式：key是Topic，value是tags -->
-		<property name="topicSubExpressionMap">
-			<map>
-				<entry key="YinleiUser" value="Test||Test1" />
-				<entry key="YinleiUser2" value="Test2" />
-			</map>
-		</property>
-		<property name="kryoer" ref="kryoer" />
+<!-- 		<property name="topicSubExpressionMap"> -->
+<!-- 			<map> -->
+<!-- 				<entry key="YinleiUser" value="Test||Test1" /> -->
+<!-- 				<entry key="YinleiUser2" value="Test2" /> -->
+<!-- 			</map> -->
+<!-- 		</property> -->
+<!-- 		<property name="kryoer" ref="kryoer" /> -->
 		<!-- 业务监听器 -->
-		<property name="messageListener" ref="simpleRocketMQMessageListener" />
+<!-- 		<property name="messageListener" ref="simpleRocketMQMessageListener" /> -->
 		<!-- 强制业务层自己使用kryo反序列化 -->
-		<property name="forceServiceDeserialize" value="true" />
+<!-- 		<property name="forceServiceDeserialize" value="true" /> -->
 		<!-- 是否启动创建topic，建议false，这个需要服务器开启客户端创建的权限，建议服务端创建 -->
-		<property name="initTopic" value="false" />
+<!-- 		<property name="initTopic" value="false" /> -->
 		<!-- redis高可用，以及去重的特性，需要该属性 -->
-		<property name="redisService" ref="redisService" />
+<!-- 		<property name="redisService" ref="redisService" /> -->
 		<!-- 开始数据库持久化 -->
-		<property name="databaseCacheEnable" value="true" />
+<!-- 		<property name="databaseCacheEnable" value="true" /> -->
 		<!-- databaseCacheEnable=true需要该属性 -->
-		<property name="dataSource" ref="tiantianDataSource" />
-	</bean>
+<!-- 		<property name="dataSource" ref="tiantianDataSource" /> -->
+<!-- 	</bean> -->
 	
 	<!-- RocketMQ生产者，建议使用一个应用配置一个 -->
 <!-- 	<bean id="rocketMQMessageProducer" class="com.vteba.mq.rocketmq.producer.RocketMQMessageProducer"  init-method="init" destroy-method="destroy"> -->
