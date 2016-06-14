@@ -1,5 +1,7 @@
 package com.vteba.batch.launcher;
 
+import java.util.HashMap;
+import java.util.Map;
 import java.util.concurrent.Callable;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
@@ -27,6 +29,7 @@ import org.springframework.core.task.TaskExecutor;
 import org.springframework.core.task.TaskRejectedException;
 import org.springframework.util.Assert;
 import org.springframework.util.concurrent.ListenableFuture;
+import org.springframework.util.concurrent.ListenableFutureCallback;
 
 /**
  * 简单实现 {@link JobLauncher} 这个接口. 接口
@@ -57,7 +60,7 @@ public class DefaultJobLauncher implements JobLauncher, InitializingBean {
 
 	private JobRepository jobRepository;
 
-	private AsyncListenableTaskExecutor taskExecutor;
+	private AsyncListenableTaskExecutor taskExecutor; // 使用异步可监听的接口定义
 	
 	/** 用来保存系统中正在执行的任务，key是jobName，value是线程id */
 	private volatile ConcurrentMap<String, String> concurrentMap = new ConcurrentHashMap<>();
@@ -86,8 +89,10 @@ public class DefaultJobLauncher implements JobLauncher, InitializingBean {
 		Assert.notNull(job, "The Job must not be null.");
 		Assert.notNull(jobParameters, "The JobParameters must not be null.");
 
+		final String jobName = job.getName();
+		
 		final JobExecution jobExecution;
-		JobExecution lastExecution = jobRepository.getLastJobExecution(job.getName(), jobParameters);
+		JobExecution lastExecution = jobRepository.getLastJobExecution(jobName, jobParameters);
 		if (lastExecution != null) {
 			if (!job.isRestartable()) {
 				throw new JobRestartException("JobInstance already exists and is not restartable");
@@ -114,27 +119,32 @@ public class DefaultJobLauncher implements JobLauncher, InitializingBean {
 		 * <i>and</i> fail a job execution for this instance between the last
 		 * assertion and the next method returning successfully.
 		 */
-		jobExecution = jobRepository.createJobExecution(job.getName(), jobParameters);
+		jobExecution = jobRepository.createJobExecution(jobName, jobParameters);
 
 		try {
-			Callable<Boolean> callable = new Callable<Boolean>() {
+			Callable<Map<String, String>> callable = new Callable<Map<String, String>>() {
 
 				@Override
-				public Boolean call() throws Exception {
+				public Map<String, String> call() throws Exception {
+					Map<String, String> map = new HashMap<>();
 					try {
+						Long threadId = Thread.currentThread().getId();
+						map.put(jobName, threadId.toString());
+						concurrentMap.put(jobName, threadId.toString());
+						
 						LOGGER.info("Job: [" + job + "] launched with the following parameters: [" + jobParameters
 								+ "]");
 						job.execute(jobExecution);
 						LOGGER.info("Job: [" + job + "] completed with the following parameters: [" + jobParameters
 								+ "] and the following status: [" + jobExecution.getStatus() + "]");
-						return true;
+						return map;
 					} catch (Throwable t) {
 						LOGGER.info("Job: [" + job
 								+ "] failed unexpectedly and fatally with the following parameters: [" + jobParameters
 								+ "]", t);
 						rethrow(t);
 					}
-					return false;
+					return map;
 				}
 				
 				private void rethrow(Throwable t) {
@@ -146,8 +156,30 @@ public class DefaultJobLauncher implements JobLauncher, InitializingBean {
 					throw new IllegalStateException(t);
 				}
 			};
-			ListenableFuture<Boolean> future = taskExecutor.submitListenable(callable);
-			
+			ListenableFuture<Map<String, String>> future = taskExecutor.submitListenable(callable);
+			future.addCallback(new ListenableFutureCallback<Map<String, String>>() {
+
+				@Override
+				public void onSuccess(Map<String, String> result) {
+					String callbackReturnId = result.get(jobName);
+					String existTaskId = concurrentMap.get(jobName);
+					LOGGER.info("job任务回调，执行任务线程id是[{}], 回调返回线程id是[{}]", existTaskId, callbackReturnId);
+					if (callbackReturnId != null && callbackReturnId.equals(existTaskId)) {
+						LOGGER.info("job[{}]执行成功, 执行任务的线程id是[{}], 将删除运行状态。", jobName, existTaskId);
+						concurrentMap.remove(jobName);
+					} else if (StringUtils.isBlank(existTaskId)) {
+						LOGGER.warn("job[{}]执行成功回调返回线程id=[{}],已存在任务id为空,认为执行成功。", jobName, callbackReturnId);
+					} else {
+						LOGGER.warn("job[{}]执行成功回调返回线程id=[{}],已存在任务id=[{}],三者不一致。", jobName, callbackReturnId, existTaskId);
+					}
+				}
+
+				@Override
+				public void onFailure(Throwable ex) {
+					LOGGER.error("任务运行失败[{}], 将从缓存中删除运行状态，等待下一次运行.", jobName, ex);
+					concurrentMap.remove(jobName);
+				}
+			});
 		} catch (TaskRejectedException e) {
 			jobExecution.upgradeStatus(BatchStatus.FAILED);
 			if (jobExecution.getExitStatus().equals(ExitStatus.UNKNOWN)) {
@@ -208,5 +240,13 @@ public class DefaultJobLauncher implements JobLauncher, InitializingBean {
 		return concurrentMap;
 	}
 	
+	/**
+	 * 获取job运行的线程id，可能为null
+	 * @param jobName job名字
+	 * @return 线程id
+	 */
+	public String getRunningThreadId(String jobName) {
+		return concurrentMap.get(jobName);
+	}
 }
 

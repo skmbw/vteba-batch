@@ -1,22 +1,16 @@
 package com.vteba.batch.launcher;
 
-import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Set;
 
 import javax.inject.Inject;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.batch.core.BatchStatus;
 import org.springframework.batch.core.Job;
 import org.springframework.batch.core.JobExecution;
 import org.springframework.batch.core.JobParameters;
 import org.springframework.batch.core.JobParametersBuilder;
-import org.springframework.batch.core.explore.JobExplorer;
-import org.springframework.batch.core.launch.JobLauncher;
-import org.springframework.batch.core.repository.JobRepository;
 
 import com.vteba.utils.date.DateUtils;
 
@@ -31,11 +25,11 @@ public class SpringBatchJobLauncher {
 	private static final Logger LOGGER = LoggerFactory.getLogger(SpringBatchJobLauncher.class);
 	
 	@Inject
-	private JobLauncher jobLauncher;
-	@Inject
-	private JobExplorer jobExplorer;
-	@Inject
-	private JobRepository jobRepository;
+	private DefaultJobLauncher jobLauncher;
+//	@Inject
+//	private JobExplorer jobExplorer;
+//	@Inject
+//	private JobRepository jobRepository;
 	
 	private String dateFormat;
 	private Map<String, String> jobParameters;
@@ -50,33 +44,42 @@ public class SpringBatchJobLauncher {
 		jobParameters.put("executeDatetime", DateUtils.toDateString(dateFormat) + 1);
 		JobParameters allParams = translateParams(job, jobParameters);
 		
-		boolean jobExist = jobRepository.isJobInstanceExists(jobName, allParams);
-		if (jobExist) {
-			JobExecution jobExecution = jobRepository.getLastJobExecution(jobName, allParams);
-			BatchStatus batchStatus = jobExecution.getStatus();
-			Date endTime = jobExecution.getEndTime();
-			if (endTime == null || batchStatus != BatchStatus.COMPLETED) {
-				
-			}
-		}
+//		boolean jobExist = jobRepository.isJobInstanceExists(jobName, allParams);
+//		if (jobExist) {
+//			JobExecution jobExecution = jobRepository.getLastJobExecution(jobName, allParams);
+//			BatchStatus batchStatus = jobExecution.getStatus();
+//			Date endTime = jobExecution.getEndTime();
+//			if (endTime == null || batchStatus != BatchStatus.COMPLETED) {
+//				
+//			}
+//		}
 		
-		Set<JobExecution> jobExecutionSets = jobExplorer.findRunningJobExecutions(jobName);
-		int size = jobExecutionSets.size();
-		if (size > 1) {
+//		Set<JobExecution> jobExecutionSets = jobExplorer.findRunningJobExecutions(jobName);
+//		int size = jobExecutionSets.size();
+//		if (size > 1) {
+//			if (LOGGER.isInfoEnabled()) {
+//				LOGGER.info("已经有任务在运行{},size=[{}].", jobExecutionSets, size);
+//			}
+//			return;
+//		} else {
+//			if (LOGGER.isInfoEnabled()) {
+//				LOGGER.info("开始执行：JobName=[{}]", jobName);
+//			}
+//		}
+		
+		boolean running = jobLauncher.isRunning(jobName);
+		
+		if (running) {
 			if (LOGGER.isInfoEnabled()) {
-				LOGGER.info("已经有任务在运行{},size=[{}].", jobExecutionSets, size);
+				LOGGER.info("任务jobName=[{}]正在运行，线程id=[{}]，如果线程id=[null]，说明数据被回调清除，是正常的.", jobName, jobLauncher.getRunningThreadId(jobName));
 			}
 			return;
-		} else {
-			if (LOGGER.isInfoEnabled()) {
-				LOGGER.info("开始执行：JobName=[{}]", jobName);
-			}
 		}
 		
 		JobExecution je = jobLauncher.run(job, allParams);
 		Long jobExecutionId = je.getId();
 		if (LOGGER.isInfoEnabled()) {
-			LOGGER.info("开始执行：JobName=[{}], JobExecutionId=[{}]", jobName, jobExecutionId);
+			LOGGER.info("开始执行：jobName=[{}], JobExecutionId=[{}]", jobName, jobExecutionId);
 		}
 	}
 
@@ -100,7 +103,7 @@ public class SpringBatchJobLauncher {
 		this.jobParameters = jobParameters;
 	}
 
-	public void setJobLauncher(JobLauncher jobLauncher) {
+	public void setJobLauncher(DefaultJobLauncher jobLauncher) {
 		this.jobLauncher = jobLauncher;
 	}
 
