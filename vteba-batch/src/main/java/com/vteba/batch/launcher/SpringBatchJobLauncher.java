@@ -5,8 +5,8 @@ import java.util.Map;
 
 import javax.inject.Inject;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.springframework.batch.core.Job;
 import org.springframework.batch.core.JobExecution;
 import org.springframework.batch.core.JobParameters;
@@ -22,27 +22,23 @@ import com.vteba.utils.date.DateUtils;
  */
 public class SpringBatchJobLauncher {
 	
-	private static final Logger LOGGER = LoggerFactory.getLogger(SpringBatchJobLauncher.class);
+	private static final Logger LOGGER = LogManager.getLogger(SpringBatchJobLauncher.class);
 	
 	@Inject
 	private DefaultJobLauncher jobLauncher;
-//	@Inject
-//	private JobExplorer jobExplorer;
-//	@Inject
-//	private JobRepository jobRepository;
 	
 	private String dateFormat;
-	private Map<String, String> jobParameters;
+	private Map<String, String> parameters;
 	private Job job;
 
 	public void execute() throws Exception {
 		String jobName = job.getName();
-		if (jobParameters == null) {
-			jobParameters = new HashMap<String, String>();
+		if (parameters == null) {
+			parameters = new HashMap<String, String>();
 		}
 		// 参数和job name是唯一确定Job的
-		jobParameters.put("executeDatetime", DateUtils.toDateString(dateFormat));
-		JobParameters allParams = translateParams(job, jobParameters);
+		parameters.put("executeDatetime", DateUtils.toDateString(dateFormat));
+		JobParameters jobParameters = params(parameters);
 		
 		// 如果已有任务正在运行，返回
 		boolean running = jobLauncher.isRunning(jobName);
@@ -53,22 +49,20 @@ public class SpringBatchJobLauncher {
 			return;
 		}
 		
-		JobExecution je = jobLauncher.run(job, allParams);
+		JobExecution je = jobLauncher.run(job, jobParameters);
 		Long jobExecutionId = je.getId();
 		if (LOGGER.isInfoEnabled()) {
 			LOGGER.info("开始执行：jobName=[{}], JobExecutionId=[{}]", jobName, jobExecutionId);
 		}
 	}
 
-	private JobParameters translateParams(Job job, Map<String, String> params) {
+	private JobParameters params(Map<String, String> params) {
 		JobParametersBuilder builder = new JobParametersBuilder();
-
 		if (params != null) {
 			for (Map.Entry<String, String> param : params.entrySet()) {
 				builder.addString(param.getKey(), param.getValue());
 			}
 		}
-
 		return builder.toJobParameters();
 	}
 
@@ -76,8 +70,8 @@ public class SpringBatchJobLauncher {
 		this.job = job;
 	}
 
-	public void setJobParameters(Map<String, String> jobParameters) {
-		this.jobParameters = jobParameters;
+	public void setParameters(Map<String, String> parameters) {
+		this.parameters = parameters;
 	}
 
 	public void setJobLauncher(DefaultJobLauncher jobLauncher) {
