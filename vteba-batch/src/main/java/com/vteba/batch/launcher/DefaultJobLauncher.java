@@ -42,7 +42,11 @@ import org.springframework.util.concurrent.ListenableFutureCallback;
  * JobExecution. Repository是必须的，因为提供的{@link Job}
  * 可能会重启一个已经存在的 {@link JobInstance}, 并且仅有这个
  * Repository能可靠的重建它.
- *
+ * 
+ * <p>另外的改进是，将Runnable改成使用Callable来执行，启动时将任务放入缓存中，在Call的回调中，去除任务的执行状态
+ * 。在任务执行起见，如果有新的任务起来，那么会阻止创建新的任务，避免并发执行任务的问题。如果task支持并发另当别论。
+ * </p>
+ * 
  * @author Lucas Ward
  * @author Dave Syer
  * @author Will Schipp
