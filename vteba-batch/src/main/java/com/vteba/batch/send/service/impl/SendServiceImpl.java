@@ -6,7 +6,7 @@ import javax.inject.Named;
 import com.vteba.batch.send.dao.SendDao;
 import com.vteba.batch.send.model.Send;
 import com.vteba.batch.send.service.spi.SendService;
-import com.vteba.service.generic.impl.BasicServiceImpl;
+import com.vteba.common.service.impl.BasicServiceImpl;
 import com.vteba.tx.jdbc.mybatis.spi.BasicDao;
 
 /**

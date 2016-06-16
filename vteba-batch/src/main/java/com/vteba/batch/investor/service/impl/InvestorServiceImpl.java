@@ -6,8 +6,7 @@ import javax.inject.Named;
 import com.vteba.batch.investor.dao.InvestorDao;
 import com.vteba.batch.investor.model.Investor;
 import com.vteba.batch.investor.service.spi.InvestorService;
-
-import com.vteba.service.generic.impl.BasicServiceImpl;
+import com.vteba.common.service.impl.BasicServiceImpl;
 import com.vteba.tx.jdbc.mybatis.spi.BasicDao;
 
 /**

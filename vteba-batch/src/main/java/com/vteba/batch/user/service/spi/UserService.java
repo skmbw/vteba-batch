@@ -2,8 +2,7 @@ package com.vteba.batch.user.service.spi;
 
 import com.vteba.batch.user.model.User;
 import com.vteba.batch.user.model.UserBean;
-
-import com.vteba.service.generic.MyBatisService;
+import com.vteba.common.service.MyBatisService;
 
 /**
  * 用户相关的业务service接口。
