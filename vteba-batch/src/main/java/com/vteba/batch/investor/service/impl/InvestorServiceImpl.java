@@ -7,7 +7,7 @@ import com.vteba.batch.investor.dao.InvestorDao;
 import com.vteba.batch.investor.model.Investor;
 import com.vteba.batch.investor.service.spi.InvestorService;
 import com.vteba.common.service.impl.BasicServiceImpl;
-import com.vteba.tx.jdbc.mybatis.spi.BasicDao;
+import com.vteba.tx.dao.spi.BasicDao;
 
 /**
  * 投资人相关的service业务实现。

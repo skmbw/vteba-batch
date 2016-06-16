@@ -2,8 +2,8 @@ package com.vteba.batch.user.dao;
 
 import com.vteba.batch.user.model.User;
 import com.vteba.batch.user.model.UserBean;
+import com.vteba.tx.dao.spi.BaseDao;
 import com.vteba.tx.jdbc.mybatis.annotation.DaoMapper;
-import com.vteba.tx.jdbc.mybatis.spi.BaseDao;
 
 /**
  * 表user的MyBatis Dao Mapper。

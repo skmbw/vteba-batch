@@ -1,8 +1,8 @@
 package com.vteba.batch.investor.dao;
 
 import com.vteba.batch.investor.model.Investor;
+import com.vteba.tx.dao.spi.BasicDao;
 import com.vteba.tx.jdbc.mybatis.annotation.DaoMapper;
-import com.vteba.tx.jdbc.mybatis.spi.BasicDao;
 
 /**
  * 表investor的MyBatis Dao Mapper。

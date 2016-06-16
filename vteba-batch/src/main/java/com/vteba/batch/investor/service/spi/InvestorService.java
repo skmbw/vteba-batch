@@ -1,7 +1,7 @@
 package com.vteba.batch.investor.service.spi;
 
 import com.vteba.batch.investor.model.Investor;
-import com.vteba.common.service.BasicService;
+import com.vteba.common.service.spi.BasicService;
 
 /**
  * 投资人相关的业务service接口。

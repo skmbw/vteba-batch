@@ -7,7 +7,7 @@ import com.vteba.batch.send.dao.SendDao;
 import com.vteba.batch.send.model.Send;
 import com.vteba.batch.send.service.spi.SendService;
 import com.vteba.common.service.impl.BasicServiceImpl;
-import com.vteba.tx.jdbc.mybatis.spi.BasicDao;
+import com.vteba.tx.dao.spi.BasicDao;
 
 /**
  * 发送相关的service业务实现。

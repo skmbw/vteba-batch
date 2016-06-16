@@ -15,7 +15,7 @@ import com.vteba.batch.user.model.User;
 import com.vteba.batch.user.model.UserBean;
 import com.vteba.batch.user.service.spi.UserService;
 import com.vteba.common.service.impl.MyBatisServiceImpl;
-import com.vteba.tx.jdbc.mybatis.spi.BaseDao;
+import com.vteba.tx.dao.spi.BaseDao;
 import com.vteba.utils.date.DateUtils;
 
 /**

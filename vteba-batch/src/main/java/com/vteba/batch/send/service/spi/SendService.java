@@ -1,7 +1,7 @@
 package com.vteba.batch.send.service.spi;
 
 import com.vteba.batch.send.model.Send;
-import com.vteba.common.service.BasicService;
+import com.vteba.common.service.spi.BasicService;
 
 /**
  * 发送相关的业务service接口。

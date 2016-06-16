@@ -1,10 +1,10 @@
 package com.vteba.batch.send.dao;
 
 import com.vteba.batch.send.model.Send;
+import com.vteba.tx.dao.spi.BasicDao;
 import com.vteba.tx.jdbc.mybatis.annotation.DaoMapper;
 import com.vteba.tx.jdbc.mybatis.annotation.DatabaseType;
 import com.vteba.tx.jdbc.mybatis.annotation.Schema;
-import com.vteba.tx.jdbc.mybatis.spi.BasicDao;
 
 /**
  * 表send的MyBatis Dao Mapper。
