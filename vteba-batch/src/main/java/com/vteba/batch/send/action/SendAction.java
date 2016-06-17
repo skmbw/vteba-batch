@@ -43,6 +43,15 @@ public class SendAction extends GenericAction<Send> {
     @RequestMapping("/initial")
     public String initial(Send model, Map<String, Object> maps) {
     	try {
+    		
+    		Send s = new Send();
+    		s.setName("aa");
+    		s.setAge(22);
+    		
+    		sendServiceImpl.save(s);
+    		
+    		System.out.println(s.getId());
+    		
     		model.setId(1222);
     		model.setName("尹雷");
     		model.setPageSize(10);

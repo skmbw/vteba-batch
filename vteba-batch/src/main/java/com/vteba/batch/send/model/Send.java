@@ -4,6 +4,9 @@ import com.vteba.annotation.Kryo;
 
 @Kryo
 public class Send {
+	
+	private Integer age;
+	
     /**
      * order by 排序语句
      * 对应数据库表字段 send
@@ -129,4 +132,12 @@ public class Send {
     public void setName(String name) {
         this.name = name;
     }
+
+	public Integer getAge() {
+		return age;
+	}
+
+	public void setAge(Integer age) {
+		this.age = age;
+	}
 }

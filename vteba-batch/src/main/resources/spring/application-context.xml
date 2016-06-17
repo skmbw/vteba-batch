@@ -12,7 +12,7 @@
 	
 	<import resource="application-mybatis.xml"/>
 <!-- 	<import resource="application-dubbo.xml"/> -->
-	<import resource="classpath:job/application-batch.xml"/>
+<!-- 	<import resource="classpath:job/application-batch.xml"/> -->
 <!-- 	<import resource="application-rocketmq.xml"/> -->
 	
 	<!-- 默认是基于java interface代理，proxy-target-class="true"表示基于cglib代理。 expose-proxy="true"表示将aop放到AopContext中，供查询 -->
@@ -348,7 +348,7 @@
 		<property name="port" value="${redis.port}" />
 	</bean>
 
-	<bean id="kryoerRedisSerializer" class="com.vteba.cache.redis.KryoerRedisSerializer">
+	<bean id="kryoerRedisSerializer" class="com.vteba.serialize.kryo.KryoerRedisSerializer">
 		<property name="kryoer" ref="kryoer" />
 	</bean>
 

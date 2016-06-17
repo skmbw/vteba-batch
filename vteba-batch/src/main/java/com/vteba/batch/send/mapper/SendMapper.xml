@@ -8,13 +8,14 @@
     -->
     <id column="id" property="id" jdbcType="INTEGER" />
     <result column="name" property="name" jdbcType="VARCHAR" />
+    <result column="age" property="age" jdbcType="INTEGER" />
   </resultMap>
   <sql id="Base_Column_List" >
     <!--
       WARNING - 该表所有字段。
       MyBatis代码工具自动生成，不要修改！
     -->
-    id, name
+    id, name, age
   </sql>
   <sql id="model_where_clause" >
     <!--
@@ -147,26 +148,26 @@
       <include refid="model_where_clause" />
     </if>
   </delete>
-  <insert id="save" parameterType="com.vteba.batch.send.model.Send" >
+  <insert id="save" parameterType="com.vteba.batch.send.model.Send" useGeneratedKeys="true" keyProperty="id">
     <!--
       WARNING - 插入记录，只有非空字段才会插入到数据库。
       MyBatis代码工具自动生成，不要修改！
     -->
     insert into send
     <trim prefix="(" suffix=")" suffixOverrides="," >
-      <if test="id != null" >
-        id,
-      </if>
       <if test="name != null" >
         name,
       </if>
+      <if test="age != null" >
+        age,
+      </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides="," >
-      <if test="id != null" >
-        #{id,jdbcType=INTEGER},
-      </if>
       <if test="name != null" >
         #{name,jdbcType=VARCHAR},
+      </if>
+      <if test="age != null" >
+        #{age,jdbcType=INTEGER},
       </if>
     </trim>
   </insert>
