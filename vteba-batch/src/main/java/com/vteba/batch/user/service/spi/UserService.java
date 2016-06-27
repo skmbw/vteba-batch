@@ -14,4 +14,6 @@ public interface UserService extends MyBatisService<User, UserBean, Integer> {
 	public int updateUser(int request);
 	
 	public int updateEntity(int request);
+	
+	public User test(User request);
 }

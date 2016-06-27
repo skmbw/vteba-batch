@@ -97,4 +97,14 @@ public class UserServiceImpl extends MyBatisServiceImpl<User, UserBean, Integer>
 		}
 		return 1;
 	}
+
+	@Override
+	public User test(User request) {
+		User user = new User();
+		user.setUpdateDate(new Date());
+		user.setId(2341);
+		user.setName(request.getName());
+		user.setAge(request.getAge());
+		return user;
+	}
 }
